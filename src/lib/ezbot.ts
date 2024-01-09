@@ -20,6 +20,7 @@ import {
   PageViewEvent,
   CommonEventProperties,
   enableActivityTracking,
+  addGlobalContexts,
 } from '@snowplow/browser-tracker';
 
 const plugins = [
@@ -39,8 +40,8 @@ const EzbotTrackerDomain = 'https://api.ezbot.ai';
 const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
 const EzbotPredictionsContextSchema =
   'iglu:com.ezbot/predictions_content/jsonschema/1-0-0';
-const EzbotSessionContextSchema =
-  'iglu:com.ezbot/session_context/jsonschema/1-0-0';
+// const EzbotSessionContextSchema =
+//   'iglu:com.ezbot/session_context/jsonschema/1-0-0';
 
 type Predictions = Record<string, string>;
 
@@ -48,12 +49,12 @@ type predictionsResponse = {
   predictions: Predictions;
 };
 
-type SessionContext = {
-  schema: string;
-  data: {
-    sessionId: string;
-  };
-};
+// type SessionContext = {
+//   schema: string;
+//   data: {
+//     sessionId: string;
+//   };
+// };
 
 const DefaultWebConfiguration: TrackerConfiguration = {
   appId: 'default-ezbot-app-id',
@@ -66,7 +67,7 @@ class EzbotBrowserTracker {
   config: TrackerConfiguration;
   projectId: number;
   tracker: BrowserTracker;
-  sessionId: string;
+  sessionId: string | undefined;
   predictions: Predictions;
 
   constructor(
@@ -75,19 +76,34 @@ class EzbotBrowserTracker {
   ) {
     this.config = config;
     this.projectId = projectId;
-    // TODO generate new session id, set it as ezbot session id, and add it to the contexts
-    this.sessionId = 'abc';
 
-    (async () => {
-      this.predictions = await this.getPredictions();
-    })();
-    // TODO Add predictions context
+    // TODO
+    // If session id doesn't work...
+    // a - figure out how to get session id (move this below newTracker), OR
+    // b - generate new session id, set it as ezbot session id, and add it to the contexts
+    // this.sessionId = 'abc';
 
     this.tracker = newTracker('ezbot', EzbotTrackerDomain, {
       appId: config.appId,
       plugins: plugins,
-      contexts: [],
     });
+
+    const domainUserInfo = this.tracker.getDomainUserInfo() as unknown;
+    if (Array.isArray(domainUserInfo)) {
+      this.sessionId = (domainUserInfo as string[])[6];
+    }
+
+    this.predictions = {}; // Assign an initial value to predictions
+
+    (async () => {
+      return await this.getPredictions();
+    })();
+
+    const predictionsContext = {
+      schema: EzbotPredictionsContextSchema,
+      data: this.predictions,
+    };
+    addGlobalContexts([predictionsContext], [this.tracker.id]);
   }
 
   trackPageView(
@@ -119,7 +135,7 @@ class EzbotBrowserTracker {
     return this.predictions;
   }
 
-  startBackgroundTracking(config: ActivityTrackingConfiguration) {
+  startActivityTracking(config: ActivityTrackingConfiguration) {
     enableActivityTracking(config, [this.tracker.id]);
   }
 }
