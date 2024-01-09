@@ -42,7 +42,18 @@
     "node": ">=10"
   },
   "dependencies": {
-    "@bitauth/libauth": "^1.17.1"
+    "@bitauth/libauth": "^1.17.1",
+    "@snowplow/browser-plugin-browser-features": "^3.19.0",
+    "@snowplow/browser-plugin-client-hints": "^3.19.0",
+    "@snowplow/browser-plugin-consent": "^3.19.0",
+    "@snowplow/browser-plugin-ecommerce": "^3.19.0",
+    "@snowplow/browser-plugin-form-tracking": "^3.19.0",
+    "@snowplow/browser-plugin-ga-cookies": "^3.19.0",
+    "@snowplow/browser-plugin-geolocation": "^3.19.0",
+    "@snowplow/browser-plugin-link-click-tracking": "^3.19.0",
+    "@snowplow/browser-plugin-site-tracking": "^3.19.0",
+    "@snowplow/browser-plugin-timezone": "^3.19.0",
+    "@snowplow/browser-tracker": "^3.19.0"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
