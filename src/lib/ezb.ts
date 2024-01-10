@@ -11,10 +11,13 @@ import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
 import {
   addGlobalContexts,
   BrowserTracker,
-  newTracker,
   trackSelfDescribingEvent,
 } from '@snowplow/browser-tracker';
-import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
+import {
+  TrackerConfiguration,
+  SharedState,
+  addTracker,
+} from '@snowplow/browser-tracker-core';
 
 const plugins = [
   GaCookiesPlugin(),
@@ -59,10 +62,22 @@ async function initEzbot(
   projectId: number,
   config: TrackerConfiguration = DefaultWebConfiguration
 ): Promise<BrowserTracker> {
-  const tracker = newTracker('ezbot', EzbotTrackerDomain, {
+  const state = new SharedState();
+  const trackerConfig = {
     appId: config.appId,
     plugins: plugins,
-  });
+  };
+  const tracker = addTracker(
+    'ezbot',
+    '',
+    '0.1',
+    EzbotTrackerDomain,
+    state,
+    trackerConfig
+  );
+  if (tracker === null) {
+    throw new Error('Failed to initialize ezbot tracker');
+  }
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId = (domainUserInfo as string[])[6];
   const predictions = await getPredictions(projectId, sessionId);

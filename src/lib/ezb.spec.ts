@@ -17,8 +17,10 @@ describe('Initialization', () => {
     const t = await initEzbot(1, { appId: 'test-app-id' });
     expect(t).toBeDefined();
   });
-  // it('tracks Page Views', async () => {
-  //   const t = await initEzbot(1, { appId: 'test-app-id' });
-  //   t.trackPageView();
-  // });
+  it('tracks Page Views', async () => {
+    const t = await initEzbot(1, { appId: 'test-app-id' });
+    expect(t.trackPageView).toBeDefined();
+    t.trackPageView();
+    expect(t.trackPageView).toHaveBeenCalled();
+  });
 });
