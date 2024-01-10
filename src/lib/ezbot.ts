@@ -1,27 +1,27 @@
+import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
+import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
+import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
+import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
+import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
+import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
+import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
+import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
+import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
+import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
+import {
+  addGlobalContexts,
+  BrowserTracker,
+  CommonEventProperties,
+  enableActivityTracking,
+  newTracker,
+  PageViewEvent,
+  trackPageView,
+  trackSelfDescribingEvent,
+} from '@snowplow/browser-tracker';
 import {
   ActivityTrackingConfiguration,
   TrackerConfiguration,
 } from '@snowplow/browser-tracker-core';
-import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
-import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
-import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
-import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
-import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
-import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
-import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
-import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
-import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
-import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
-import {
-  newTracker,
-  BrowserTracker,
-  trackSelfDescribingEvent,
-  trackPageView,
-  PageViewEvent,
-  CommonEventProperties,
-  enableActivityTracking,
-  addGlobalContexts,
-} from '@snowplow/browser-tracker';
 import { addTracker, SharedState } from '@snowplow/browser-tracker-core';
 
 const plugins = [

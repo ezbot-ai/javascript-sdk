@@ -1,20 +1,19 @@
-import {
-  trackSelfDescribingEvent,
-  newTracker,
-  BrowserTracker,
-  addGlobalContexts,
-} from '@snowplow/browser-tracker';
-
-import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
-import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
+import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
 import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
 import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
-import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
-import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
-import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
 import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
+import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
+import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
+import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
+import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
 import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
-import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
+import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
+import {
+  addGlobalContexts,
+  BrowserTracker,
+  newTracker,
+  trackSelfDescribingEvent,
+} from '@snowplow/browser-tracker';
 import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 const plugins = [
@@ -33,7 +32,7 @@ const EzbotTrackerDomain = 'https://api.ezbot.ai';
 const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
 const EzbotPredictionsContextSchema =
   'iglu:com.ezbot/predictions_content/jsonschema/1-0-0';
-const DefaultWebConfiguration: TrackerConfiguration = {
+const DefaultWebConfiguration = {
   appId: 'default-ezbot-app-id',
   encodeBase64: true,
   cookieName: '_ezbot_',
@@ -43,7 +42,7 @@ const DefaultWebConfiguration: TrackerConfiguration = {
 type Predictions = Record<string, string>;
 
 type predictionsResponse = {
-  predictions: Predictions;
+  predictions: Record<string, string>;
 };
 
 async function getPredictions(
