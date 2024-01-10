@@ -22,6 +22,7 @@ import {
   enableActivityTracking,
   addGlobalContexts,
 } from '@snowplow/browser-tracker';
+import { addTracker, SharedState } from '@snowplow/browser-tracker-core';
 
 const plugins = [
   GaCookiesPlugin(),
@@ -63,12 +64,15 @@ const DefaultWebConfiguration: TrackerConfiguration = {
   plugins: plugins,
 };
 
+// TODO: CAN't set this.tracker= addTracker or newTracker
+// that means I may not be able to use a class for this. Might need to do all top-level functions
+
 class EzbotBrowserTracker {
   config: TrackerConfiguration;
   projectId: number;
   tracker: BrowserTracker;
   sessionId: string | undefined;
-  predictions: Predictions;
+  predictions: Predictions | undefined;
 
   constructor(
     projectId: number,
@@ -83,27 +87,43 @@ class EzbotBrowserTracker {
     // b - generate new session id, set it as ezbot session id, and add it to the contexts
     // this.sessionId = 'abc';
 
-    this.tracker = newTracker('ezbot', EzbotTrackerDomain, {
-      appId: config.appId,
-      plugins: plugins,
-    });
+    // newTracker('ezbot', EzbotTrackerDomain, {
+    //   appId: config.appId,
+    //   plugins: plugins,
+    // });
+    // const state = new SharedState();
+    // this.tracker = addTracker(
+    //   'ezbot',
+    //   'ezbot',
+    //   '1',
+    //   EzbotTrackerDomain,
+    //   state,
+    //   {
+    //     appId: 'abc',
+    //     plugins: plugins,
+    //   }
+    // ) as BrowserTracker;
+  }
 
+  async init() {
+    // const state = new SharedState();
+    // const tracker = addTracker('ezbot', EzbotTrackerDomain, state, {
+    //   appId: 'abc',
+    //   plugins: plugins,
+    // });
     const domainUserInfo = this.tracker.getDomainUserInfo() as unknown;
     if (Array.isArray(domainUserInfo)) {
       this.sessionId = (domainUserInfo as string[])[6];
     }
 
-    this.predictions = {}; // Assign an initial value to predictions
-
-    (async () => {
-      return await this.getPredictions();
-    })();
+    this.predictions = await this.getPredictions();
 
     const predictionsContext = {
       schema: EzbotPredictionsContextSchema,
       data: this.predictions,
     };
     addGlobalContexts([predictionsContext], [this.tracker.id]);
+    return this;
   }
 
   trackPageView(
