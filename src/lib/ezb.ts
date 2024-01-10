@@ -1,23 +1,21 @@
-import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
-import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
-import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
-import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
-import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
+import {
+  trackSelfDescribingEvent,
+  newTracker,
+  BrowserTracker,
+  addGlobalContexts,
+} from '@snowplow/browser-tracker';
+
 import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
 import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
+import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
+import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
 import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
-import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
+import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
 import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
-import {
-  addGlobalContexts,
-  BrowserTracker,
-  trackSelfDescribingEvent,
-} from '@snowplow/browser-tracker';
-import {
-  TrackerConfiguration,
-  SharedState,
-  addTracker,
-} from '@snowplow/browser-tracker-core';
+import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
+import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
+import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
+import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 const plugins = [
   GaCookiesPlugin(),
@@ -35,7 +33,7 @@ const EzbotTrackerDomain = 'https://api.ezbot.ai';
 const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
 const EzbotPredictionsContextSchema =
   'iglu:com.ezbot/predictions_content/jsonschema/1-0-0';
-const DefaultWebConfiguration = {
+const DefaultWebConfiguration: TrackerConfiguration = {
   appId: 'default-ezbot-app-id',
   encodeBase64: true,
   cookieName: '_ezbot_',
@@ -45,7 +43,7 @@ const DefaultWebConfiguration = {
 type Predictions = Record<string, string>;
 
 type predictionsResponse = {
-  predictions: Record<string, string>;
+  predictions: Predictions;
 };
 
 async function getPredictions(
@@ -62,21 +60,12 @@ async function initEzbot(
   projectId: number,
   config: TrackerConfiguration = DefaultWebConfiguration
 ): Promise<BrowserTracker> {
-  const state = new SharedState();
-  const trackerConfig = {
+  const tracker = newTracker('ezbot', EzbotTrackerDomain, {
     appId: config.appId,
     plugins: plugins,
-  };
-  const tracker = addTracker(
-    'ezbot',
-    '',
-    '0.1',
-    EzbotTrackerDomain,
-    state,
-    trackerConfig
-  );
+  });
   if (tracker === null) {
-    throw new Error('Failed to initialize ezbot tracker');
+    throw new Error('Failed to initialize tracker');
   }
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId = (domainUserInfo as string[])[6];
