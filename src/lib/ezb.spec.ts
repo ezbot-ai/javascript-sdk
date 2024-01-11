@@ -85,7 +85,7 @@ describe('ezbot js tracker', () => {
     clearEventQueue();
   });
   it('exposes a global trackRewardEvent function', async () => {
-    expect(window.trackRewardEvent).toBeDefined();
+    expect(window.ezbot.trackRewardEvent).toBeDefined();
   });
   it('has a track reward function that sends a reward event', async () => {
     trackRewardEvent({ bar: 'baz' });
@@ -101,7 +101,7 @@ describe('ezbot js tracker', () => {
     clearEventQueue();
   });
   it('exposes a global startActivityTracking', async () => {
-    expect(window.startActivityTracking).toBeDefined();
+    expect(window.ezbot.startActivityTracking).toBeDefined();
   });
   it('has a start activity tracking function that triggers OOB activity tracking', async () => {
     const config = {
@@ -114,6 +114,6 @@ describe('ezbot js tracker', () => {
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();
-    expect(window.trackPageView).toBeDefined();
+    expect(window.ezbot.trackPageView).toBeDefined();
   });
 });

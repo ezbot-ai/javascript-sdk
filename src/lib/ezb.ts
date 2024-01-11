@@ -81,24 +81,30 @@ async function initEzbot(
     data: predictions,
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
-  window.trackPageView = tracker.trackPageView;
-  window.trackRewardEvent = trackRewardEvent;
-  window.startActivityTracking = startActivityTracking;
+  window.ezbot = {
+    tracker: tracker,
+    trackPageView: tracker.trackPageView, // only send to ezbot tracker
+    trackRewardEvent: trackRewardEvent,
+    startActivityTracking: startActivityTracking,
+  };
 
   return tracker;
 }
 
 function trackRewardEvent(payload: Record<string, unknown>) {
-  trackSelfDescribingEvent({
-    event: {
-      schema: EzbotRewardEventSchema,
-      data: payload,
+  trackSelfDescribingEvent(
+    {
+      event: {
+        schema: EzbotRewardEventSchema,
+        data: payload,
+      },
     },
-  });
+    [ezbotTrackerId] // only send to ezbot tracker
+  );
 }
 
 function startActivityTracking(config: ActivityTrackingConfiguration) {
-  enableActivityTracking(config, [ezbotTrackerId]);
+  enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
 export { trackRewardEvent, initEzbot, startActivityTracking };
