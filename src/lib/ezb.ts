@@ -74,7 +74,7 @@ async function initEzbot(
     schema: EzbotPredictionsContextSchema,
     data: predictions,
   };
-  addGlobalContexts([predictionsContext]);
+  addGlobalContexts([predictionsContext], [tracker.id]);
 
   return tracker;
 }
