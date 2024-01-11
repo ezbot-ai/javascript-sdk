@@ -3,6 +3,7 @@ import {
   newTracker,
   BrowserTracker,
   addGlobalContexts,
+  enableActivityTracking,
 } from '@snowplow/browser-tracker';
 
 import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
@@ -15,7 +16,10 @@ import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
 import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
 import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
 import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
-import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
+import {
+  ActivityTrackingConfiguration,
+  TrackerConfiguration,
+} from '@snowplow/browser-tracker-core';
 
 const plugins = [
   GaCookiesPlugin(),
@@ -46,6 +50,8 @@ type predictionsResponse = {
   predictions: Predictions;
 };
 
+let tracker: BrowserTracker;
+const ezbotTrackerId = 'ezbot';
 async function getPredictions(
   projectId: number,
   sessionId: string
@@ -60,7 +66,7 @@ async function initEzbot(
   projectId: number,
   config: TrackerConfiguration = DefaultWebConfiguration
 ): Promise<BrowserTracker> {
-  const tracker = newTracker('ezbot', EzbotTrackerDomain, {
+  tracker = newTracker(ezbotTrackerId, EzbotTrackerDomain, {
     appId: config.appId,
     plugins: plugins,
   });
@@ -75,6 +81,9 @@ async function initEzbot(
     data: predictions,
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
+  window.trackPageView = tracker.trackPageView;
+  window.trackRewardEvent = trackRewardEvent;
+  window.startActivityTracking = startActivityTracking;
 
   return tracker;
 }
@@ -88,4 +97,8 @@ function trackRewardEvent(payload: Record<string, unknown>) {
   });
 }
 
-export { trackRewardEvent, initEzbot };
+function startActivityTracking(config: ActivityTrackingConfiguration) {
+  enableActivityTracking(config, [ezbotTrackerId]);
+}
+
+export { trackRewardEvent, initEzbot, startActivityTracking };

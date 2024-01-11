@@ -1,6 +1,6 @@
 // Switch to babel from ts-jest
 import { trackPageView } from '@snowplow/browser-tracker';
-import { initEzbot, trackRewardEvent } from './ezb';
+import { initEzbot, trackRewardEvent, startActivityTracking } from './ezb';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
 
 const predictions = {
@@ -85,6 +85,9 @@ describe('ezbot js tracker', () => {
     clearEventQueue();
   });
   it('exposes a global trackRewardEvent function', async () => {
+    expect(window.trackRewardEvent).toBeDefined();
+  });
+  it('has a track reward function that sends a reward event', async () => {
     trackRewardEvent({ bar: 'baz' });
     const eventOutQueue = tracker.sharedState.outQueues[0];
     const firstEvent = (eventOutQueue as Outqueue)[0];
@@ -96,5 +99,21 @@ describe('ezbot js tracker', () => {
       schema: 'iglu:com.ezbot/reward_event/jsonschema/1-0-0',
     });
     clearEventQueue();
+  });
+  it('exposes a global startActivityTracking', async () => {
+    expect(window.startActivityTracking).toBeDefined();
+  });
+  it('has a start activity tracking function that triggers OOB activity tracking', async () => {
+    const config = {
+      minimumVisitLength: 10,
+      heartbeatDelay: 10,
+    };
+    tracker.enableActivityTracking = jest.fn();
+    startActivityTracking(config);
+    expect(tracker.enableActivityTracking).toHaveBeenCalled();
+  });
+  it('exposes a global trackPageView function', async () => {
+    expect(tracker.trackPageView).toBeDefined();
+    expect(window.trackPageView).toBeDefined();
   });
 });
