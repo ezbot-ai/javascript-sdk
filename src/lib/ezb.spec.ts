@@ -49,6 +49,9 @@ describe('ezbot js tracker', () => {
     });
     // Add ezbot tracker to jsdom DOM
     tracker = await initEzbot(1, { appId: 'test-app-id' });
+    const sessionId = (tracker.getDomainUserInfo() as unknown as string[])[6];
+    const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}`;
+    expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
     outQueue = tracker.sharedState.outQueues[0] as Outqueue;
   });
   // afterEach(() => {
