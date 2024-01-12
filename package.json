@@ -6,7 +6,7 @@
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
   "repository": "https://github.com/YOUR_GITHUB_USER_NAME/ezbot-javascript",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "keywords": [],
   "scripts": {
     "build": "run-p build:*",
