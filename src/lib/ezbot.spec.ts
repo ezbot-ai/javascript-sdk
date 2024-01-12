@@ -1,7 +1,8 @@
 // Switch to babel from ts-jest
 import { trackPageView } from '@snowplow/browser-tracker';
-import { initEzbot, trackRewardEvent, startActivityTracking } from './ezb';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
+
+import { initEzbot, startActivityTracking, trackRewardEvent } from './ezbot';
 
 const predictions = {
   foo: 'bar',
