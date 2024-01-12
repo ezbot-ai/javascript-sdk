@@ -20,6 +20,7 @@
     "iglu",
     "libauth",
     "mkdir",
+    "Outqueue",
     "prettierignore",
     "sandboxed",
     "transpiled",

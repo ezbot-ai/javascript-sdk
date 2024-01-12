@@ -1,3 +1,8 @@
+// Must disable no-let and immutable-data linting because JSDOM is common to all tests
+/* eslint-disable functional/no-let */
+/* eslint-disable functional/immutable-data */
+
+/* eslint-disable functional/no-return-void */
 // Switch to babel from ts-jest
 import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
@@ -11,7 +16,6 @@ const predictions = {
 const mockTrackPageView = jest.fn();
 
 let tracker: BrowserTracker;
-let outQueue: Array<PostEvent>;
 
 type PostEvent = {
   evt: Record<string, unknown>;
@@ -46,18 +50,14 @@ describe('ezbot js tracker', () => {
         json: async () => {
           return { predictions: predictions };
         },
-      };
+      } as Response;
     });
     // Add ezbot tracker to jsdom DOM
     tracker = await initEzbot(1, { appId: 'test-app-id' });
     const sessionId = (tracker.getDomainUserInfo() as unknown as string[])[6];
     const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}`;
     expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
-    outQueue = tracker.sharedState.outQueues[0] as Outqueue;
   });
-  // afterEach(() => {
-  //   tracker.sharedState.outQueues[0] = [];
-  // });
   it('initializes', async () => {
     expect(tracker).toBeDefined();
   });
