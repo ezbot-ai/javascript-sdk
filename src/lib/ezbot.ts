@@ -67,6 +67,7 @@ const plugins = [
 ];
 const EzbotTrackerDomain = 'https://api.ezbot.ai';
 const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
+const EzbotLinkClickEventSchema = 'iglu:com.ezbot/link_click/jsonschema/1-0-0';
 const EzbotPredictionsContextSchema =
   'iglu:com.ezbot/predictions_content/jsonschema/1-0-0';
 const DefaultWebConfiguration: TrackerConfiguration = {
@@ -80,6 +81,8 @@ declare global {
   interface Window {
     ezbot: {
       tracker: BrowserTracker;
+      predictions: Predictions;
+      sessionId: string;
       trackPageView: (
         event?: Readonly<PageViewEvent & CommonEventProperties>
       ) => void;
@@ -131,6 +134,8 @@ async function initEzbot(
   // eslint-disable-next-line functional/immutable-data
   window.ezbot = {
     tracker: tracker,
+    predictions: predictions,
+    sessionId: sessionId,
     trackPageView: tracker.trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
@@ -151,10 +156,22 @@ function trackRewardEvent(payload: Record<string, unknown>): void {
   );
 }
 
+function trackLinkClick(payload: Record<string, unknown>): void {
+  trackSelfDescribingEvent(
+    {
+      event: {
+        schema: EzbotLinkClickEventSchema,
+        data: payload,
+      },
+    },
+    [ezbotTrackerId] // only send to ezbot tracker
+  );
+}
+
 function startActivityTracking(
   config: Readonly<ActivityTrackingConfiguration>
 ): void {
   enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
-export { trackRewardEvent, initEzbot, startActivityTracking };
+export { trackRewardEvent, initEzbot, startActivityTracking, trackLinkClick };
