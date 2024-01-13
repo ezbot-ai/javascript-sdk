@@ -45,6 +45,7 @@ import {
   CommonEventProperties,
   enableActivityTracking,
   newTracker,
+  trackPageView as tPageView,
   trackSelfDescribingEvent,
 } from '@snowplow/browser-tracker';
 import {
@@ -175,4 +176,16 @@ function startActivityTracking(config: ActivityTrackingConfiguration): void {
   enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
-export { trackRewardEvent, initEzbot, startActivityTracking, trackLinkClick };
+function trackPageView(
+  config: Readonly<PageViewEvent & CommonEventProperties>
+): void {
+  tPageView(config);
+}
+
+export {
+  trackRewardEvent,
+  initEzbot,
+  startActivityTracking,
+  trackLinkClick,
+  trackPageView,
+};
