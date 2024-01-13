@@ -84,11 +84,13 @@ declare global {
       predictions: Predictions;
       sessionId: string;
       trackPageView: (
-        event?: Readonly<PageViewEvent & CommonEventProperties>
+        // eslint-disable-next-line functional/prefer-immutable-types
+        event?: PageViewEvent & CommonEventProperties
       ) => void;
       trackRewardEvent: (payload: Record<string, unknown>) => void;
       startActivityTracking: (
-        config: Readonly<ActivityTrackingConfiguration>
+        // eslint-disable-next-line functional/prefer-immutable-types
+        config: ActivityTrackingConfiguration
       ) => void;
     };
   }
@@ -168,9 +170,8 @@ function trackLinkClick(payload: Record<string, unknown>): void {
   );
 }
 
-function startActivityTracking(
-  config: Readonly<ActivityTrackingConfiguration>
-): void {
+// eslint-disable-next-line functional/prefer-immutable-types
+function startActivityTracking(config: ActivityTrackingConfiguration): void {
   enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 

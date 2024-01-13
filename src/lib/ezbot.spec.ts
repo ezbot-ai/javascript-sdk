@@ -3,7 +3,6 @@
 /* eslint-disable functional/immutable-data */
 
 /* eslint-disable functional/no-return-void */
-// Switch to babel from ts-jest
 import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
 
