@@ -88,7 +88,7 @@ declare global {
         // eslint-disable-next-line functional/prefer-immutable-types
         event?: PageViewEvent & CommonEventProperties
       ) => void;
-      trackRewardEvent: (payload: Record<string, unknown>) => void;
+      trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (
         // eslint-disable-next-line functional/prefer-immutable-types
         config: ActivityTrackingConfiguration
@@ -101,6 +101,34 @@ type Predictions = Record<string, string>;
 
 type predictionsResponse = {
   predictions: Predictions;
+};
+
+type EzbotRewardEvent = {
+  schema: string;
+  data: EzbotRewardEventPayload;
+};
+
+type EzbotRewardEventPayload = {
+  key: string;
+  reward?: number | null;
+  rewardUnits?: string | null;
+  category?: string | null;
+};
+
+type EzbotLinkClickEvent = {
+  schema: string;
+  data: EzbotLinkClickEventPayload;
+};
+
+type EzbotLinkClickEventPayload = {
+  text?: string | null;
+  href?: string | null;
+  selector: string;
+};
+
+type EzbotPredictionsContext = {
+  schema: string;
+  data: Predictions;
 };
 
 const ezbotTrackerId = 'ezbot';
@@ -129,7 +157,7 @@ async function initEzbot(
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId = (domainUserInfo as string[])[6];
   const predictions = await getPredictions(projectId, sessionId);
-  const predictionsContext = {
+  const predictionsContext: EzbotPredictionsContext = {
     schema: EzbotPredictionsContextSchema,
     data: predictions,
   };
@@ -147,25 +175,25 @@ async function initEzbot(
   return tracker;
 }
 
-function trackRewardEvent(payload: Record<string, unknown>): void {
+function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
+  const event: EzbotRewardEvent = {
+    schema: EzbotRewardEventSchema,
+    data: payload,
+  };
   trackSelfDescribingEvent(
-    {
-      event: {
-        schema: EzbotRewardEventSchema,
-        data: payload,
-      },
-    },
+    { event: event },
     [ezbotTrackerId] // only send to ezbot tracker
   );
 }
 
-function trackLinkClick(payload: Record<string, unknown>): void {
+function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
+  const event: EzbotLinkClickEvent = {
+    schema: EzbotLinkClickEventSchema,
+    data: payload,
+  };
   trackSelfDescribingEvent(
     {
-      event: {
-        schema: EzbotLinkClickEventSchema,
-        data: payload,
-      },
+      event: event,
     },
     [ezbotTrackerId] // only send to ezbot tracker
   );

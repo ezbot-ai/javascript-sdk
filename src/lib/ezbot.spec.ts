@@ -88,14 +88,14 @@ describe('ezbot js tracker', () => {
     expect(window.ezbot.trackRewardEvent).toBeDefined();
   });
   it('has a track reward function that sends a reward event', async () => {
-    trackRewardEvent({ bar: 'baz' });
+    trackRewardEvent({ key: 'foo' });
     const eventOutQueue = tracker.sharedState.outQueues[0];
     const firstEvent = (eventOutQueue as Outqueue)[0];
     expect(firstEvent.evt.e).toEqual('ue'); // ue = unstructured event
     const contexts = firstEvent.evt.ue_px; // ue_px = unstructured event payload
     const decodedContexts = decodeUnstructuredEventPayload(contexts as string);
     expect(decodedContexts).toEqual({
-      data: { bar: 'baz' },
+      data: { key: 'foo' },
       schema: 'iglu:com.ezbot/reward_event/jsonschema/1-0-0',
     });
     clearEventQueue();
