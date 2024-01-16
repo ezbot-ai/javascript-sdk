@@ -4,15 +4,46 @@ The easiest way to interact with ezbot via JS (node and browser). For ease of us
 
 ## How to use
 
-### How to install it into your project
+### How to use it in your project
 
 ```bash
 npm install ezbot-javascript
 ```
 
-### How to Develop
+```js
+import {
+  initEzbot,
+  trackPageView,
+  trackRewardEvent,
+  startActivityTracking,
+} from 'ezbot-javascript';
+
+await initEzbot();
+startActivityTracking();
+trackPageView();
+trackRewardEvent();
+```
+
+### How to develop this library
 
 ```bash
 npm install
+npm run fix
 npm run tests:unit
 ```
+
+## Credits
+
+`ezbot/ezbot-javascript` is maintained by [ezbot](ezbot.ai) and many [constributors](https://github.com/ezbot/ezbot-javascript/graphs/contributors).
+
+### First-party Code
+
+First-party code is stored in the `src` directory.
+
+### Third-party Code
+
+Third-party code is brought in via npm, with a full manifest available in the `package.json` file.
+
+### Special Thanks
+
+Special thanks to Snowplow Analytics, Ltd, for their [Browser Tracker](https://www.npmjs.com/package/@snowplow/browser-tracker) library and other open source contributions.
