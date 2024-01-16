@@ -112,8 +112,5 @@
     "exclude": [
       "**/*.spec.js"
     ]
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
