@@ -5,12 +5,15 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ezbot-ai/javascript-sdk"
-  },
+  "repository": "https://github.com/ezbot-ai/javascript-sdk.git",
   "license": "Apache-2.0",
-  "keywords": ["experimentation", "ab testing", "snowplow", "CRO", "optimization"],
+  "keywords": [
+    "experimentation",
+    "ab testing",
+    "snowplow",
+    "CRO",
+    "optimization"
+  ],
   "scripts": {
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
@@ -111,6 +114,6 @@
     ]
   },
   "publishConfig": {
-    "@ezbot-ai:registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   }
 }
