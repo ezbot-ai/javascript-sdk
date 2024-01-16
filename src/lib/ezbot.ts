@@ -216,4 +216,9 @@ export {
   startActivityTracking,
   trackLinkClick,
   trackPageView,
+  EzbotLinkClickEvent,
+  EzbotRewardEvent,
+  EzbotLinkClickEventPayload,
+  EzbotRewardEventPayload,
+  EzbotPredictionsContext,
 };
