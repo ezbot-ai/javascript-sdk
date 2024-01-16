@@ -53,7 +53,6 @@ import {
   PageViewEvent,
   TrackerConfiguration,
 } from '@snowplow/browser-tracker-core';
-import { v4 as uuidv4 } from 'uuid';
 
 const plugins = [
   GaCookiesPlugin(),
@@ -115,99 +114,10 @@ async function getPredictions(
   return (responseJSON as predictionsResponse).predictions;
 }
 
-function generateBestQuerySelector(element: Readonly<HTMLElement>): string {
-  const selectors = Array.from(
-    { length: element.parentElement?.children.length ?? 0 },
-    (_, index) => {
-      // eslint-disable-next-line functional/no-let
-      let selector = element.tagName.toLowerCase();
-
-      if (element.id) {
-        selector += `#${element.id}`;
-        return selector;
-      }
-
-      if (index > 0) {
-        selector += `:nth-child(${index + 1})`;
-      }
-
-      return selector;
-    }
-  );
-
-  return selectors.join(' > ');
-}
-
-type ElementPayload = {
-  text: string;
-  id: string;
-  classes: DOMTokenList;
-  tag: string;
-  href: string | null;
-  selector: string;
-  ezbotElementId: string | null;
-};
-
-type EventPayload = {
-  event: string;
-  element: ElementPayload;
-};
-
-function buildElementClickPayload(element: Readonly<HTMLElement>): string {
-  const elementText = element.innerText;
-  const elementId = element.id;
-  const elementClasses = element.classList;
-  const elementTag = element.tagName;
-  const elementHref = element.getAttribute('href');
-  const querySelector = generateBestQuerySelector(element);
-  const ezbotElementId = element.getAttribute('data-ezbot-element-id');
-  const elementPayload = {
-    text: elementText,
-    id: elementId,
-    classes: elementClasses,
-    tag: elementTag,
-    href: elementHref,
-    selector: querySelector,
-    ezbotElementId,
-  };
-  const eventPayload = {
-    event: 'elementClicked',
-    element: elementPayload,
-  };
-  return JSON.stringify(eventPayload);
-}
-
-function postMessageToParent(message: object): void {
-  window.parent.postMessage(message, '*');
-}
-
-function setupUniqueElementIds(): void {
-  const elements = document.querySelectorAll('*');
-  elements.forEach((element) => {
-    const elementId = uuidv4();
-    element.setAttribute('data-ezbot-element-id', elementId);
-  });
-}
-
-function setupElementClickListeners(): void {
-  document.addEventListener('click', (event) => {
-    const element = event.target as HTMLElement;
-    const elementPayloadJSONString = buildElementClickPayload(element);
-    const elementPayload = JSON.parse(elementPayloadJSONString);
-    const elementPayloadWithArrayClasses = {
-      ...elementPayload,
-      classes: Array.from(elementPayload.element.classes),
-    };
-    postMessageToParent(elementPayloadWithArrayClasses); // TODO: ADD DOMAIN LEVEL RESTRICTIONS
-  });
-}
-
 async function initEzbot(
   projectId: number,
   config: TrackerConfiguration = DefaultWebConfiguration
 ): Promise<BrowserTracker> {
-  setupUniqueElementIds();
-  setupElementClickListeners();
   const tracker = newTracker(ezbotTrackerId, EzbotTrackerDomain, {
     appId: config.appId,
     plugins: plugins,
@@ -278,5 +188,4 @@ export {
   startActivityTracking,
   trackLinkClick,
   trackPageView,
-  EventPayload,
 };

@@ -49,8 +49,7 @@
     "@snowplow/browser-plugin-link-click-tracking": "^3.19.0",
     "@snowplow/browser-plugin-site-tracking": "^3.19.0",
     "@snowplow/browser-plugin-timezone": "^3.19.0",
-    "@snowplow/browser-tracker": "^3.19.0",
-    "uuid": "^9.0.1"
+    "@snowplow/browser-tracker": "^3.19.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
@@ -59,7 +58,6 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@snowplow/browser-tracker-core": "^3.19.0",
     "@types/jest": "~29.5.11",
-    "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "babel-jest": "^29.7.0",
