@@ -1,13 +1,16 @@
 {
-  "name": "ezbot-javascript",
-  "version": "1.0.0",
+  "name": "@ezbot-ai/javascript-sdk",
+  "version": "0.1.0",
   "description": "The easiest way to interact with ezbot via JS (node and browser)",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/YOUR_GITHUB_USER_NAME/ezbot-javascript",
-  "license": "BSD-3-Clause",
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ezbot-ai/javascript-sdk"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["experimentation", "ab testing", "snowplow", "CRO", "optimization"],
   "scripts": {
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
@@ -57,7 +60,7 @@
     "@babel/preset-typescript": "^7.23.3",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@snowplow/browser-tracker-core": "^3.19.0",
-    "@types/jest": "~27.4.1",
+    "@types/jest": "~29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "babel-jest": "^29.7.0",
@@ -69,9 +72,9 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-functional": "^6.0.0",
     "eslint-plugin-import": "^2.29.1",
+    "generate-license-file": "^3.0.1",
     "gh-pages": "^3.1.0",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "~29.7.0",
     "jest-environment-jsdom-global": "~4.0.0",
     "jest-standard-reporter": "~2.0.0",
     "jsdom": "^23.2.0",
@@ -80,7 +83,7 @@
     "open-cli": "^8.0.0",
     "prettier": "^2.1.1",
     "standard-version": "^9.0.0",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.25.7",
     "typescript": "^5.3.3"
   },
@@ -106,5 +109,8 @@
     "exclude": [
       "**/*.spec.js"
     ]
+  },
+  "publishConfig": {
+    "@ezbot-ai:registry": "https://npm.pkg.github.com"
   }
 }

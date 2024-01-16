@@ -45,6 +45,7 @@ import {
   CommonEventProperties,
   enableActivityTracking,
   newTracker,
+  trackPageView as tPageView,
   trackSelfDescribingEvent,
 } from '@snowplow/browser-tracker';
 import {
@@ -67,6 +68,7 @@ const plugins = [
 ];
 const EzbotTrackerDomain = 'https://api.ezbot.ai';
 const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
+const EzbotLinkClickEventSchema = 'iglu:com.ezbot/link_click/jsonschema/1-0-0';
 const EzbotPredictionsContextSchema =
   'iglu:com.ezbot/predictions_content/jsonschema/1-0-0';
 const DefaultWebConfiguration: TrackerConfiguration = {
@@ -80,12 +82,16 @@ declare global {
   interface Window {
     ezbot: {
       tracker: BrowserTracker;
+      predictions: Predictions;
+      sessionId: string;
       trackPageView: (
-        event?: Readonly<PageViewEvent & CommonEventProperties>
+        // eslint-disable-next-line functional/prefer-immutable-types
+        event?: PageViewEvent & CommonEventProperties
       ) => void;
-      trackRewardEvent: (payload: Record<string, unknown>) => void;
+      trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (
-        config: Readonly<ActivityTrackingConfiguration>
+        // eslint-disable-next-line functional/prefer-immutable-types
+        config: ActivityTrackingConfiguration
       ) => void;
     };
   }
@@ -95,6 +101,34 @@ type Predictions = Record<string, string>;
 
 type predictionsResponse = {
   predictions: Predictions;
+};
+
+type EzbotRewardEvent = {
+  schema: string;
+  data: EzbotRewardEventPayload;
+};
+
+type EzbotRewardEventPayload = {
+  key: string;
+  reward?: number | null;
+  rewardUnits?: string | null;
+  category?: string | null;
+};
+
+type EzbotLinkClickEvent = {
+  schema: string;
+  data: EzbotLinkClickEventPayload;
+};
+
+type EzbotLinkClickEventPayload = {
+  text?: string | null;
+  href?: string | null;
+  selector: string;
+};
+
+type EzbotPredictionsContext = {
+  schema: string;
+  data: Predictions;
 };
 
 const ezbotTrackerId = 'ezbot';
@@ -123,7 +157,7 @@ async function initEzbot(
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId = (domainUserInfo as string[])[6];
   const predictions = await getPredictions(projectId, sessionId);
-  const predictionsContext = {
+  const predictionsContext: EzbotPredictionsContext = {
     schema: EzbotPredictionsContextSchema,
     data: predictions,
   };
@@ -131,6 +165,8 @@ async function initEzbot(
   // eslint-disable-next-line functional/immutable-data
   window.ezbot = {
     tracker: tracker,
+    predictions: predictions,
+    sessionId: sessionId,
     trackPageView: tracker.trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
@@ -139,22 +175,50 @@ async function initEzbot(
   return tracker;
 }
 
-function trackRewardEvent(payload: Record<string, unknown>): void {
+function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
+  const event: EzbotRewardEvent = {
+    schema: EzbotRewardEventSchema,
+    data: payload,
+  };
+  trackSelfDescribingEvent(
+    { event: event },
+    [ezbotTrackerId] // only send to ezbot tracker
+  );
+}
+
+function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
+  const event: EzbotLinkClickEvent = {
+    schema: EzbotLinkClickEventSchema,
+    data: payload,
+  };
   trackSelfDescribingEvent(
     {
-      event: {
-        schema: EzbotRewardEventSchema,
-        data: payload,
-      },
+      event: event,
     },
     [ezbotTrackerId] // only send to ezbot tracker
   );
 }
 
-function startActivityTracking(
-  config: Readonly<ActivityTrackingConfiguration>
-): void {
+// eslint-disable-next-line functional/prefer-immutable-types
+function startActivityTracking(config: ActivityTrackingConfiguration): void {
   enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
-export { trackRewardEvent, initEzbot, startActivityTracking };
+function trackPageView(
+  config: Readonly<PageViewEvent & CommonEventProperties>
+): void {
+  tPageView(config);
+}
+
+export {
+  trackRewardEvent,
+  initEzbot,
+  startActivityTracking,
+  trackLinkClick,
+  trackPageView,
+  EzbotLinkClickEvent,
+  EzbotRewardEvent,
+  EzbotLinkClickEventPayload,
+  EzbotRewardEventPayload,
+  EzbotPredictionsContext,
+};
