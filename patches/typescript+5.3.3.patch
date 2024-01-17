@@ -1,0 +1,45 @@
+diff --git a/node_modules/typescript/lib/lib.dom.d.ts b/node_modules/typescript/lib/lib.dom.d.ts
+index ac946ba..1e68715 100644
+--- a/node_modules/typescript/lib/lib.dom.d.ts
++++ b/node_modules/typescript/lib/lib.dom.d.ts
+@@ -15545,40 +15545,6 @@ declare var MimeType: {
+     new(): MimeType;
+ };
+ 
+-/**
+- * Returns an array of MimeType instances, each of which contains information about a supported browser plugins. This object is returned by NavigatorPlugins.mimeTypes.
+- * @deprecated
+- *
+- * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MimeTypeArray)
+- */
+-interface MimeTypeArray {
+-    /**
+-     * @deprecated
+-     *
+-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MimeTypeArray/length)
+-     */
+-    readonly length: number;
+-    /**
+-     * @deprecated
+-     *
+-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MimeTypeArray/item)
+-     */
+-    item(index: number): MimeType | null;
+-    /**
+-     * @deprecated
+-     *
+-     * [MDN Reference](https://developer.mozilla.org/docs/Web/API/MimeTypeArray/namedItem)
+-     */
+-    namedItem(name: string): MimeType | null;
+-    [index: number]: MimeType;
+-}
+-
+-/** @deprecated */
+-declare var MimeTypeArray: {
+-    prototype: MimeTypeArray;
+-    new(): MimeTypeArray;
+-};
+-
+ /**
+  * Events that occur due to the user interacting with a pointing device (such as a mouse). Common events using this interface include click, dblclick, mouseup, mousedown.
+  *
