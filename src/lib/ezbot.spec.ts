@@ -68,7 +68,7 @@ describe('ezbot js tracker', () => {
     const decodedContexts = decodeContexts(contexts as string);
     expect(decodedContexts).toContainEqual({
       data: predictions,
-      schema: 'iglu:com.ezbot/predictions_context/jsonschema/1-0-0',
+      schema: 'iglu:com.ezbot/predictions_context/jsonschema/1-0-1',
     });
   });
   it('exposes a global getDomainUserInfo function', async () => {
