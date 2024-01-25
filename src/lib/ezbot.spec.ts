@@ -11,6 +11,14 @@ import { initEzbot, startActivityTracking, trackRewardEvent } from './ezbot';
 const predictions = {
   foo: 'bar',
 };
+const predictionsReformatted = {
+  predictions: [
+    {
+      variable: 'foo',
+      value: 'bar'
+    }
+  ]
+};
 
 const mockTrackPageView = jest.fn();
 
@@ -67,7 +75,7 @@ describe('ezbot js tracker', () => {
     const contexts = firstEvent.evt.cx;
     const decodedContexts = decodeContexts(contexts as string);
     expect(decodedContexts).toContainEqual({
-      data: predictions,
+      data: predictionsReformatted,
       schema: 'iglu:com.ezbot/predictions_context/jsonschema/1-0-1',
     });
   });

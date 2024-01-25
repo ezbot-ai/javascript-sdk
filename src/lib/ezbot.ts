@@ -82,7 +82,7 @@ declare global {
   interface Window {
     ezbot: {
       tracker: BrowserTracker;
-      predictions: Predictions;
+      predictions: Array<Prediction>;
       sessionId: string;
       trackPageView: (
         // eslint-disable-next-line functional/prefer-immutable-types
@@ -97,10 +97,17 @@ declare global {
   }
 }
 
-type Predictions = Record<string, string>;
+type Prediction = {
+  variable: string;
+  value: string;
+};
+
+type Predictions = {
+  predictions: Array<Prediction>;
+};
 
 type predictionsResponse = {
-  predictions: Predictions;
+  predictions: Map<string, string>;
 };
 
 type EzbotRewardEvent = {
@@ -135,11 +142,15 @@ const ezbotTrackerId = 'ezbot';
 async function getPredictions(
   projectId: number,
   sessionId: string
-): Promise<Predictions> {
+): Promise<Array<Prediction>> {
   const predictionsURL = `https://api.ezbot.ai/predict?projectId=${projectId}&sessionId=${sessionId}`;
   const response = await fetch(predictionsURL);
   const responseJSON = await response.json();
-  return (responseJSON as predictionsResponse).predictions;
+  const predictionMap: Map<string,string> = new Map(Object.entries((responseJSON as predictionsResponse).predictions));
+  return Array.from(predictionMap, ([name, value]) => {
+    const prediction: Prediction = { variable: name, value: value };
+    return prediction;
+  });
 }
 
 async function initEzbot(
@@ -159,7 +170,7 @@ async function initEzbot(
   const predictions = await getPredictions(projectId, sessionId);
   const predictionsContext: EzbotPredictionsContext = {
     schema: EzbotPredictionsContextSchema,
-    data: predictions,
+    data: { predictions: predictions },
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
   // eslint-disable-next-line functional/immutable-data

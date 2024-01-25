@@ -29,7 +29,7 @@ trackRewardEvent();
 ```bash
 npm install
 npm run fix
-npm run tests:unit
+npm run test:unit
 ```
 
 ## Credits
