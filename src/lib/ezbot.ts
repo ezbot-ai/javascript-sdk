@@ -70,7 +70,7 @@ const EzbotTrackerDomain = 'https://api.ezbot.ai';
 const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
 const EzbotLinkClickEventSchema = 'iglu:com.ezbot/link_click/jsonschema/1-0-0';
 const EzbotPredictionsContextSchema =
-  'iglu:com.ezbot/predictions_context/jsonschema/1-0-0';
+  'iglu:com.ezbot/predictions_context/jsonschema/1-0-1';
 const DefaultWebConfiguration: TrackerConfiguration = {
   appId: 'default-ezbot-app-id',
   encodeBase64: true,
