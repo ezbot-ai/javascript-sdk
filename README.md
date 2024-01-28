@@ -4,10 +4,10 @@ The easiest way to interact with ezbot via JS (node and browser). For ease of us
 
 ## How to use
 
-### How to use it in your project
+### How to use it in your project via NPM
 
 ```bash
-npm install ezbot-javascript
+npm install @ezbot-ai/javascript-sdk
 ```
 
 ```js
@@ -16,12 +16,25 @@ import {
   trackPageView,
   trackRewardEvent,
   startActivityTracking,
-} from 'ezbot-javascript';
+} from '@ezbot-ai/javascript-sdk';
 
 await initEzbot();
 startActivityTracking();
 trackPageView();
 trackRewardEvent();
+```
+
+### How to use it in your project via `<script>` tag
+
+```html
+<script src="https://cdn.ezbot.ai/web-snippets/ezbot.min.js">
+```
+
+```js
+await ezbot.initEzbot();
+ezbot.startActivityTracking();
+ezbot.trackPageView();
+ezbot.trackRewardEvent();
 ```
 
 ### How to develop this library
