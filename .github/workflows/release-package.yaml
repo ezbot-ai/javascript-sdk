@@ -57,7 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           cache: 'npm'
-          cache-dependency-path: 'admin-backend-ui-vue/package-lock.json'
+          cache-dependency-path: 'javascript-sdk/package-lock.json'
           node-version: 20
       - run: npm ci
       - run: npm run build:web-snippet
