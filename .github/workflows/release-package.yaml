@@ -44,3 +44,30 @@ jobs:
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  publish-snippet:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      BROWSERSLIST_IGNORE_OLD_DATA: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          cache-dependency-path: 'admin-backend-ui-vue/package-lock.json'
+          node-version: 20
+      - run: npm ci
+      - run: npm run build:web-snippet
+      - name: Change to build directory & log contents
+        run: cd ./build/web-snippets && pwd && ls
+      - name: Configure AWS credentials from Production account
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::581316994213:role/GithubDeployRole
+          aws-region: us-east-1
+      - name: Copy files to the production website with the AWS CLI
+        run: |
+          cd ./build/web-snippets && aws s3 sync --delete . s3://ezbot-prod-javascript-tracker/web-snippets

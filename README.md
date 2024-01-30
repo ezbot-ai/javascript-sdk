@@ -4,10 +4,10 @@ The easiest way to interact with ezbot via JS (node and browser). For ease of us
 
 ## How to use
 
-### How to use it in your project
+### How to use it in your project via NPM (recommended)
 
 ```bash
-npm install ezbot-javascript
+npm install @ezbot-ai/javascript-sdk
 ```
 
 ```js
@@ -16,12 +16,41 @@ import {
   trackPageView,
   trackRewardEvent,
   startActivityTracking,
-} from 'ezbot-javascript';
+} from '@ezbot-ai/javascript-sdk';
 
-await initEzbot();
-startActivityTracking();
+await initEzbot(yourProjectId, { appId: yourAppId });
+startActivityTracking({
+  /** The minimum time that must have elapsed before first heartbeat */
+  minimumVisitLength: 2,
+  /** The interval at which the callback will be fired */
+  heartbeatDelay: 2,
+});
 trackPageView();
-trackRewardEvent();
+trackRewardEvent({ key: 'your_key', reward: 1, rewardUnits: 'count' });
+trackRewardEvent({ key: 'another_key', reward: 100, rewardUnits: 'dollars' });
+```
+
+### How to use it in your project via `<script>` tag
+
+```html
+<script src="https://cdn.ezbot.ai/web-snippets/ezbot.min.js">
+```
+
+```js
+await ezbot.initEzbot(yourProjectId, { appId: yourAppId });
+ezbot.startActivityTracking({
+  /** The minimum time that must have elapsed before first heartbeat */
+  minimumVisitLength: 2,
+  /** The interval at which the callback will be fired */
+  heartbeatDelay: 2,
+});
+ezbot.trackPageView();
+ezbot.trackRewardEvent({ key: 'your_key', reward: 1, rewardUnits: 'count' });
+ezbot.trackRewardEvent({
+  key: 'another_key',
+  reward: 100,
+  rewardUnits: 'dollars',
+});
 ```
 
 ### How to develop this library
