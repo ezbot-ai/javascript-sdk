@@ -18,10 +18,16 @@ import {
   startActivityTracking,
 } from '@ezbot-ai/javascript-sdk';
 
-await initEzbot();
-startActivityTracking();
+await initEzbot(yourProjectId, { appId: yourAppId });
+startActivityTracking({
+    /** The minimum time that must have elapsed before first heartbeat */
+    minimumVisitLength: 2;
+    /** The interval at which the callback will be fired */
+    heartbeatDelay: 2;
+});
 trackPageView();
-trackRewardEvent();
+trackRewardEvent({ key: 'your_key', reward: 1, rewardUnits: 'count' });
+trackRewardEvent({ key: 'another_key', reward: 100, rewardUnits: 'dollars' });
 ```
 
 ### How to use it in your project via `<script>` tag
@@ -31,10 +37,15 @@ trackRewardEvent();
 ```
 
 ```js
-await ezbot.initEzbot();
-ezbot.startActivityTracking();
-ezbot.trackPageView();
-ezbot.trackRewardEvent();
+await ezbot.initEzbot(yourProjectId, { appId: yourAppId });
+ezbot.startActivityTracking({
+    /** The minimum time that must have elapsed before first heartbeat */
+    minimumVisitLength: 2;
+    /** The interval at which the callback will be fired */
+    heartbeatDelay: 2;
+});
+ezbot.trackRewardEvent({ key: 'your_key', reward: 1, rewardUnits: 'count' });
+ezbot.trackRewardEvent({ key: 'another_key', reward: 100, rewardUnits: 'dollars' });
 ```
 
 ### How to develop this library
