@@ -106,21 +106,28 @@ function replaceTextWithPredictions(predictions) {
       console.log('no predictions, skipping text replacement');
       return;
     }
-    if (predictions[heroHeadlineKey]) {
+    const heroHeadlineKeyFound = predictions.find(
+      (e) => e.variable === heroHeadlineKey
+    );
+    if (heroHeadlineKeyFound) {
+      const heroHeadlineValue = heroHeadlineKeyFound.value;
       console.log(
-        `Predictions has key "${heroHeadlineKey}". Setting headline to "${predictions[heroHeadlineKey]}"`
+        `Predictions has key "${heroHeadlineKey}". Setting headline to "${heroHeadlineValue}"`
       );
-      $(`#${heroHeadlineId}`).text(predictions[heroHeadlineKey]);
+      $(`#${heroHeadlineId}`).text(heroHeadlineValue);
     } else {
       console.log(
         `No key "${heroHeadlineKey}" in predictions. Skipping replacement.`
       );
     }
-    if (predictions[heroCTAKey]) {
+
+    const heroCTAKeyFound = predictions.find((e) => e.variable === heroCTAKey);
+    if (heroCTAKeyFound) {
+      const heroCTAValue = heroCTAKeyFound.value;
       console.log(
-        `Predictions has key "${heroCTAKey}". Setting cta to "${predictions[heroCTAKey]}"`
+        `Predictions has key "${heroCTAKey}". Setting cta to "${heroCTAValue}"`
       );
-      $(`#${heroCTAId}`).text(predictions[heroCTAKey]);
+      $(`#${heroCTAId}`).text(heroCTAValue);
     } else {
       console.log(
         `No key "${heroCTAKey}" in predictions. Skipping replacement.`
