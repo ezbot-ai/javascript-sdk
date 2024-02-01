@@ -15,9 +15,9 @@ const predictionsReformatted = {
   predictions: [
     {
       variable: 'foo',
-      value: 'bar'
-    }
-  ]
+      value: 'bar',
+    },
+  ],
 };
 
 const mockTrackPageView = jest.fn();
