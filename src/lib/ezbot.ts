@@ -106,7 +106,7 @@ type Predictions = {
   predictions: Array<Prediction>;
 };
 
-type predictionsResponse = {
+type PredictionsResponse = {
   predictions: Map<string, string>;
 };
 
@@ -146,7 +146,9 @@ async function getPredictions(
   const predictionsURL = `https://api.ezbot.ai/predict?projectId=${projectId}&sessionId=${sessionId}`;
   const response = await fetch(predictionsURL);
   const responseJSON = await response.json();
-  const predictionMap: Map<string,string> = new Map(Object.entries((responseJSON as predictionsResponse).predictions));
+  const predictionMap: Map<string, string> = new Map(
+    Object.entries((responseJSON as PredictionsResponse).predictions)
+  );
   return Array.from(predictionMap, ([name, value]) => {
     const prediction: Prediction = { variable: name, value: value };
     return prediction;
@@ -232,4 +234,7 @@ export {
   EzbotLinkClickEventPayload,
   EzbotRewardEventPayload,
   EzbotPredictionsContext,
+  Prediction,
+  Predictions,
+  PredictionsResponse,
 };
