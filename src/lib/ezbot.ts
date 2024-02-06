@@ -157,10 +157,11 @@ async function getPredictions(
 
 async function initEzbot(
   projectId: number,
-  config: TrackerConfiguration = DefaultWebConfiguration
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _config: TrackerConfiguration = DefaultWebConfiguration
 ): Promise<BrowserTracker> {
   const tracker = newTracker(ezbotTrackerId, EzbotTrackerDomain, {
-    appId: config.appId,
+    appId: projectId.toString(),
     plugins: plugins,
   });
   if (tracker === null) {
