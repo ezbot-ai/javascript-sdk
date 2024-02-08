@@ -160,6 +160,10 @@ async function initEzbot(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _config: TrackerConfiguration = DefaultWebConfiguration
 ): Promise<BrowserTracker> {
+  const existingTracker = window.ezbot?.tracker;
+  if (existingTracker) {
+    return existingTracker;
+  }
   const tracker = newTracker(ezbotTrackerId, EzbotTrackerDomain, {
     appId: projectId.toString(),
     plugins: plugins,
