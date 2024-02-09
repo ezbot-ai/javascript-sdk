@@ -91,6 +91,29 @@ ezbot.trackRewardEvent({
 });
 ```
 
+### NextJS
+
+Since we don't yet support server-side rendering, you'll need to notate your component with `"use strict"` and use the React Hook `useEffect` to initialize ezbot. If you're using Strict Mode, you'll need to use a ref to prevent multiple initializations in your development environment. Strict Mode does not affect production.
+
+```js
+'use client';
+
+import { initEzbot } from '@ezbot-ai/javascript-sdk';
+import { useEffect, useRef } from 'react';
+
+// your component
+export default function Home() {
+  const ezbotInit = useRef(false);
+  useEffect(() => {
+    if (ezbotInit.current) {
+      return;
+    }
+    initEzbot(7);
+    ezbotInit.current = true;
+  }, []);
+}
+```
+
 ## Using Predictions
 
 Change your user's experience based on the predictions made by ezbot. For now, you'll need to write custom code to use the predictions.
