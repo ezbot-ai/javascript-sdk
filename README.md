@@ -58,6 +58,7 @@ import {
   trackPageView,
   trackRewardEvent,
   startActivityTracking,
+  makeVisualChanges,
 } from '@ezbot-ai/javascript-sdk';
 
 await initEzbot(yourProjectId, { appId: yourAppId });
@@ -70,6 +71,7 @@ startActivityTracking({
 trackPageView();
 trackRewardEvent({ key: 'your_key', reward: 1, rewardUnits: 'count' });
 trackRewardEvent({ key: 'another_key', reward: 100, rewardUnits: 'dollars' });
+makeVisualChanges(); // Optional. If the variable is a visual change, it will be applied.
 ```
 
 ### Via `<script>` tag
@@ -89,6 +91,7 @@ ezbot.trackRewardEvent({
   reward: 100,
   rewardUnits: 'dollars',
 });
+makeVisualChanges(); // Optional. If the variable is a visual change, it will be applied.
 ```
 
 ### NextJS
@@ -120,47 +123,28 @@ Change your user's experience based on the predictions made by ezbot. For now, y
 
 Below is just an example. After initializing ezbot, you can use the `window.ezbot.predictions` object to access the predictions.
 
-### Example Text Replacement Via NPM
+### Example Predictions Response
 
-```js
-function replaceTextWithPredictions(predictions) {
-  try {
-    if (!predictions) {
-      console.log('no predictions, skipping text replacement');
-      return;
+```json
+{
+  "holdback": false,
+  "predictions": [
+    {
+      "key": "hero_headline",
+      "type": "basic",
+      "version": "0.1",
+      "value": "Automated Experimentation with AI",
+      "config": null
+    },
+    {
+      "key": "hero_cta",
+      "type": "basic",
+      "version": "0.1",
+      "value": "Check It Out",
+      "config": null
     }
-    const heroHeadlineKeyFound = predictions.find(
-      (e) => e.variable === heroHeadlineKey
-    );
-    if (heroHeadlineKeyFound) {
-      const heroHeadlineValue = heroHeadlineKeyFound.value;
-      console.log(
-        `Predictions has key "${heroHeadlineKey}". Setting headline to "${heroHeadlineValue}"`
-      );
-      $(`#${heroHeadlineId}`).text(heroHeadlineValue);
-    } else {
-      console.log(
-        `No key "${heroHeadlineKey}" in predictions. Skipping replacement.`
-      );
-    }
-
-    const heroCTAKeyFound = predictions.find((e) => e.variable === heroCTAKey);
-    if (heroCTAKeyFound) {
-      const heroCTAValue = heroCTAKeyFound.value;
-      console.log(
-        `Predictions has key "${heroCTAKey}". Setting cta to "${heroCTAValue}"`
-      );
-      $(`#${heroCTAId}`).text(heroCTAValue);
-    } else {
-      console.log(
-        `No key "${heroCTAKey}" in predictions. Skipping replacement.`
-      );
-    }
-  } catch (e) {
-    console.error('Error replacing text with predictions', e);
-  }
+  ]
 }
-replaceTextWithPredictions(window.ezbot.predictions);
 ```
 
 ## Credits

@@ -97,9 +97,15 @@ declare global {
   }
 }
 
+interface VariableConfig {
+  [key: string]: string;
+}
 type Prediction = {
-  variable: string;
+  key: string;
+  type: string;
+  version: string;
   value: string;
+  config: VariableConfig;
 };
 
 type Predictions = {
@@ -107,7 +113,8 @@ type Predictions = {
 };
 
 type PredictionsResponse = {
-  predictions: Map<string, string>;
+  holdback: boolean;
+  predictions: Array<Prediction>;
 };
 
 type EzbotRewardEvent = {
@@ -145,14 +152,12 @@ async function getPredictions(
 ): Promise<Array<Prediction>> {
   const predictionsURL = `https://api.ezbot.ai/predict?projectId=${projectId}&sessionId=${sessionId}`;
   const response = await fetch(predictionsURL);
-  const responseJSON = await response.json();
-  const predictionMap: Map<string, string> = new Map(
-    Object.entries((responseJSON as PredictionsResponse).predictions)
-  );
-  return Array.from(predictionMap, ([name, value]) => {
-    const prediction: Prediction = { variable: name, value: value };
-    return prediction;
-  });
+  if (response.status !== 200) {
+    throw new Error(`Failed to fetch predictions: Got a ${response.status} response;
+    }`);
+  }
+  const responseJSON = (await response.json()) as PredictionsResponse;
+  return responseJSON.predictions;
 }
 
 async function initEzbot(
@@ -228,9 +233,60 @@ function trackPageView(
   tPageView(config);
 }
 
+// eslint-disable-next-line functional/prefer-immutable-types
+function setElementText(element: Element, text: string): void {
+  // eslint-disable-next-line functional/immutable-data
+  element.textContent = text;
+}
+
+function makeVisualChanges(): void {
+  const predictions = window.ezbot?.predictions;
+  if (!predictions) {
+    console.log('No predictions found. Skipping visual changes.');
+    return;
+  }
+  predictions.forEach((prediction) => {
+    if (prediction.type != 'visual') {
+      return;
+    }
+    if (prediction.config == null) {
+      console.log(
+        `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`
+      );
+      return;
+    }
+    if (!prediction.config.selector) {
+      console.log(
+        `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`
+      );
+      return;
+    }
+    if (!prediction.config.action) {
+      console.log(
+        `No action found for prediction with key: ${prediction.key}. Skipping its visual change.`
+      );
+      return;
+    }
+    const element = document.querySelector(prediction.config.selector);
+    if (prediction.config.action === 'setText' && element) {
+      console.log(
+        `Setting text for element with selector ${prediction.config.selector} to ${prediction.value}`
+      );
+      setElementText(element, prediction.value);
+      return;
+    } else {
+      console.log(
+        'Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.'
+      );
+      return;
+    }
+  });
+}
+
 export {
   trackRewardEvent,
   initEzbot,
+  makeVisualChanges,
   startActivityTracking,
   trackLinkClick,
   trackPageView,
