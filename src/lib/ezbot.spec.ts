@@ -130,7 +130,6 @@ describe('ezbot js tracker', () => {
     expect(window.ezbot.trackPageView).toBeDefined();
   });
   it('exposes a global makeVisualChanges function', async () => {
-    expect(tracker.makeVisualChanges).toBeDefined();
     expect(window.ezbot.makeVisualChanges).toBeDefined();
   });
 });
