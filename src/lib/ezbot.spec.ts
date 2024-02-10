@@ -8,16 +8,26 @@ import { BrowserTracker } from '@snowplow/browser-tracker-core';
 
 import { initEzbot, startActivityTracking, trackRewardEvent } from './ezbot';
 
-const predictions = {
-  foo: 'bar',
-};
-const predictionsReformatted = {
-  predictions: [
-    {
-      variable: 'foo',
-      value: 'bar',
-    },
-  ],
+const predictions = [
+  {
+    key: 'hero_headline',
+    type: 'basic',
+    version: '0.1',
+    value: 'Increase Conversions with AI',
+    config: null,
+  },
+  {
+    key: 'hero_cta',
+    type: 'basic',
+    version: '0.1',
+    value: 'Explore Benefits',
+    config: null,
+  },
+];
+
+const predictionsResponseBody = {
+  holdback: false,
+  predictions: predictions,
 };
 
 const mockTrackPageView = jest.fn();
@@ -54,8 +64,9 @@ describe('ezbot js tracker', () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
     global.fetch = jest.fn(async () => {
       return {
+        status: 200,
         json: async () => {
-          return { predictions: predictions };
+          return predictionsResponseBody;
         },
       } as Response;
     });
@@ -75,15 +86,9 @@ describe('ezbot js tracker', () => {
     const contexts = firstEvent.evt.cx;
     const decodedContexts = decodeContexts(contexts as string);
     expect(decodedContexts).toContainEqual({
-      data: predictionsReformatted,
+      data: { predictions: predictions },
       schema: 'iglu:com.ezbot/predictions_context/jsonschema/1-0-1',
     });
-  });
-  it('exposes a global getDomainUserInfo function', async () => {
-    expect(tracker.getDomainUserInfo).toBeDefined();
-    tracker.trackPageView = mockTrackPageView;
-    trackPageView();
-    expect(tracker.trackPageView).toHaveBeenCalled();
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();

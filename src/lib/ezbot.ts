@@ -153,7 +153,7 @@ async function getPredictions(
   const predictionsURL = `https://api.ezbot.ai/predict?projectId=${projectId}&sessionId=${sessionId}`;
   const response = await fetch(predictionsURL);
   if (response.status !== 200) {
-    throw new Error(`Failed to fetch predictions: Got a ${response.status} response);
+    throw new Error(`Failed to fetch predictions: Got a ${response.status} response;
     }`);
   }
   const responseJSON = (await response.json()) as PredictionsResponse;
