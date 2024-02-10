@@ -1,3 +1,5 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/prefer-immutable-types */
 /*
  * This package uses source code from Snowplow Analytics Ltd
  * Copyright (c) 2022 Snowplow Analytics Ltd, 2010 Anthon Pang
@@ -84,23 +86,19 @@ declare global {
       tracker: BrowserTracker;
       predictions: Array<Prediction>;
       sessionId: string;
-      trackPageView: (
-        // eslint-disable-next-line functional/prefer-immutable-types
-        event?: PageViewEvent & CommonEventProperties
-      ) => void;
+      trackPageView: (event?: PageViewEvent & CommonEventProperties) => void;
       trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
-      startActivityTracking: (
-        // eslint-disable-next-line functional/prefer-immutable-types
-        config: ActivityTrackingConfiguration
-      ) => void;
+      startActivityTracking: (config: ActivityTrackingConfiguration) => void;
       makeVisualChanges: () => void;
     };
   }
 }
 
-interface VariableConfig {
-  [key: string]: string;
-}
+type VariableConfig = {
+  selector: string;
+  action: string;
+};
+
 type Prediction = {
   key: string;
   type: string;
@@ -186,7 +184,7 @@ async function initEzbot(
     data: { predictions: predictions },
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
-  // eslint-disable-next-line functional/immutable-data
+
   window.ezbot = {
     tracker: tracker,
     predictions: predictions,
@@ -224,7 +222,6 @@ function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
   );
 }
 
-// eslint-disable-next-line functional/prefer-immutable-types
 function startActivityTracking(config: ActivityTrackingConfiguration): void {
   enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
@@ -235,10 +232,98 @@ function trackPageView(
   tPageView(config);
 }
 
-// eslint-disable-next-line functional/prefer-immutable-types
 function setElementText(element: Element, text: string): void {
-  // eslint-disable-next-line functional/immutable-data
   element.textContent = text;
+}
+
+function setElementInnerHTML(element: HTMLElement, innerHTML: string): void {
+  element.innerHTML = innerHTML;
+}
+
+function addElementAttributes(
+  element: HTMLElement,
+  attributes: Record<string, string>
+): void {
+  Object.entries(attributes).forEach(([key, value]) => {
+    element.setAttribute(key, value);
+  });
+}
+
+function removeElementAttributes(
+  element: HTMLElement,
+  attributes: Array<string>
+): void {
+  attributes.forEach((attribute) => {
+    element.removeAttribute(attribute);
+  });
+}
+function setElementAttribute(
+  element: HTMLElement,
+  attribute: string,
+  value: string
+) {
+  element.setAttribute(attribute, value);
+}
+
+function addElementClasses(element: HTMLElement, classes: Array<string>): void {
+  element.classList.add(...classes);
+}
+
+function removeElementClasses(
+  element: HTMLElement,
+  classes: Array<string>
+): void {
+  element.classList.remove(...classes);
+}
+
+function setElementHref(element: HTMLAnchorElement, href: string): void {
+  setElementAttribute(element, 'href', href);
+}
+
+function hideElement(element: HTMLElement): void {
+  element.style.display = 'none';
+  element.style.visibility = 'hidden';
+}
+function showElement(element: HTMLElement): void {
+  element.style.display = 'block';
+  element.style.visibility = 'visible';
+}
+
+function validateVisualPrediction(prediction: Prediction): string | null {
+  if (prediction.config == null) {
+    return `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`;
+  }
+  if (!prediction.config.selector) {
+    return `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`;
+  }
+  if (!prediction.config.action) {
+    return `No action found for prediction with key: ${prediction.key}. Skipping its visual change.`;
+  }
+
+  return null;
+}
+
+function makeVisualChange(prediction: Prediction): void {
+  const element = document.querySelector(prediction.config.selector);
+  if (!element) {
+    console.log(
+      `No element found for prediction with key: ${prediction.key}. Skipping its visual change.`
+    );
+  }
+  const action = prediction.config.action;
+  if (action === 'setText') {
+    setElementText(element, prediction.value);
+  }
+  if (action === 'setInnerHTML') {
+    setElementInnerHTML(element, prediction.value);
+  }
+  if (action === 'addAttributes') {
+    addElementAttributes(element, prediction.value);
+  } else {
+    console.log(
+      `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
+    );
+  }
 }
 
 function makeVisualChanges(): void {
@@ -251,47 +336,35 @@ function makeVisualChanges(): void {
     if (prediction.type != 'visual') {
       return;
     }
-    if (prediction.config == null) {
-      console.log(
-        `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
+
+    const validationError = validateVisualPrediction(prediction);
+    if (validationError != null) {
+      console.log(validationError);
       return;
     }
-    if (!prediction.config.selector) {
-      console.log(
-        `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
-      return;
-    }
-    if (!prediction.config.action) {
-      console.log(
-        `No action found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
-      return;
-    }
-    const element = document.querySelector(prediction.config.selector);
-    if (prediction.config.action === 'setText' && element) {
-      console.log(
-        `Setting text for element with selector ${prediction.config.selector} to ${prediction.value}`
-      );
-      setElementText(element, prediction.value);
-      return;
-    } else {
-      console.log(
-        'Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.'
-      );
-      return;
-    }
+
+    makeVisualChange(prediction);
   });
 }
 
 export {
   trackRewardEvent,
   initEzbot,
+  makeVisualChange,
   makeVisualChanges,
   startActivityTracking,
   trackLinkClick,
   trackPageView,
+  setElementText,
+  setElementInnerHTML,
+  addElementAttributes,
+  removeElementAttributes,
+  setElementAttribute,
+  addElementClasses,
+  removeElementClasses,
+  setElementHref,
+  hideElement,
+  showElement,
   EzbotLinkClickEvent,
   EzbotRewardEvent,
   EzbotLinkClickEventPayload,
