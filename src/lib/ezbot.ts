@@ -93,6 +93,7 @@ declare global {
         // eslint-disable-next-line functional/prefer-immutable-types
         config: ActivityTrackingConfiguration
       ) => void;
+      makeVisualChanges: () => void;
     };
   }
 }
@@ -193,6 +194,7 @@ async function initEzbot(
     trackPageView: tracker.trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
+    makeVisualChanges: makeVisualChanges,
   };
 
   return tracker;
