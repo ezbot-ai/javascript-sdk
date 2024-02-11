@@ -6,7 +6,8 @@
 import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
 
-import { initEzbot, startActivityTracking, trackRewardEvent } from './ezbot';
+import { initEzbot } from './ezbot';
+import { startActivityTracking, trackRewardEvent } from './tracking';
 
 const predictions = [
   {
