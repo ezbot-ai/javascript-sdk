@@ -5,8 +5,19 @@
 /* eslint-disable functional/no-return-void */
 import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
+import Ajv from "ajv";
 
-import { initEzbot, startActivityTracking, trackRewardEvent } from './ezbot';
+import {
+  initEzbot,
+  PredictionsContext,
+  startActivityTracking,
+  trackRewardEvent
+} from './ezbot';
+import * as predictions_schema from './schemas/com.ezbot/predictions_context/jsonschema/1-0-1.json';
+
+
+const ajv = new Ajv();
+const validate_predictions = ajv.compile<PredictionsContext>(predictions_schema);
 
 const predictions = [
   {
@@ -76,6 +87,9 @@ describe('ezbot js tracker', () => {
     const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}`;
     expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
   });
+  afterEach(async () => {
+    clearEventQueue();
+  });
   it('initializes', async () => {
     expect(tracker).toBeDefined();
   });
@@ -86,16 +100,24 @@ describe('ezbot js tracker', () => {
     const contexts = firstEvent.evt.cx;
     const decodedContexts = decodeContexts(contexts as string);
     expect(decodedContexts).toContainEqual({
-      data: { predictions: predictions },
+      data: { predictions: predictions.map(p => ({variable: p.key, value: p.value})) },
       schema: 'iglu:com.ezbot/predictions_context/jsonschema/1-0-1',
     });
+  });
+  it('sets valid predictions context to correct schema version 1-0-1', async () => {
+    trackPageView();
+    const eventOutQueue = tracker.sharedState.outQueues[0];
+    const firstEvent = (eventOutQueue as Outqueue)[0];
+    const contexts = firstEvent.evt.cx;
+    const decodedContexts: Context[] = decodeContexts(contexts as string);
+
+    expect(validate_predictions(decodedContexts[2].data)).toBeTruthy()
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();
     tracker.trackPageView = mockTrackPageView;
     trackPageView();
     expect(tracker.trackPageView).toHaveBeenCalled();
-    clearEventQueue();
   });
   it('exposes a global trackRewardEvent function', async () => {
     expect(window.ezbot.trackRewardEvent).toBeDefined();
@@ -111,7 +133,6 @@ describe('ezbot js tracker', () => {
       data: { key: 'foo' },
       schema: 'iglu:com.ezbot/reward_event/jsonschema/1-0-0',
     });
-    clearEventQueue();
   });
   it('exposes a global startActivityTracking', async () => {
     expect(window.ezbot.startActivityTracking).toBeDefined();

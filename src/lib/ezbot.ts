@@ -109,8 +109,17 @@ type Prediction = {
   config: VariableConfig;
 };
 
+type PredictionContext = {
+  variable: string;
+  value: string;
+};
+
 type Predictions = {
   predictions: Array<Prediction>;
+};
+
+type PredictionsContext = {
+  predictions: Array<PredictionContext>;
 };
 
 type PredictionsResponse = {
@@ -143,7 +152,7 @@ type EzbotLinkClickEventPayload = {
 
 type EzbotPredictionsContext = {
   schema: string;
-  data: Predictions;
+  data: PredictionsContext;
 };
 
 const ezbotTrackerId = 'ezbot';
@@ -179,11 +188,11 @@ async function initEzbot(
   }
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
-  const sessionId = (domainUserInfo as string[])[6];
-  const predictions = await getPredictions(projectId, sessionId);
+  const sessionId: string = (domainUserInfo as string[])[6];
+  const predictions: Array<Prediction> = await getPredictions(projectId, sessionId);
   const predictionsContext: EzbotPredictionsContext = {
     schema: EzbotPredictionsContextSchema,
-    data: { predictions: predictions },
+    data: { predictions: predictions.map(pred => ({variable: pred.key, value: pred.value})) },
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
   // eslint-disable-next-line functional/immutable-data
@@ -298,6 +307,8 @@ export {
   EzbotRewardEventPayload,
   EzbotPredictionsContext,
   Prediction,
+  PredictionContext,
   Predictions,
+  PredictionsContext,
   PredictionsResponse,
 };
