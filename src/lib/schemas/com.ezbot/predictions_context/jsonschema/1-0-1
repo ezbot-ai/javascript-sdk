@@ -1,0 +1,39 @@
+{
+  "$schema": "http://iglucentral.com/schemas/com.snowplowanalytics.self-desc/schema/jsonschema/1-0-0#",
+  "description": "ezbot predictions context",
+  "self": {
+    "vendor": "com.ezbot",
+    "name": "predictions_context",
+    "format": "jsonschema",
+    "version": "1-0-1"
+  },
+  "type": "object",
+  "properties": {
+    "predictions": {
+      "description": "Array of variable predictions",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "variable keys and prediction value pair",
+        "properties": {
+            "variable": {
+            "type": "string",
+            "description": "name of the variable"
+          },
+          "value": {
+            "type": "string",
+            "description": "predicted value for the variable"
+          }
+        },
+        "required": [
+          "variable", "value"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "predictions"
+  ],
+  "additionalProperties": false
+}
