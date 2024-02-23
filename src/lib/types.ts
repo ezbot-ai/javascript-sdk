@@ -17,7 +17,7 @@ type Prediction = {
   type: string;
   version: string;
   value: string;
-  config: VariableConfig;
+  config: VariableConfig | null;
 };
 
 type Predictions = {
