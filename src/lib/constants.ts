@@ -22,9 +22,11 @@ const plugins = [
   BrowserFeaturesPlugin(),
 ];
 const ezbotTrackerDomain = 'https://api.ezbot.ai';
-const ezbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
-const ezbotLinkClickEventSchema = 'iglu:com.ezbot/link_click/jsonschema/1-0-0';
-const ezbotPredictionsContextSchemaURL =
+const ezbotRewardEventSchemaPath =
+  'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
+const ezbotLinkClickEventSchemaPath =
+  'iglu:com.ezbot/link_click/jsonschema/1-0-0';
+const ezbotPredictionsContextSchemaPath =
   'iglu:com.ezbot/predictions_context/jsonschema/1-0-1';
 const defaultWebConfiguration: TrackerConfiguration = {
   appId: 'default-ezbot-app-id',
@@ -37,9 +39,9 @@ const ezbotTrackerId = 'ezbot';
 export {
   ezbotTrackerDomain,
   ezbotTrackerId,
-  ezbotRewardEventSchema,
-  ezbotLinkClickEventSchema,
-  ezbotPredictionsContextSchemaURL,
+  ezbotRewardEventSchemaPath,
+  ezbotLinkClickEventSchemaPath,
+  ezbotPredictionsContextSchemaPath,
   defaultWebConfiguration,
   plugins,
 };

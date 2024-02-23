@@ -12,8 +12,8 @@ import {
 } from '@snowplow/browser-tracker-core';
 
 import {
-  ezbotLinkClickEventSchema,
-  ezbotRewardEventSchema,
+  ezbotLinkClickEventSchemaPath,
+  ezbotRewardEventSchemaPath,
   ezbotTrackerId,
 } from './constants';
 import {
@@ -25,7 +25,7 @@ import {
 
 function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
   const event: EzbotRewardEvent = {
-    schema: ezbotRewardEventSchema,
+    schema: ezbotRewardEventSchemaPath,
     data: payload,
   };
   trackSelfDescribingEvent(
@@ -36,7 +36,7 @@ function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
 
 function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
   const event: EzbotLinkClickEvent = {
-    schema: ezbotLinkClickEventSchema,
+    schema: ezbotLinkClickEventSchemaPath,
     data: payload,
   };
   trackSelfDescribingEvent(
