@@ -51,6 +51,12 @@ function validateVisualPrediction(prediction: Prediction): string | null {
 }
 
 function makeVisualChange(prediction: Prediction): void {
+  if (!prediction.config) {
+    console.log(
+      `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`
+    );
+    return;
+  }
   const element = document.querySelector(prediction.config.selector);
   if (!element) {
     console.log(

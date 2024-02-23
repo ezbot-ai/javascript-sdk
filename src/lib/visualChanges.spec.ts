@@ -246,6 +246,7 @@ describe('visualChanges', () => {
           version: '2.0',
         },
       ];
+      // @ts-expect-error:next-line
       window.ezbot = { predictions };
       visualChanges.makeVisualChanges();
       expect(div2.textContent).toBe(predictions[1].value);
