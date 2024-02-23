@@ -1,25 +1,20 @@
 /* eslint-disable functional/no-return-void */
-const mockTrackPageView = jest.fn();
-const mockEnableActivityTracking = jest.fn();
-const mockTrackSelfDescribingEvent = jest.fn();
-
+import {
+  enableActivityTracking,
+  trackPageView,
+  trackSelfDescribingEvent,
+} from '@snowplow/browser-tracker';
 import { CommonEventProperties, PageViewEvent } from '@snowplow/tracker-core';
 
 import {
   startActivityTracking,
+  trackPageView as tPageView,
   trackLinkClick,
-  trackPageView,
   trackRewardEvent,
 } from './tracking';
+jest.mock('@snowplow/browser-tracker');
 
 describe('tracking', () => {
-  beforeAll(() => {
-    jest.mock('@snowplow/browser-tracker', () => ({
-      enableActivityTracking: mockEnableActivityTracking,
-      trackPageView: mockTrackPageView,
-      trackSelfDescribingEvent: mockTrackSelfDescribingEvent,
-    }));
-  });
   describe('trackRewardEvent', () => {
     it('should call trackSelfDescribingEvent with the correct payload', () => {
       const payload = {
@@ -27,10 +22,10 @@ describe('tracking', () => {
         reward: 100,
       };
       trackRewardEvent(payload);
-      expect(mockTrackSelfDescribingEvent).toHaveBeenCalledWith(
+      expect(trackSelfDescribingEvent).toHaveBeenCalledWith(
         {
           event: {
-            schema: 'iglu:com.example/reward/jsonschema/1-0-0',
+            schema: 'iglu:com.ezbot/reward_event/jsonschema/1-0-0',
             data: payload,
           },
         },
@@ -45,10 +40,10 @@ describe('tracking', () => {
         linkId: 'some_link_id',
       };
       trackLinkClick(payload);
-      expect(mockTrackSelfDescribingEvent).toHaveBeenCalledWith(
+      expect(trackSelfDescribingEvent).toHaveBeenCalledWith(
         {
           event: {
-            schema: 'iglu:com.example/link_click/jsonschema/1-0-0',
+            schema: 'iglu:com.ezbot/link_click/jsonschema/1-0-0',
             data: payload,
           },
         },
@@ -63,9 +58,7 @@ describe('tracking', () => {
         heartbeatDelay: 10,
       };
       startActivityTracking(config);
-      expect(mockEnableActivityTracking).toHaveBeenCalledWith(config, [
-        'ezbot',
-      ]);
+      expect(enableActivityTracking).toHaveBeenCalledWith(config, ['ezbot']);
     });
   });
   describe('trackPageView', () => {
@@ -77,8 +70,8 @@ describe('tracking', () => {
         pageTitle: 'some_title',
         referrer: 'some_referrer',
       };
-      trackPageView(config);
-      expect(mockTrackPageView).toHaveBeenCalledWith(config);
+      tPageView(config);
+      expect(trackPageView).toHaveBeenCalledWith(config);
     });
   });
 });
