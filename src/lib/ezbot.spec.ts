@@ -69,7 +69,7 @@ function clearEventQueue() {
 }
 
 describe('ezbot js tracker', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
     global.fetch = jest.fn(async () => {
       return {
@@ -81,6 +81,9 @@ describe('ezbot js tracker', () => {
     });
     // Add ezbot tracker to jsdom DOM
     tracker = await initEzbot(1, { appId: 'test-app-id' });
+  });
+  it('initializes', () => {
+    expect(tracker).toBeDefined();
     const sessionId = (tracker.getDomainUserInfo() as unknown as string[])[6];
     const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}`;
     expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
@@ -122,10 +125,10 @@ describe('ezbot js tracker', () => {
     trackPageView();
     expect(tracker.trackPageView).toHaveBeenCalled();
   });
-  it('exposes a global trackRewardEvent function', async () => {
+  it('exposes a global trackRewardEvent function', () => {
     expect(window.ezbot.trackRewardEvent).toBeDefined();
   });
-  it('has a track reward function that sends a reward event', async () => {
+  it('has a track reward function that sends a reward event', () => {
     trackRewardEvent({ key: 'foo' });
     const eventOutQueue = tracker.sharedState.outQueues[0];
     const firstEvent = (eventOutQueue as Outqueue)[0];

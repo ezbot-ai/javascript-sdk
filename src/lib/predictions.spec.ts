@@ -26,18 +26,18 @@ const projectId = 123;
 const sessionId = 'abc123';
 
 describe('getPredictions', () => {
-  // Mock the fetch function to return a resolved Promise with the predictions object
-  global.fetch = jest.fn(async () => {
-    return {
-      status: 200,
-      json: async () => {
-        return predictionsResponseBody;
-      },
-    } as Response;
-  });
-});
-describe('when the fetch is successful', () => {
-  beforeAll(async () => {
+  describe('when the fetch is successful', () => {
+    beforeEach(async () => {
+      // Mock the fetch function to return a resolved Promise with the predictions object
+      global.fetch = jest.fn(async () => {
+        return {
+          status: 200,
+          json: async () => {
+            return predictionsResponseBody;
+          },
+        } as Response;
+      });
+    });
     it('should return an array of predictions', async () => {
       // Call the getPredictions function
       const predictions = await getPredictions(projectId, sessionId);
@@ -47,7 +47,7 @@ describe('when the fetch is successful', () => {
     });
   });
   describe('when the fetch is unsuccessful', () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       // Mock the fetch function to return a resolved Promise with the predictions object
       global.fetch = jest.fn(async () => {
         return {
