@@ -24,7 +24,7 @@ const plugins = [
 const ezbotTrackerDomain = 'https://api.ezbot.ai';
 const ezbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
 const ezbotLinkClickEventSchema = 'iglu:com.ezbot/link_click/jsonschema/1-0-0';
-const ezbotPredictionsContextSchema =
+const ezbotPredictionsContextSchemaURL =
   'iglu:com.ezbot/predictions_context/jsonschema/1-0-1';
 const defaultWebConfiguration: TrackerConfiguration = {
   appId: 'default-ezbot-app-id',
@@ -39,7 +39,7 @@ export {
   ezbotTrackerId,
   ezbotRewardEventSchema,
   ezbotLinkClickEventSchema,
-  ezbotPredictionsContextSchema,
+  ezbotPredictionsContextSchemaURL,
   defaultWebConfiguration,
   plugins,
 };

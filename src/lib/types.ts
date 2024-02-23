@@ -52,7 +52,7 @@ type EzbotLinkClickEventPayload = {
   selector: string;
 };
 
-type Variation = {
+type PredictionForContext = {
   variable: string;
   value: string;
 };
@@ -60,7 +60,7 @@ type Variation = {
 type EzbotPredictionsContext = {
   schema: string;
   data: {
-    predictions: Array<Variation>;
+    predictions: Array<PredictionForContext>;
   };
 };
 
@@ -88,6 +88,7 @@ export {
   EzbotLinkClickEvent,
   EzbotLinkClickEventPayload,
   EzbotPredictionsContext,
+  PredictionForContext,
 };
 
 declare global {

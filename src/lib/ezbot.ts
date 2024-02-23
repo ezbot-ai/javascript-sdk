@@ -55,7 +55,7 @@ async function getPredictions(
 
 import {
   defaultWebConfiguration,
-  ezbotPredictionsContextSchema,
+  ezbotPredictionsContextSchemaURL,
   ezbotTrackerDomain,
   plugins,
 } from './constants';
@@ -111,7 +111,7 @@ async function initEzbot(
     sessionId
   );
   const predictionsContext: EzbotPredictionsContext = {
-    schema: ezbotPredictionsContextSchema,
+    schema: ezbotPredictionsContextSchemaURL,
     data: {
       predictions: predictions.map((pred) => ({
         variable: pred.key,
