@@ -1,3 +1,5 @@
+/* eslint-disable functional/immutable-data */
+
 /*
  * This package uses source code from Snowplow Analytics Ltd
  * Copyright (c) 2022 Snowplow Analytics Ltd, 2010 Anthon Pang
@@ -28,132 +30,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* eslint-disable functional/no-return-void */
-import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
-import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
-import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
-import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
-import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
-import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
-import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
-import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
-import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
-import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
+
 import {
   addGlobalContexts,
   BrowserTracker,
-  CommonEventProperties,
-  enableActivityTracking,
   newTracker,
-  trackPageView as tPageView,
-  trackSelfDescribingEvent,
 } from '@snowplow/browser-tracker';
-import {
-  ActivityTrackingConfiguration,
-  PageViewEvent,
-  TrackerConfiguration,
-} from '@snowplow/browser-tracker-core';
-
-const plugins = [
-  GaCookiesPlugin(),
-  GeolocationPlugin(),
-  ClientHintsPlugin(),
-  ConsentPlugin(),
-  LinkClickTrackingPlugin(),
-  FormTrackingPlugin(),
-  TimezonePlugin(),
-  EcommercePlugin(),
-  SiteTrackingPlugin(),
-  BrowserFeaturesPlugin(),
-];
-const EzbotTrackerDomain = 'https://api.ezbot.ai';
-const EzbotRewardEventSchema = 'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
-const EzbotLinkClickEventSchema = 'iglu:com.ezbot/link_click/jsonschema/1-0-0';
-const EzbotPredictionsContextSchema =
-  'iglu:com.ezbot/predictions_context/jsonschema/1-0-1';
-const DefaultWebConfiguration: TrackerConfiguration = {
-  appId: 'default-ezbot-app-id',
-  encodeBase64: true,
-  cookieName: '_ezbot_',
-  plugins: plugins,
-};
-
-declare global {
-  interface Window {
-    ezbot: {
-      tracker: BrowserTracker;
-      predictions: Array<Prediction>;
-      sessionId: string;
-      trackPageView: (
-        // eslint-disable-next-line functional/prefer-immutable-types
-        event?: PageViewEvent & CommonEventProperties
-      ) => void;
-      trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
-      startActivityTracking: (
-        // eslint-disable-next-line functional/prefer-immutable-types
-        config: ActivityTrackingConfiguration
-      ) => void;
-      makeVisualChanges: () => void;
-    };
-  }
-}
-
-interface VariableConfig {
-  [key: string]: string;
-}
-type Prediction = {
-  key: string;
-  type: string;
-  version: string;
-  value: string;
-  config: VariableConfig;
-};
-
-type PredictionContext = {
-  variable: string;
-  value: string;
-};
-
-type Predictions = {
-  predictions: Array<Prediction>;
-};
-
-type PredictionsContext = {
-  predictions: Array<PredictionContext>;
-};
-
-type PredictionsResponse = {
-  holdback: boolean;
-  predictions: Array<Prediction>;
-};
-
-type EzbotRewardEvent = {
-  schema: string;
-  data: EzbotRewardEventPayload;
-};
-
-type EzbotRewardEventPayload = {
-  key: string;
-  reward?: number | null;
-  rewardUnits?: string | null;
-  category?: string | null;
-};
-
-type EzbotLinkClickEvent = {
-  schema: string;
-  data: EzbotLinkClickEventPayload;
-};
-
-type EzbotLinkClickEventPayload = {
-  text?: string | null;
-  href?: string | null;
-  selector: string;
-};
-
-type EzbotPredictionsContext = {
-  schema: string;
-  data: PredictionsContext;
-};
+import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 const ezbotTrackerId = 'ezbot';
 async function getPredictions(
@@ -170,16 +53,40 @@ async function getPredictions(
   return responseJSON.predictions;
 }
 
+import {
+  defaultWebConfiguration,
+  ezbotPredictionsContextSchemaPath,
+  ezbotTrackerDomain,
+  plugins,
+} from './constants';
+import {
+  startActivityTracking,
+  trackLinkClick,
+  trackPageView,
+  trackRewardEvent,
+} from './tracking';
+import {
+  EzbotLinkClickEvent,
+  EzbotLinkClickEventPayload,
+  EzbotPredictionsContext,
+  EzbotRewardEvent,
+  EzbotRewardEventPayload,
+  Prediction,
+  Predictions,
+  PredictionsResponse,
+} from './types';
+import { makeVisualChange, makeVisualChanges } from './visualChanges';
+
 async function initEzbot(
   projectId: number,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _config: TrackerConfiguration = DefaultWebConfiguration
+  _config: TrackerConfiguration = defaultWebConfiguration
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
     return existingTracker;
   }
-  const tracker = newTracker(ezbotTrackerId, EzbotTrackerDomain, {
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {
     appId: projectId.toString(),
     plugins: plugins,
   });
@@ -189,13 +96,21 @@ async function initEzbot(
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId: string = (domainUserInfo as string[])[6];
-  const predictions: Array<Prediction> = await getPredictions(projectId, sessionId);
+  const predictions: Array<Prediction> = await getPredictions(
+    projectId,
+    sessionId
+  );
   const predictionsContext: EzbotPredictionsContext = {
-    schema: EzbotPredictionsContextSchema,
-    data: { predictions: predictions.map(pred => ({variable: pred.key, value: pred.value})) },
+    schema: ezbotPredictionsContextSchemaPath,
+    data: {
+      predictions: predictions.map((pred) => ({
+        variable: pred.key,
+        value: pred.value,
+      })),
+    },
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
-  // eslint-disable-next-line functional/immutable-data
+
   window.ezbot = {
     tracker: tracker,
     predictions: predictions,
@@ -209,94 +124,10 @@ async function initEzbot(
   return tracker;
 }
 
-function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
-  const event: EzbotRewardEvent = {
-    schema: EzbotRewardEventSchema,
-    data: payload,
-  };
-  trackSelfDescribingEvent(
-    { event: event },
-    [ezbotTrackerId] // only send to ezbot tracker
-  );
-}
-
-function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
-  const event: EzbotLinkClickEvent = {
-    schema: EzbotLinkClickEventSchema,
-    data: payload,
-  };
-  trackSelfDescribingEvent(
-    {
-      event: event,
-    },
-    [ezbotTrackerId] // only send to ezbot tracker
-  );
-}
-
-// eslint-disable-next-line functional/prefer-immutable-types
-function startActivityTracking(config: ActivityTrackingConfiguration): void {
-  enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
-}
-
-function trackPageView(
-  config: Readonly<PageViewEvent & CommonEventProperties>
-): void {
-  tPageView(config);
-}
-
-// eslint-disable-next-line functional/prefer-immutable-types
-function setElementText(element: Element, text: string): void {
-  // eslint-disable-next-line functional/immutable-data
-  element.textContent = text;
-}
-
-function makeVisualChanges(): void {
-  const predictions = window.ezbot?.predictions;
-  if (!predictions) {
-    console.log('No predictions found. Skipping visual changes.');
-    return;
-  }
-  predictions.forEach((prediction) => {
-    if (prediction.type != 'visual') {
-      return;
-    }
-    if (prediction.config == null) {
-      console.log(
-        `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
-      return;
-    }
-    if (!prediction.config.selector) {
-      console.log(
-        `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
-      return;
-    }
-    if (!prediction.config.action) {
-      console.log(
-        `No action found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
-      return;
-    }
-    const element = document.querySelector(prediction.config.selector);
-    if (prediction.config.action === 'setText' && element) {
-      console.log(
-        `Setting text for element with selector ${prediction.config.selector} to ${prediction.value}`
-      );
-      setElementText(element, prediction.value);
-      return;
-    } else {
-      console.log(
-        'Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.'
-      );
-      return;
-    }
-  });
-}
-
 export {
   trackRewardEvent,
   initEzbot,
+  makeVisualChange,
   makeVisualChanges,
   startActivityTracking,
   trackLinkClick,
@@ -307,8 +138,6 @@ export {
   EzbotRewardEventPayload,
   EzbotPredictionsContext,
   Prediction,
-  PredictionContext,
   Predictions,
-  PredictionsContext,
   PredictionsResponse,
 };

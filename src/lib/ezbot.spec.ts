@@ -5,19 +5,17 @@
 /* eslint-disable functional/no-return-void */
 import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
-import Ajv from "ajv";
+import Ajv from 'ajv';
 
-import {
-  initEzbot,
-  PredictionsContext,
-  startActivityTracking,
-  trackRewardEvent
-} from './ezbot';
-import * as predictions_schema from './schemas/com.ezbot/predictions_context/jsonschema/1-0-1.json';
-
+import { initEzbot } from './ezbot';
+import * as predictionsContextSchema from './schemas/com.ezbot/predictions_context/jsonschema/1-0-1.json';
+import { startActivityTracking, trackRewardEvent } from './tracking';
+import { EzbotPredictionsContext } from './types';
 
 const ajv = new Ajv();
-const validate_predictions = ajv.compile<PredictionsContext>(predictions_schema);
+const validatePredictionsContextSchema = ajv.compile<EzbotPredictionsContext>(
+  predictionsContextSchema
+);
 
 const predictions = [
   {
@@ -71,7 +69,7 @@ function clearEventQueue() {
 }
 
 describe('ezbot js tracker', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
     global.fetch = jest.fn(async () => {
       return {
@@ -83,6 +81,9 @@ describe('ezbot js tracker', () => {
     });
     // Add ezbot tracker to jsdom DOM
     tracker = await initEzbot(1, { appId: 'test-app-id' });
+  });
+  it('initializes', () => {
+    expect(tracker).toBeDefined();
     const sessionId = (tracker.getDomainUserInfo() as unknown as string[])[6];
     const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}`;
     expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
@@ -100,7 +101,12 @@ describe('ezbot js tracker', () => {
     const contexts = firstEvent.evt.cx;
     const decodedContexts = decodeContexts(contexts as string);
     expect(decodedContexts).toContainEqual({
-      data: { predictions: predictions.map(p => ({variable: p.key, value: p.value})) },
+      data: {
+        predictions: predictions.map((p) => ({
+          variable: p.key,
+          value: p.value,
+        })),
+      },
       schema: 'iglu:com.ezbot/predictions_context/jsonschema/1-0-1',
     });
   });
@@ -111,7 +117,9 @@ describe('ezbot js tracker', () => {
     const contexts = firstEvent.evt.cx;
     const decodedContexts: Context[] = decodeContexts(contexts as string);
 
-    expect(validate_predictions(decodedContexts[2].data)).toBeTruthy()
+    expect(
+      validatePredictionsContextSchema(decodedContexts[2].data)
+    ).toBeTruthy();
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();
@@ -119,10 +127,10 @@ describe('ezbot js tracker', () => {
     trackPageView();
     expect(tracker.trackPageView).toHaveBeenCalled();
   });
-  it('exposes a global trackRewardEvent function', async () => {
+  it('exposes a global trackRewardEvent function', () => {
     expect(window.ezbot.trackRewardEvent).toBeDefined();
   });
-  it('has a track reward function that sends a reward event', async () => {
+  it('has a track reward function that sends a reward event', () => {
     trackRewardEvent({ key: 'foo' });
     const eventOutQueue = tracker.sharedState.outQueues[0];
     const firstEvent = (eventOutQueue as Outqueue)[0];
