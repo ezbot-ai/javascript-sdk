@@ -67,13 +67,16 @@ function makeVisualChange(prediction: Prediction): void {
   const action = prediction.config.action;
   if (action === 'setText') {
     setElementText(element, prediction.value);
+    return;
   }
   if (action === 'setInnerHTML') {
     setElementInnerHTML(element, prediction.value);
+    return;
   }
   if (action === 'setHref') {
     if (element instanceof HTMLAnchorElement) {
       setElementHref(element, prediction.value);
+      return;
     } else {
       console.log(
         `Element with selector: ${prediction.config.selector} is not an anchor element. Skipping its visual change.`
@@ -88,6 +91,7 @@ function makeVisualChange(prediction: Prediction): void {
       return;
     }
     setElementSrc(element, prediction.value);
+    return;
   }
   if (action === 'hide') {
     if (!(element instanceof HTMLElement)) {
@@ -97,6 +101,7 @@ function makeVisualChange(prediction: Prediction): void {
       return;
     }
     hideElement(element);
+    return;
   }
   if (action === 'show') {
     if (!(element instanceof HTMLElement)) {
