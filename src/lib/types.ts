@@ -9,7 +9,18 @@ import {
 
 type VariableConfig = {
   selector: string;
-  action: 'setText' | 'setInnerHTML' | 'setHref' | 'setSrc' | 'hide' | 'show';
+  action:
+    | 'setText'
+    | 'setInnerHTML'
+    | 'setHref'
+    | 'setSrc'
+    | 'hide'
+    | 'show'
+    | 'addClasses'
+    | 'removeClasses'
+    | 'setStyle'
+    | 'setAttribute';
+  attribute?: string;
 };
 
 type Prediction = {

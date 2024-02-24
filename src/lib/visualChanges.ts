@@ -19,6 +19,31 @@ function setElementAttribute(
   element.setAttribute(attribute, value);
 }
 
+function addClassesToElement(element: HTMLElement, classes: string[]): void {
+  if (classes.length === 0) {
+    console.log(`No classes to add to element.`);
+    return;
+  }
+  classes.forEach((className) => {
+    element.classList.add(className);
+  });
+}
+function removeClassesFromElement(
+  element: HTMLElement,
+  classes: string[]
+): void {
+  if (classes.length === 0) {
+    console.log(`No classes to remove from element.`);
+    return;
+  }
+  classes.forEach((className) => {
+    element.classList.remove(className);
+  });
+}
+function setElementStyle(element: HTMLElement, value: string): void {
+  setElementAttribute(element, 'style', value);
+}
+
 function setElementHref(element: HTMLAnchorElement, href: string): void {
   setElementAttribute(element, 'href', href);
 }
@@ -49,6 +74,18 @@ function validateVisualPrediction(prediction: Prediction): string | null {
 
   return null;
 }
+function parseCommaSeparatedList(list: string): string[] {
+  // if list is empty, return an empty array
+  if (list.length === 0) {
+    return [];
+  }
+  // if list has no commas, return it as an array
+  if (list.indexOf(',') === -1) {
+    return [list];
+  }
+  const listArray = list.split(',').map((item) => item.trim());
+  return listArray;
+}
 
 function makeVisualChange(prediction: Prediction): void {
   if (!prediction.config) {
@@ -57,64 +94,84 @@ function makeVisualChange(prediction: Prediction): void {
     );
     return;
   }
-  const element = document.querySelector(prediction.config.selector);
-  if (!element) {
+  const selector = prediction.config.selector;
+  if (!selector) {
     console.log(
-      `No element found for prediction with key: ${prediction.key}. Skipping its visual change.`
+      `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`
     );
     return;
   }
+
+  const element = document.querySelector(selector);
+  if (!element || !(element instanceof HTMLElement)) {
+    console.log(
+      `No HTML element found for prediction with key: ${prediction.key}. Skipping its visual change.`
+    );
+    return;
+  }
+
   const action = prediction.config.action;
-  if (action === 'setText') {
-    setElementText(element, prediction.value);
-    return;
-  }
-  if (action === 'setInnerHTML') {
-    setElementInnerHTML(element, prediction.value);
-    return;
-  }
-  if (action === 'setHref') {
-    if (element instanceof HTMLAnchorElement) {
-      setElementHref(element, prediction.value);
-      return;
-    } else {
-      console.log(
-        `Element with selector: ${prediction.config.selector} is not an anchor element. Skipping its visual change.`
+
+  switch (action) {
+    case 'setText':
+      setElementText(element, prediction.value);
+      break;
+    case 'setInnerHTML':
+      setElementInnerHTML(element, prediction.value);
+      break;
+    case 'setAttribute':
+      if (!prediction.config.attribute) {
+        console.log(
+          `No attribute found for prediction with key: ${prediction.key}. Skipping its visual change.`
+        );
+        return;
+      }
+      setElementAttribute(
+        element,
+        prediction.config.attribute,
+        prediction.value
       );
-    }
-  }
-  if (action === 'setSrc') {
-    if (!(element instanceof HTMLImageElement)) {
-      console.log(
-        `Element with selector: ${prediction.config.selector} is not an image element. Skipping its visual change.`
+      break;
+    case 'addClasses':
+      addClassesToElement(element, parseCommaSeparatedList(prediction.value));
+      break;
+    case 'removeClasses':
+      removeClassesFromElement(
+        element,
+        parseCommaSeparatedList(prediction.value)
       );
-      return;
-    }
-    setElementSrc(element, prediction.value);
-    return;
-  }
-  if (action === 'hide') {
-    if (!(element instanceof HTMLElement)) {
+      break;
+    case 'setHref':
+      if (element instanceof HTMLAnchorElement) {
+        setElementHref(element, prediction.value);
+      } else {
+        console.log(
+          `Element with selector: ${prediction.config.selector} is not an anchor element. Skipping its visual change.`
+        );
+      }
+      break;
+    case 'setStyle':
+      setElementStyle(element, prediction.value);
+      break;
+    case 'setSrc':
+      if (element instanceof HTMLImageElement) {
+        setElementSrc(element, prediction.value);
+      } else {
+        console.log(
+          `Element with selector: ${prediction.config.selector} is not an image element. Skipping its visual change.`
+        );
+      }
+      break;
+    case 'hide':
+      hideElement(element);
+      break;
+    case 'show':
+      showElement(element);
+      break;
+    default:
       console.log(
-        `Element with selector: ${prediction.config.selector} is not an HTML element. Skipping its visual change.`
+        `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
       );
-      return;
-    }
-    hideElement(element);
-    return;
-  }
-  if (action === 'show') {
-    if (!(element instanceof HTMLElement)) {
-      console.log(
-        `Element with selector: ${prediction.config.selector} is not an HTML element. Skipping its visual change.`
-      );
-      return;
-    }
-    showElement(element);
-  } else {
-    console.log(
-      `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
-    );
   }
 }
 
@@ -144,6 +201,9 @@ export {
   setElementAttribute,
   setElementHref,
   setElementSrc,
+  addClassesToElement,
+  removeClassesFromElement,
+  setElementStyle,
   hideElement,
   showElement,
   validateVisualPrediction,

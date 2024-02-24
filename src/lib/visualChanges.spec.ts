@@ -36,6 +36,51 @@ describe('visualChanges', () => {
       expect(div.getAttribute(attribute)).toBe(value);
     });
   });
+  describe('addClassesToElement', () => {
+    it('adds the given classes to the element', () => {
+      const div = document.createElement('div');
+      const classes = ['class1', 'class2'];
+
+      visualChanges.addClassesToElement(div, classes);
+      expect(div.classList.contains(classes[0])).toBe(true);
+      expect(div.classList.contains(classes[1])).toBe(true);
+    });
+    it('logs a message if no classes are given', () => {
+      const div = document.createElement('div');
+      const classes: string[] = [];
+
+      visualChanges.addClassesToElement(div, classes);
+      expect(logSpy).toHaveBeenCalledWith(`No classes to add to element.`);
+    });
+  });
+  describe('removeClassesFromElement', () => {
+    it('removes the given classes from the element', () => {
+      const div = document.createElement('div');
+      const classes = ['class1', 'class2'];
+      div.classList.add(classes[0]);
+      div.classList.add(classes[1]);
+
+      visualChanges.removeClassesFromElement(div, classes);
+      expect(div.classList.contains(classes[0])).toBe(false);
+      expect(div.classList.contains(classes[1])).toBe(false);
+    });
+    it('logs a message if no classes are given', () => {
+      const div = document.createElement('div');
+      const classes: string[] = [];
+
+      visualChanges.removeClassesFromElement(div, classes);
+      expect(logSpy).toHaveBeenCalledWith(`No classes to remove from element.`);
+    });
+  });
+  describe('setElementStyle', () => {
+    it('sets the style of the given element', () => {
+      const div = document.createElement('div');
+      const style = 'color: red;';
+
+      visualChanges.setElementStyle(div, style);
+      expect(div.getAttribute('style')).toBe(style);
+    });
+  });
   describe('setElementHref', () => {
     it('sets the href of the given anchor element', () => {
       const anchor = document.createElement('a');
@@ -150,6 +195,114 @@ describe('visualChanges', () => {
         expect(div.innerHTML).toBe(prediction.value);
       });
     });
+    describe('with a setAttribute action', () => {
+      it('sets the attribute of the element', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: 'some_value',
+          config: {
+            selector: '#test',
+            action: 'setAttribute',
+            attribute: 'data-test',
+          },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(div.getAttribute('data-test')).toBe(prediction.value);
+      });
+      it('logs a message if no attribute is found', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: 'some_value',
+          config: { selector: '#test', action: 'setAttribute' },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(logSpy).toHaveBeenCalledWith(
+          `No attribute found for prediction with key: ${prediction.key}. Skipping its visual change.`
+        );
+      });
+    });
+    describe('with a addClasses action', () => {
+      it('adds the classes to the element', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: 'class1,class2',
+          config: { selector: '#test', action: 'addClasses' },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(div.classList.contains('class1')).toBe(true);
+        expect(div.classList.contains('class2')).toBe(true);
+      });
+      it('logs a message if no classes are found', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: '',
+          config: { selector: '#test', action: 'addClasses' },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(logSpy).toHaveBeenCalledWith(`No classes to add to element.`);
+      });
+    });
+    describe('with a removeClasses action', () => {
+      it('removes the classes from the element', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        div.classList.add('class1');
+        div.classList.add('class2');
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: 'class1,class2',
+          config: { selector: '#test', action: 'removeClasses' },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(div.classList.contains('class1')).toBe(false);
+        expect(div.classList.contains('class2')).toBe(false);
+      });
+      it('logs a message if no classes are found', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: '',
+          config: { selector: '#test', action: 'removeClasses' },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(logSpy).toHaveBeenCalledWith(
+          `No classes to remove from element.`
+        );
+      });
+    });
     describe('with a setHref action', () => {
       it('sets the href of the anchor element', () => {
         const anchor = document.createElement('a');
@@ -165,6 +318,23 @@ describe('visualChanges', () => {
 
         visualChanges.makeVisualChange(prediction);
         expect(anchor.getAttribute('href')).toBe(prediction.value);
+      });
+    });
+    describe('with a setStyle action', () => {
+      it('sets the style of the element', () => {
+        const div = document.createElement('div');
+        div.id = 'test';
+        jest.spyOn(document, 'querySelector').mockReturnValueOnce(div);
+        const prediction: Prediction = {
+          key: 'some_key',
+          value: 'color: red;',
+          config: { selector: '#test', action: 'setStyle' },
+          type: 'visual',
+          version: '2.0',
+        };
+
+        visualChanges.makeVisualChange(prediction);
+        expect(div.getAttribute('style')).toBe(prediction.value);
       });
     });
     describe('with a setSrc action', () => {
