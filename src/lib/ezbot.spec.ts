@@ -13,7 +13,7 @@ import { startActivityTracking, trackRewardEvent } from './tracking';
 import { EzbotPredictionsContext } from './types';
 
 const ajv = new Ajv();
-const validate_predictions = ajv.compile<EzbotPredictionsContext>(
+const validatePredictionsContextSchema = ajv.compile<EzbotPredictionsContext>(
   predictionsContextSchema
 );
 
@@ -117,7 +117,9 @@ describe('ezbot js tracker', () => {
     const contexts = firstEvent.evt.cx;
     const decodedContexts: Context[] = decodeContexts(contexts as string);
 
-    expect(validate_predictions(decodedContexts[2].data)).toBeTruthy();
+    expect(
+      validatePredictionsContextSchema(decodedContexts[2].data)
+    ).toBeTruthy();
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();
