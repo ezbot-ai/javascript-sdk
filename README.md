@@ -91,7 +91,7 @@ ezbot.trackRewardEvent({
   reward: 100,
   rewardUnits: 'dollars',
 });
-makeVisualChanges(); // Optional. If the variable is a visual change, it will be applied.
+ezbot.makeVisualChanges(); // Optional. If the variable is a visual change, it will be applied.
 ```
 
 ### NextJS
