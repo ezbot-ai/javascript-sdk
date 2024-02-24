@@ -17,7 +17,7 @@ Use
 ```js
 import { initEzbot } from '@ezbot-ai/javascript-sdk';
 
-await initEzbot(yourProjectId, { appId: yourAppId });
+await initEzbot(yourProjectId);
 ```
 
 ### How to use it in your project via `<script>` tag
@@ -25,13 +25,13 @@ await initEzbot(yourProjectId, { appId: yourAppId });
 Install
 
 ```html
-<script src="https://cdn.ezbot.ai/web-snippets/ezbot.min.js">
+<script src="https://cdn.ezbot.ai/web-snippets/ezbot.min.js"></script>
 ```
 
 Use
 
 ```js
-await ezbot.initEzbot(yourProjectId, { appId: yourAppId });
+await ezbot.initEzbot(yourProjectId);
 ```
 
 ### How to develop this library
@@ -48,7 +48,7 @@ Send reward events to ezbot to tune the model and improve the quality of the rec
 
 We currently support two types of rewardUnits: `count` and `dollars`. If you send a reward with `dollars` as the rewardUnits, we will use it to calculate the total dollars per session. If you send a reward with `count` as the rewardUnits, we will optimize for total _count_ of reward events per session.
 
-We only support one type of `rewardUnits` in projects today.
+We only support one type of `rewardUnits` per project today.
 
 ### Via NPM
 
@@ -61,7 +61,7 @@ import {
   makeVisualChanges,
 } from '@ezbot-ai/javascript-sdk';
 
-await initEzbot(yourProjectId, { appId: yourAppId });
+await initEzbot(yourProjectId);
 startActivityTracking({
   /** The minimum time that must have elapsed before first heartbeat */
   minimumVisitLength: 2,
@@ -77,7 +77,7 @@ makeVisualChanges(); // Optional. If the variable is a visual change, it will be
 ### Via `<script>` tag
 
 ```js
-await ezbot.initEzbot(yourProjectId, { appId: yourAppId });
+await ezbot.initEzbot(yourProjectId);
 ezbot.startActivityTracking({
   /** The minimum time that must have elapsed before first heartbeat */
   minimumVisitLength: 2,
