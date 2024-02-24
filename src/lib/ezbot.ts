@@ -75,17 +75,7 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
-import {
-  hideElement,
-  makeVisualChange,
-  makeVisualChanges,
-  setElementAttribute,
-  setElementHref,
-  setElementInnerHTML,
-  setElementSrc,
-  setElementText,
-  showElement,
-} from './visualChanges';
+import { makeVisualChanges } from './visualChanges';
 
 async function initEzbot(
   projectId: number,
@@ -137,18 +127,9 @@ async function initEzbot(
 export {
   trackRewardEvent,
   initEzbot,
-  makeVisualChange,
-  makeVisualChanges,
   startActivityTracking,
   trackLinkClick,
   trackPageView,
-  setElementText,
-  setElementInnerHTML,
-  setElementSrc,
-  setElementAttribute,
-  setElementHref,
-  hideElement,
-  showElement,
   EzbotLinkClickEvent,
   EzbotRewardEvent,
   EzbotLinkClickEventPayload,
