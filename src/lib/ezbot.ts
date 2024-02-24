@@ -75,7 +75,7 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
-import { makeVisualChanges } from './visualChanges';
+import { makeVisualChange, makeVisualChanges } from './visualChanges';
 
 async function initEzbot(
   projectId: number,
@@ -127,6 +127,8 @@ async function initEzbot(
 export {
   trackRewardEvent,
   initEzbot,
+  makeVisualChange,
+  makeVisualChanges,
   startActivityTracking,
   trackLinkClick,
   trackPageView,
