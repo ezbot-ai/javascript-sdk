@@ -81,7 +81,9 @@ declare global {
       tracker: BrowserTracker;
       predictions: Array<Prediction>;
       sessionId: string;
-      trackPageView: (event?: PageViewEvent & CommonEventProperties) => void;
+      trackPageView: (
+        config: Readonly<PageViewEvent & CommonEventProperties>
+      ) => void;
       trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (config: ActivityTrackingConfiguration) => void;
       makeVisualChanges: () => void;
@@ -101,17 +103,3 @@ export {
   EzbotPredictionsContext,
   PredictionForContext,
 };
-
-declare global {
-  interface Window {
-    ezbot: {
-      tracker: BrowserTracker;
-      predictions: Array<Prediction>;
-      sessionId: string;
-      trackPageView: (event?: PageViewEvent & CommonEventProperties) => void;
-      trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
-      startActivityTracking: (config: ActivityTrackingConfiguration) => void;
-      makeVisualChanges: () => void;
-    };
-  }
-}
