@@ -115,7 +115,7 @@ async function initEzbot(
     tracker: tracker,
     predictions: predictions,
     sessionId: sessionId,
-    trackPageView: tracker.trackPageView, // only send to ezbot tracker
+    trackPageView: trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
