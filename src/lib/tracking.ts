@@ -1,11 +1,6 @@
 /* eslint-disable functional/prefer-immutable-types */
 /* eslint-disable functional/no-return-void */
-import {
-  CommonEventProperties,
-  enableActivityTracking,
-  trackPageView as tPageView,
-  trackSelfDescribingEvent,
-} from '@snowplow/browser-tracker';
+import * as Snowplow from '@snowplow/browser-tracker';
 import {
   ActivityTrackingConfiguration,
   PageViewEvent,
@@ -28,7 +23,7 @@ function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
     schema: ezbotRewardEventSchemaPath,
     data: payload,
   };
-  trackSelfDescribingEvent(
+  Snowplow.trackSelfDescribingEvent(
     { event: event },
     [ezbotTrackerId] // only send to ezbot tracker
   );
@@ -39,7 +34,7 @@ function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
     schema: ezbotLinkClickEventSchemaPath,
     data: payload,
   };
-  trackSelfDescribingEvent(
+  Snowplow.trackSelfDescribingEvent(
     {
       event: event,
     },
@@ -48,13 +43,13 @@ function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
 }
 
 function startActivityTracking(config: ActivityTrackingConfiguration): void {
-  enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
+  Snowplow.enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
 function trackPageView(
-  config: Readonly<PageViewEvent & CommonEventProperties>
+  config: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
 ): void {
-  tPageView(config);
+  Snowplow.trackPageView(config);
 }
 
 export {
