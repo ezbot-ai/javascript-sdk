@@ -11,7 +11,7 @@ const localStyles: Styles = {
   },
   '.ezbot-highlight': {
     border: '2px solid red',
-    backgroundColor: 'rgba(255, 0, 0, 0.3)',
+    'background-color': 'rgba(255, 0, 0, 0.3)',
   },
 };
 const setLocalStyles = () => {
