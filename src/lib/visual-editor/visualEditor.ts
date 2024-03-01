@@ -1,8 +1,9 @@
-/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-return-void */
 import { v4 as uuidv4 } from 'uuid';
 
 import { getSelector } from './getSelector';
+import { highlightElement } from './highlighting';
+import { setLocalStyles } from './localStyles';
 
 // TODO: MOVE ME AND USE ME IN VISUAL EDITOR
 // type HighlightElementPayload = {
@@ -27,7 +28,7 @@ function setupReceiveMessageListener(): void {
         return;
       }
       if (type == 'highlightElement') {
-        element.style.border = `2px solid ${ezbotElement.color}`;
+        highlightElement(element);
       } else {
         console.error('Unknown message type', type);
       }
@@ -104,5 +105,6 @@ export {
   VisualEditorClickEventPayload,
   setupElementClickListeners,
   setupUniqueElementIds,
+  setLocalStyles,
   setupReceiveMessageListener,
 };

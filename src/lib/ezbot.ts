@@ -75,14 +75,15 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
-import { makeVisualChange, makeVisualChanges } from './visualChanges';
 import {
+  setLocalStyles,
   setupElementClickListeners,
   setupReceiveMessageListener,
   setupUniqueElementIds,
   VisualEditorClickEventPayload,
   VisualEditorElementPayload,
-} from './visualEditor';
+} from './visual-editor/visualEditor';
+import { makeVisualChange, makeVisualChanges } from './visualChanges';
 
 async function initEzbot(
   projectId: number,
@@ -122,6 +123,7 @@ async function initEzbot(
     setupUniqueElementIds();
     setupElementClickListeners();
     setupReceiveMessageListener();
+    setLocalStyles();
   } catch (error) {
     console.error('Failed to setup element click listeners', error);
   }
