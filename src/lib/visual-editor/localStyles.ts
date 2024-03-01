@@ -20,8 +20,16 @@ const setLocalStyles = () => {
   });
   const style = document.createElement('style');
   style.type = 'text/css';
+  style.id = 'ezbot-local-styles';
   style.innerHTML = styles.join(' ');
   document.head.appendChild(style);
 };
+const removeLocalStyles = () => {
+  const style = document.getElementById('ezbot-local-styles');
+  console.log('removeLocalStyles', style);
+  if (style) {
+    style.remove();
+  }
+};
 
-export { setLocalStyles };
+export { removeLocalStyles, setLocalStyles };

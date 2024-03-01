@@ -75,11 +75,8 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
+import { initVisualEditor } from './visual-editor/init';
 import {
-  setLocalStyles,
-  setupElementClickListeners,
-  setupReceiveMessageListener,
-  setupUniqueElementIds,
   VisualEditorClickEventPayload,
   VisualEditorElementPayload,
 } from './visual-editor/visualEditor';
@@ -120,10 +117,7 @@ async function initEzbot(
   addGlobalContexts([predictionsContext], [tracker.id]);
 
   try {
-    setupUniqueElementIds();
-    setupElementClickListeners();
-    setupReceiveMessageListener();
-    setLocalStyles();
+    initVisualEditor();
   } catch (error) {
     console.error('Failed to setup element click listeners', error);
   }

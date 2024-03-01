@@ -4,6 +4,7 @@
 
 const highlightClass = 'ezbot-highlighted';
 
+// TODO: make this a class so I can remove it when going back to interactive mode
 const highlightStyle = {
   border: '2px solid red',
   backgroundColor: 'rgba(255, 0, 0, 0.2)',
