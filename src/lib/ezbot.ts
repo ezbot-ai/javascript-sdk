@@ -76,6 +76,13 @@ import {
   PredictionsResponse,
 } from './types';
 import { makeVisualChange, makeVisualChanges } from './visualChanges';
+import {
+  setupElementClickListeners,
+  setupReceiveMessageListener,
+  setupUniqueElementIds,
+  VisualEditorClickEventPayload,
+  VisualEditorElementPayload,
+} from './visualEditor';
 
 async function initEzbot(
   projectId: number,
@@ -111,6 +118,14 @@ async function initEzbot(
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
 
+  try {
+    setupUniqueElementIds();
+    setupElementClickListeners();
+    setupReceiveMessageListener();
+  } catch (error) {
+    console.error('Failed to setup element click listeners', error);
+  }
+
   window.ezbot = {
     tracker: tracker,
     predictions: predictions,
@@ -140,4 +155,6 @@ export {
   Prediction,
   Predictions,
   PredictionsResponse,
+  VisualEditorElementPayload,
+  VisualEditorClickEventPayload,
 };

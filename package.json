@@ -18,7 +18,7 @@
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
     "build:module": "tsc -p tsconfig.module.json",
-    "build:web-snippet": "tsc -p tsconfig.json && browserify -p tinyify build/main/index.js -s ezbot -o build/web-snippets/ezbot.min.js",
+    "build:web-snippet": "tsc -p tsconfig.json && browserify -p esmify > build/main/index.js -p tinyify build/main/index.js -s ezbot -o build/web-snippets/ezbot.min.js",
     "fix": "run-s fix:*",
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:lint": "eslint src --ext .ts --fix",
@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@bitauth/libauth": "^1.17.1",
+    "@medv/finder": "^3.2.0",
     "@snowplow/browser-plugin-browser-features": "^3.19.0",
     "@snowplow/browser-plugin-client-hints": "^3.19.0",
     "@snowplow/browser-plugin-consent": "^3.19.0",
@@ -58,7 +59,8 @@
     "@snowplow/browser-plugin-site-tracking": "^3.19.0",
     "@snowplow/browser-plugin-timezone": "^3.19.0",
     "@snowplow/browser-tracker": "^3.19.0",
-    "patch-package": "^8.0.0"
+    "patch-package": "^8.0.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
@@ -67,6 +69,7 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@snowplow/browser-tracker-core": "^3.19.0",
     "@types/jest": "~29.5.11",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "ajv": "^8.12.0",
@@ -80,6 +83,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-functional": "^6.0.0",
     "eslint-plugin-import": "^2.29.1",
+    "esmify": "^2.1.1",
     "generate-license-file": "^3.0.1",
     "gh-pages": "^3.1.0",
     "jest": "^29.7.0",
