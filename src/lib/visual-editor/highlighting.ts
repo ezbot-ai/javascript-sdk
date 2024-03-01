@@ -2,13 +2,7 @@
 /* eslint-disable functional/prefer-immutable-types */
 /* eslint-disable functional/no-return-void */
 
-const highlightClass = 'ezbot-highlighted';
-
-// TODO: make this a class so I can remove it when going back to interactive mode
-const highlightStyle = {
-  border: '2px solid red',
-  backgroundColor: 'rgba(255, 0, 0, 0.2)',
-};
+const highlightClass = 'ezbot-highlight';
 
 const unhighlightAllElements = (): void => {
   const highlightedElements = document.querySelectorAll(`.${highlightClass}`);
@@ -28,9 +22,7 @@ const unhighlightAllElements = (): void => {
 };
 const highlightElement = (element: HTMLElement): void => {
   unhighlightAllElements();
-  element.style.border = highlightStyle.border;
-  element.style.backgroundColor = highlightStyle.backgroundColor;
   element.classList.add(highlightClass);
 };
 
-export { highlightElement };
+export { highlightElement, unhighlightAllElements };

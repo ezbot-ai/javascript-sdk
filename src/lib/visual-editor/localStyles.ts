@@ -9,6 +9,10 @@ const localStyles: Styles = {
   '*': {
     cursor: 'pointer',
   },
+  '.ezbot-highlight': {
+    border: '2px solid red',
+    backgroundColor: 'rgba(255, 0, 0, 0.3)',
+  },
 };
 const setLocalStyles = () => {
   // map over localStyles to create css string
@@ -24,12 +28,5 @@ const setLocalStyles = () => {
   style.innerHTML = styles.join(' ');
   document.head.appendChild(style);
 };
-const removeLocalStyles = () => {
-  const style = document.getElementById('ezbot-local-styles');
-  console.log('removeLocalStyles', style);
-  if (style) {
-    style.remove();
-  }
-};
 
-export { removeLocalStyles, setLocalStyles };
+export { setLocalStyles };

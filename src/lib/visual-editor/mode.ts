@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-return-void */
 type Mode = 'interactive' | 'ezbot';
-import { removeLocalStyles, setLocalStyles } from './localStyles';
+import { unhighlightAllElements } from './highlighting';
+import { setLocalStyles } from './localStyles';
 
 const enableDefaultEvents = (): void => {
   const elements = document.querySelectorAll('*');
@@ -23,7 +24,7 @@ const disableDefaultEvents = (): void => {
 const changeMode = (mode: Mode): void => {
   console.log('changeMode', mode);
   if (mode === 'interactive') {
-    removeLocalStyles();
+    unhighlightAllElements();
     disableDefaultEvents();
     // save mode to session storage
     sessionStorage.setItem('ezbotVisualEditorMode', 'interactive');
