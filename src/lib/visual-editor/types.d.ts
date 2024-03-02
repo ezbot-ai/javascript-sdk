@@ -41,7 +41,6 @@ type ElementPayload = {
 
 type ElementClickedPayload = {
   type: 'elementClicked';
-  mode: 'interactive' | 'ezbot';
   element: ElementPayload;
 };
 

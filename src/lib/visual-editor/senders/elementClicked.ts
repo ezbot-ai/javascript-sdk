@@ -1,4 +1,3 @@
-import { Mode } from '../types';
 import { ElementClickedPayload } from '../types';
 import { getSelector } from '../utils';
 
@@ -20,11 +19,8 @@ function buildElementClickedPayload(
     href: elementHref,
     selector: querySelector,
   };
-  const modeItem = sessionStorage.getItem('ezbotVisualEditorMode'); // TODO: Remove?
-  const mode = modeItem ? (modeItem as Mode) : 'interactive';
   const eventPayload: ElementClickedPayload = {
     type: 'elementClicked',
-    mode: mode,
     element: elementPayload,
   };
   return eventPayload;
