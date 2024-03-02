@@ -1,9 +1,8 @@
 /* eslint-disable functional/no-throw-statements */
 import { logInfo } from '../../utils';
 import * as actions from '../actions';
+import { IncomingEvent } from '../types';
 import * as validators from '../validators';
-
-import { IncomingEvent } from './incoming-types';
 
 const routeIncomingEvent = (
   event: Readonly<IncomingEvent>

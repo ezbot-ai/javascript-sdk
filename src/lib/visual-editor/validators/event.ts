@@ -1,5 +1,5 @@
 import { logError } from '../../utils';
-import { IncomingEvent } from '../msg-router';
+import { IncomingEvent } from '../types';
 
 const inboundEvent = (event: Readonly<IncomingEvent>): boolean => {
   try {

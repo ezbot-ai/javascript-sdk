@@ -1,9 +1,9 @@
 /* eslint-disable functional/no-return-void */
 import { Mode } from '../types';
+import { ElementClickedPayload } from '../types';
 import { getSelector } from '../utils';
 
 import { postEventToParent } from './messaging';
-import { ElementClickedPayload } from './outbound-types';
 
 function buildElementClickedPayload(
   element: Readonly<HTMLElement>

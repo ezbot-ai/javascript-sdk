@@ -5,7 +5,6 @@ import {
   setupListeners,
 } from './listeners';
 import { removeLocalStyles, setLocalStyles } from './localStyles';
-import { LocalStyles } from './types';
 
 export {
   unhighlightAllElements,
@@ -14,6 +13,5 @@ export {
   setupClickListeners,
   setupIncomingMsgListener,
   setupListeners,
-  LocalStyles,
   removeLocalStyles,
 };

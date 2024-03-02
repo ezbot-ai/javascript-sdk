@@ -1,8 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-return-void */
 import { logError } from '../../utils';
-
-import { LocalStyles } from './types';
+import { LocalStyles } from '../types';
 
 const defaultLocalStyles: LocalStyles = {
   '*': {

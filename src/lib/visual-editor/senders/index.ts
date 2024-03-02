@@ -1,6 +1,7 @@
+import { ElementClickedPayload, ElementPayload } from '../types';
+
 import { buildElementClickedPayload } from './elementClicked';
 import { postEventToParent, postMessageToParent } from './messaging';
-import { ElementClickedPayload, ElementPayload } from './outbound-types';
 
 export {
   ElementClickedPayload,

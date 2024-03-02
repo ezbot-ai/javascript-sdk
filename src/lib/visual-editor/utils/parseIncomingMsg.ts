@@ -1,4 +1,4 @@
-import { IncomingEvent } from '../msg-router';
+import { IncomingEvent } from '../types';
 
 const parseIncomingMsg = (msg: Readonly<MessageEvent>): IncomingEvent => {
   const { data } = msg;
