@@ -1,9 +1,6 @@
-/* eslint-disable functional/no-return-void */
 import { Mode } from '../types';
 import { ElementClickedPayload } from '../types';
 import { getSelector } from '../utils';
-
-import { postEventToParent } from './messaging';
 
 function buildElementClickedPayload(
   element: Readonly<HTMLElement>
@@ -25,7 +22,7 @@ function buildElementClickedPayload(
     selector: querySelector,
     ezbotElementId,
   };
-  const modeItem = sessionStorage.getItem('ezbotVisualEditorMode');
+  const modeItem = sessionStorage.getItem('ezbotVisualEditorMode'); // TODO: Remove?
   const mode = modeItem ? (modeItem as Mode) : 'interactive';
   const eventPayload: ElementClickedPayload = {
     type: 'elementClicked',
@@ -35,9 +32,4 @@ function buildElementClickedPayload(
   return eventPayload;
 }
 
-const sendElementClickedMsg = (element: Readonly<HTMLElement>) => {
-  const elementClickedPayload = buildElementClickedPayload(element);
-  postEventToParent(elementClickedPayload);
-};
-
-export { buildElementClickedPayload, sendElementClickedMsg };
+export { buildElementClickedPayload };

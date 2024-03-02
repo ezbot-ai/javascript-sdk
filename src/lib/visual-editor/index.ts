@@ -3,7 +3,6 @@ import * as actions from './actions';
 import * as msgRouter from './msg-router';
 import * as mutators from './mutators';
 import * as senders from './senders';
-import * as types from './types';
 import {
   ChangeConfigEvent,
   ChangeVariablesEvent,
@@ -23,7 +22,6 @@ const VisualEditorController = {
   msgRouter,
   mutators,
   senders,
-  types,
   utils,
   validators,
 };

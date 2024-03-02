@@ -1,6 +1,5 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-return-void */
-import { logError } from '../../utils';
 import { LocalStyles } from '../types';
 
 const defaultLocalStyles: LocalStyles = {
@@ -18,7 +17,8 @@ const buildLocalStyles = (highlightColor: string): LocalStyles => {
     ...defaultLocalStyles,
     '.ezbot-highlight': {
       border: `2px solid ${highlightColor}`,
-      'background-color': `rgba(${highlightColor}, 0.3)`,
+      'background-color': `${highlightColor}`,
+      background: `${highlightColor}`,
     },
   };
 };
@@ -47,8 +47,6 @@ const removeLocalStyles = () => {
   const style = document.getElementById('ezbot-local-styles');
   if (style) {
     style.remove();
-  } else {
-    logError(new Error('Could not find local styles to remove'));
   }
 };
 

@@ -18,6 +18,11 @@ const setupClickListeners = (): void => {
   document.addEventListener('click', (event) => {
     const element = event.target as HTMLElement;
     const elementPayload = buildElementClickedPayload(element);
+    // TODO: Move this logic
+    document.querySelectorAll('.ezbot-highlight').forEach((el) => {
+      el.classList.remove('ezbot-highlight');
+    });
+    element.classList.add('ezbot-highlight');
     postEventToParent(elementPayload);
   });
 };

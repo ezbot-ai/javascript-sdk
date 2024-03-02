@@ -7,7 +7,6 @@ type InitEvent = {
 };
 
 type SDKConfig = {
-  mode: Mode;
   highlightColor: string;
 };
 
