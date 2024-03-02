@@ -1,20 +1,30 @@
+/* eslint-disable functional/no-throw-statements */
+import { logInfo } from '../../utils';
+import * as actions from '../actions';
+import * as validators from '../validators';
+
 import { IncomingEvent } from './incoming-types';
 
-const routeIncomingEvent = (event: IncomingEvent): boolean | Error => {
+const routeIncomingEvent = (
+  event: Readonly<IncomingEvent>
+): boolean | Error => {
+  if (!validators.inboundEvent(event)) {
+    logInfo(`Invalid event: ${event}`);
+    return false;
+  }
+  switch (event.type) {
+    case 'init':
+      actions.init(event.mode);
+      break;
+    case 'changeConfig':
+      actions.changeConfig(event.mode, event.config);
+      return true;
+    case 'changeVariables':
+      throw new Error('Cannot route changeVariables: Not yet implemented');
+    default:
+      throw new Error('Invalid event type');
+  }
   throw new Error('Not implemented');
-  //   if (event.type == 'highlightElement') {
-  //     const { ezbotElement } = JSON.parse(data);
-  //     console.log('ezbotElement', ezbotElement);
-  //     const element = document.querySelector(ezbotElement.selector);
-  //     if (!element) {
-  //       logError('Element with selector not found', ezbotElement.selector);
-  //       return;
-  //     }
-  //     highlightElement(element);
-  //   } else if (event.type == 'changeMode') {
-  //     console.log('calling ChangeMode');
-  //     changeMode(event.mode);
-  //   }
 };
 
 export { routeIncomingEvent };

@@ -5,29 +5,27 @@ type InitEvent = {
   mode: Mode;
 };
 
+type SDKConfig = {
+  mode: Mode;
+  highlightColor: string;
+};
+
 type ChangeConfigEvent = {
   type: 'changeConfig';
-  config: unknown; // TODO: specify config type
-};
-type ChangeModeEvent = {
-  type: 'changeMode';
   mode: Mode;
+  config: SDKConfig;
 };
 type ChangeVariablesEvent = {
   type: 'changeVariables';
   variables: unknown; // TODO: specify variables type
 };
 
-type IncomingEvent =
-  | InitEvent
-  | ChangeConfigEvent
-  | ChangeModeEvent
-  | ChangeVariablesEvent;
+type IncomingEvent = InitEvent | ChangeConfigEvent | ChangeVariablesEvent;
 
 export {
   IncomingEvent,
   InitEvent,
   ChangeConfigEvent,
-  ChangeModeEvent,
   ChangeVariablesEvent,
+  SDKConfig,
 };

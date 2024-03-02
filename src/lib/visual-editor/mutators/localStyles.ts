@@ -14,7 +14,17 @@ const defaultLocalStyles: LocalStyles = {
   },
 };
 
-const setLocalStyles = (styles: LocalStyles = defaultLocalStyles) => {
+const buildLocalStyles = (highlightColor: string): LocalStyles => {
+  return {
+    ...defaultLocalStyles,
+    '.ezbot-highlight': {
+      border: `2px solid ${highlightColor}`,
+      'background-color': `rgba(${highlightColor}, 0.3)`,
+    },
+  };
+};
+
+const addLocalStyles = (styles: LocalStyles = defaultLocalStyles) => {
   // map over localStyles to create css string
   const stylesForHTML = Object.keys(styles).map((selector) => {
     const properties = Object.keys(styles[selector]).map((property) => {
@@ -29,6 +39,11 @@ const setLocalStyles = (styles: LocalStyles = defaultLocalStyles) => {
   document.head.appendChild(style);
 };
 
+const setLocalStyles = (styles: LocalStyles = defaultLocalStyles) => {
+  removeLocalStyles();
+  addLocalStyles(styles);
+};
+
 const removeLocalStyles = () => {
   const style = document.getElementById('ezbot-local-styles');
   if (style) {
@@ -38,4 +53,4 @@ const removeLocalStyles = () => {
   }
 };
 
-export { setLocalStyles, removeLocalStyles };
+export { addLocalStyles, removeLocalStyles, buildLocalStyles, setLocalStyles };
