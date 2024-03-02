@@ -37,7 +37,6 @@ type ElementPayload = {
   tag: string;
   href: string | null;
   selector: string;
-  ezbotElementId: string | null;
 };
 
 type ElementClickedPayload = {

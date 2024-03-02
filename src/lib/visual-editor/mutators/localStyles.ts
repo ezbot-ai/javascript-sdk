@@ -7,8 +7,9 @@ const defaultLocalStyles: LocalStyles = {
     cursor: 'pointer',
   },
   '.ezbot-highlight': {
-    border: '2px solid red',
-    'background-color': 'rgba(255, 0, 0, 0.3)',
+    // border: '2px solid rgb(158, 66, 245)',
+    'box-sizing': 'border-box',
+    'background-color': 'rgba(158, 66, 245, 0.3)',
   },
 };
 
@@ -16,9 +17,8 @@ const buildLocalStyles = (highlightColor: string): LocalStyles => {
   return {
     ...defaultLocalStyles,
     '.ezbot-highlight': {
-      border: `2px solid ${highlightColor}`,
+      'box-sizing': 'border-box',
       'background-color': `${highlightColor}`,
-      background: `${highlightColor}`,
     },
   };
 };

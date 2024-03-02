@@ -38,6 +38,8 @@ import {
 } from '@snowplow/browser-tracker';
 import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
+import { init as initVisualEditorSupport } from './visual-editor/actions';
+
 const ezbotTrackerId = 'ezbot';
 
 import {
@@ -115,6 +117,7 @@ async function initEzbot(
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
   };
+  initVisualEditorSupport('ezbot');
 
   return tracker;
 }

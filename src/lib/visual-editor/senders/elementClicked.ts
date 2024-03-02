@@ -12,7 +12,6 @@ function buildElementClickedPayload(
   const elementTag = element.tagName;
   const elementHref = element.getAttribute('href');
   const querySelector = getSelector(element);
-  const ezbotElementId = element.getAttribute('data-ezbot-element-id');
   const elementPayload = {
     text: elementText,
     id: elementId,
@@ -20,7 +19,6 @@ function buildElementClickedPayload(
     tag: elementTag,
     href: elementHref,
     selector: querySelector,
-    ezbotElementId,
   };
   const modeItem = sessionStorage.getItem('ezbotVisualEditorMode'); // TODO: Remove?
   const mode = modeItem ? (modeItem as Mode) : 'interactive';
