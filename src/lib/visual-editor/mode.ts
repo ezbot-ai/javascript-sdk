@@ -1,5 +1,4 @@
 /* eslint-disable functional/no-return-void */
-type Mode = 'interactive' | 'ezbot';
 import { unhighlightAllElements } from './highlighting';
 import { setLocalStyles } from './localStyles';
 

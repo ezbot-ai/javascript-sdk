@@ -1,5 +1,5 @@
 /* eslint-disable functional/no-return-void */
-import { postEventToParent } from './messaging';
+import { postEventToParent } from './senders/messaging';
 import {
   setLocalStyles,
   setupElementClickListeners,
@@ -7,7 +7,6 @@ import {
   setupUniqueElementIds,
 } from './visualEditor';
 
-type Mode = 'ezbot' | 'interactive';
 type InitalizationEvent = {
   type: 'initialized';
   mode: Mode;

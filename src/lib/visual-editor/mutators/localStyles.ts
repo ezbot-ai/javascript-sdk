@@ -1,0 +1,41 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-return-void */
+import { logError } from '../../utils';
+
+import { LocalStyles } from './types';
+
+const defaultLocalStyles: LocalStyles = {
+  '*': {
+    cursor: 'pointer',
+  },
+  '.ezbot-highlight': {
+    border: '2px solid red',
+    'background-color': 'rgba(255, 0, 0, 0.3)',
+  },
+};
+
+const setLocalStyles = (styles: LocalStyles = defaultLocalStyles) => {
+  // map over localStyles to create css string
+  const stylesForHTML = Object.keys(styles).map((selector) => {
+    const properties = Object.keys(styles[selector]).map((property) => {
+      return `${property}: ${styles[selector][property]}`;
+    });
+    return `${selector} { ${properties.join(';')} }`;
+  });
+  const style = document.createElement('style');
+  style.type = 'text/css';
+  style.id = 'ezbot-local-styles';
+  style.innerHTML = stylesForHTML.join(' ');
+  document.head.appendChild(style);
+};
+
+const removeLocalStyles = () => {
+  const style = document.getElementById('ezbot-local-styles');
+  if (style) {
+    style.remove();
+  } else {
+    logError(new Error('Could not find local styles to remove'));
+  }
+};
+
+export { setLocalStyles, removeLocalStyles };
