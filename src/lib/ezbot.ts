@@ -39,19 +39,6 @@ import {
 import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 const ezbotTrackerId = 'ezbot';
-async function getPredictions(
-  projectId: number,
-  sessionId: string
-): Promise<Array<Prediction>> {
-  const predictionsURL = `https://api.ezbot.ai/predict?projectId=${projectId}&sessionId=${sessionId}`;
-  const response = await fetch(predictionsURL);
-  if (response.status !== 200) {
-    throw new Error(`Failed to fetch predictions: Got a ${response.status} response;
-    }`);
-  }
-  const responseJSON = (await response.json()) as PredictionsResponse;
-  return responseJSON.predictions;
-}
 
 import {
   defaultWebConfiguration,
@@ -59,6 +46,7 @@ import {
   ezbotTrackerDomain,
   plugins,
 } from './constants';
+import { getPredictions } from './predictions';
 import {
   startActivityTracking,
   trackLinkClick,
@@ -75,11 +63,7 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
-import { initVisualEditor } from './visual-editor/init';
-import {
-  VisualEditorClickEventPayload,
-  VisualEditorElementPayload,
-} from './visual-editor/visualEditor';
+import { VisualEditorController } from './visual-editor';
 import { makeVisualChange, makeVisualChanges } from './visualChanges';
 
 async function initEzbot(
@@ -117,7 +101,7 @@ async function initEzbot(
   addGlobalContexts([predictionsContext], [tracker.id]);
 
   try {
-    initVisualEditor();
+    VisualEditorController.mutators.setupListeners();
   } catch (error) {
     console.error('Failed to setup element click listeners', error);
   }
@@ -151,6 +135,4 @@ export {
   Prediction,
   Predictions,
   PredictionsResponse,
-  VisualEditorElementPayload,
-  VisualEditorClickEventPayload,
 };
