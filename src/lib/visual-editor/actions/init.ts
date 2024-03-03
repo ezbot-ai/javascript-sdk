@@ -8,6 +8,7 @@ const init = (mode: Mode) => {
     logInfo(`Initializing mode ${mode}`);
     mutators.setLocalStyles();
     mutators.setupClickListeners();
+    mutators.setupUniqueElementIds();
   } else {
     logInfo(`Mode ${mode} requires no mutations`);
   }

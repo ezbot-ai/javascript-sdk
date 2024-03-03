@@ -4,6 +4,8 @@ import { buildElementClickedPayload, postEventToParent } from '../senders';
 import { parseIncomingMsg } from '../utils/parseIncomingMsg';
 import * as validators from '../validators';
 
+import { highlightElement, unhighlightAllElements } from './highlighting';
+
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
     if (!validators.inboundMsg(msg)) {
@@ -32,11 +34,8 @@ const setupClickListeners = (): void => {
     event.stopPropagation();
     const element = event.target as HTMLElement;
     const elementPayload = buildElementClickedPayload(element);
-    // TODO: Move this logic
-    document.querySelectorAll('.ezbot-highlight').forEach((el) => {
-      el.classList.remove('ezbot-highlight');
-    });
-    element.classList.add('ezbot-highlight');
+    unhighlightAllElements();
+    highlightElement(element);
     postEventToParent(elementPayload);
   });
 };
