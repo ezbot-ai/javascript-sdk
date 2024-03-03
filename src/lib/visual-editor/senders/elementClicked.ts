@@ -1,4 +1,4 @@
-import { ElementClickedPayload } from '../types';
+import { ElementClickedPayload, ElementPayload } from '../types';
 import { getSelector } from '../utils';
 
 function buildElementClickedPayload(
@@ -11,13 +11,14 @@ function buildElementClickedPayload(
   const elementTag = element.tagName;
   const elementHref = element.getAttribute('href');
   const querySelector = getSelector(element);
-  const elementPayload = {
+  const elementPayload: ElementPayload = {
     text: elementText,
     id: elementId,
     classes: clonableElementClasses,
     tag: elementTag,
     href: elementHref,
     selector: querySelector,
+    innerHTML: element.innerHTML,
   };
   const eventPayload: ElementClickedPayload = {
     type: 'elementClicked',

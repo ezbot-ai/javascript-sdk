@@ -9,6 +9,10 @@ const defaultLocalStyles: LocalStyles = {
   '.ezbot-highlight': {
     // border: '2px solid rgb(158, 66, 245)',
     'box-sizing': 'border-box',
+    'background-color': 'rgba(158, 66, 245, 0.5) !important',
+  },
+  '.ezbot-hover': {
+    'box-sizing': 'border-box',
     'background-color': 'rgba(158, 66, 245, 0.3)',
   },
 };
@@ -18,7 +22,7 @@ const buildLocalStyles = (highlightColor: string): LocalStyles => {
     ...defaultLocalStyles,
     '.ezbot-highlight': {
       'box-sizing': 'border-box',
-      'background-color': `${highlightColor}`,
+      'background-color': `${highlightColor} !important`,
     },
   };
 };

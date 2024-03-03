@@ -37,6 +37,7 @@ type ElementPayload = {
   tag: string;
   href: string | null;
   selector: string;
+  innerHTML: string;
 };
 
 type ElementClickedPayload = {

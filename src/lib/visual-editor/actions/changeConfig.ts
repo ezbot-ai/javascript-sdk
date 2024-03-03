@@ -8,6 +8,7 @@ const changeConfig = (mode: Mode, config: Readonly<SDKConfig>) => {
   if (mode == 'ezbot') {
     const styles = buildLocalStyles(config.highlightColor);
     mutators.setLocalStyles(styles);
+    mutators.unhighlightAllElements();
   } else {
     mutators.removeLocalStyles();
   }
