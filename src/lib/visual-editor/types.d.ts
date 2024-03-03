@@ -30,14 +30,32 @@ type LocalStyles = {
 };
 
 // Outbound Types
+type ElementStyleSetByAttribute = {
+  attribute: string;
+  value: string;
+};
+
+type ElementClientLocation = {
+  clientHeight: number;
+  clientWidth: number;
+  clientTop: number;
+  clientLeft: number;
+};
+
+type ElementAttribute = {
+  name: string;
+  value: string | Array<string>;
+};
+
 type ElementPayload = {
   text: string;
-  id: string;
-  classes: string[];
+  attributes: ElementAttribute[];
   tag: string;
-  href: string | null;
   selector: string;
   innerHTML: string;
+  visible: boolean;
+  style: ElementStyleSetByAttribute[];
+  clientLocation: ElementClientLocation;
 };
 
 type ElementClickedPayload = {
@@ -58,4 +76,7 @@ export {
   ElementClickedPayload,
   ElementPayload,
   OutboundEvent,
+  ElementAttribute,
+  ElementClientLocation,
+  ElementStyleSetByAttribute,
 };
