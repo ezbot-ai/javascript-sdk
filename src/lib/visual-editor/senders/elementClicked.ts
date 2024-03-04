@@ -67,6 +67,7 @@ function buildElementClickedPayload(
     tag: elementTag,
     selector: querySelector,
     innerHTML: element.innerHTML,
+    outerHTML: element.outerHTML,
     clientLocation: buildElementClientLocation(element),
     visible: element.checkVisibility(),
     style: buildElementStyle(element),

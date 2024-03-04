@@ -53,6 +53,7 @@ type ElementPayload = {
   tag: string;
   selector: string;
   innerHTML: string;
+  outerHTML: string;
   visible: boolean;
   style: ElementStyleSetByAttribute[];
   clientLocation: ElementClientLocation;
