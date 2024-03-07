@@ -13,7 +13,7 @@ import {
   Mode,
   OutboundEvent,
   SDKConfig,
-} from './types';
+} from './types.d';
 import * as utils from './utils';
 import * as validators from './validators';
 

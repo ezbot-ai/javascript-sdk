@@ -1,4 +1,4 @@
-import { ElementClickedPayload, ElementPayload } from '../types';
+import { ElementClickedPayload, ElementPayload } from '../types.d';
 
 import { buildElementClickedPayload } from './elementClicked';
 import { postEventToParent, postMessageToParent } from './messaging';

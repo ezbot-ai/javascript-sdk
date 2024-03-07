@@ -12,6 +12,8 @@ import * as predictionsContextSchema from './schemas/com.ezbot/predictions_conte
 import { startActivityTracking, trackRewardEvent } from './tracking';
 import { EzbotPredictionsContext } from './types';
 
+jest.mock('@medv/finder', () => ({}));
+
 const ajv = new Ajv();
 const validatePredictionsContextSchema = ajv.compile<EzbotPredictionsContext>(
   predictionsContextSchema
