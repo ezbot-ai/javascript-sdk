@@ -38,8 +38,6 @@ import {
 } from '@snowplow/browser-tracker';
 import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
-const ezbotTrackerId = 'ezbot';
-
 import {
   defaultWebConfiguration,
   ezbotPredictionsContextSchemaPath,
@@ -63,7 +61,11 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
+import { VisualEditorController } from './visual-editor';
+import { init as initVisualEditorSupport } from './visual-editor/actions';
 import { makeVisualChange, makeVisualChanges } from './visualChanges';
+
+const ezbotTrackerId = 'ezbot';
 
 async function initEzbot(
   projectId: number,
@@ -101,6 +103,12 @@ async function initEzbot(
   };
   addGlobalContexts([predictionsContext], [tracker.id]);
 
+  try {
+    VisualEditorController.mutators.setupListeners();
+  } catch (error) {
+    console.error('Failed to setup element click listeners', error);
+  }
+
   window.ezbot = {
     tracker: tracker,
     predictions: predictions,
@@ -110,6 +118,7 @@ async function initEzbot(
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
   };
+  initVisualEditorSupport('ezbot');
 
   return tracker;
 }

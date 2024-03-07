@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 /* eslint-disable functional/no-return-void */
 import * as Snowplow from '@snowplow/browser-tracker';
 import {
@@ -42,12 +41,19 @@ function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
   );
 }
 
-function startActivityTracking(config: ActivityTrackingConfiguration): void {
+const defaultActivityTrackingConfiguration: ActivityTrackingConfiguration = {
+  minimumVisitLength: 2,
+  heartbeatDelay: 2,
+};
+
+function startActivityTracking(
+  config: ActivityTrackingConfiguration = defaultActivityTrackingConfiguration
+): void {
   Snowplow.enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
 function trackPageView(
-  config: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
+  config?: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
 ): void {
   Snowplow.trackPageView(config);
 }
