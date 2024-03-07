@@ -74,11 +74,13 @@ async function initEzbot(
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
+    console.log('existing tracker');
     return existingTracker;
   }
   const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {
     appId: projectId.toString(),
     plugins: plugins,
+    stateStorageStrategy: 'localStorage',
   });
   if (tracker === null) {
     throw new Error('Failed to initialize tracker');
