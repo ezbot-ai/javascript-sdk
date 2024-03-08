@@ -6,6 +6,36 @@ const defaultLocalStyles: LocalStyles = {
   '*': {
     cursor: 'pointer',
   },
+  '.ezbot-wrapper': {
+    position: 'relative',
+    'background-color': 'rgba(158, 66, 245, 0.5) !important',
+    'box-sizing': 'border-box',
+    'z-index': '99999',
+  },
+  // '.ezbot-original-element': {
+  //   display: 'none',
+  //   visibility: 'hidden',
+  // },
+  // '.ezbot-overlays': {
+  //   position: 'absolute',
+  //   display: 'flex',
+  //   bottom: '0',
+  //   right: '0',
+  //   padding: '0.5rem',
+  //   'background-color': 'rgba(158, 66, 245, 0.5)',
+  //   color: 'white',
+  // },
+  '.ezbot-tooltip': {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    display: 'none',
+    'background-color': 'red',
+    color: 'white',
+  },
+  '.ezbot-variable-highlight': {
+    'background-color': 'green',
+  },
   '.ezbot-highlight': {
     // border: '2px solid rgb(158, 66, 245)',
     'box-sizing': 'border-box',

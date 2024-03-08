@@ -2,10 +2,12 @@
 import { logInfo } from '../../utils';
 import { routeIncomingEvent } from '../msg-router';
 import { sendElementClicked } from '../senders/elementClicked';
+import { DBVariable } from '../types';
 import { parseIncomingMsg } from '../utils/parseIncomingMsg';
 import * as validators from '../validators';
 
 import { highlightElement, unhighlightAllElements } from './highlighting';
+import { hideTooltip, showTooltip } from './tooltip';
 
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
@@ -18,16 +20,31 @@ const setupIncomingMsgListener = () => {
   });
 };
 
-const setupHoverListeners = (): void => {
-  // TODO: Tweak and re-enable?
-  // document.addEventListener('mouseover', (event) => {
-  //   const element = event.target as HTMLElement;
-  //   // TODO: Move this logic
-  //   document.querySelectorAll('.ezbot-hover').forEach((el) => {
-  //     el.classList.remove('ezbot-hover');
-  //   });
-  //   element.classList.add('ezbot-hover');
-  // });
+const setupHideToolTipListener = (element: Readonly<HTMLElement>): void => {
+  element.addEventListener('mouseout', () => {
+    hideTooltip();
+  });
+};
+
+const setupShowToolTipListener = (element: Readonly<HTMLElement>): void => {
+  element.addEventListener('mouseout', () => {
+    showTooltip();
+  });
+};
+
+const setupTooltipListeners = (variable: Readonly<DBVariable>): void => {
+  if (!variable.config) {
+    logInfo('No config for variable', variable);
+    return;
+  }
+  const element = document.querySelector(variable.config.selector);
+  if (!element) {
+    logInfo('No element for variable', variable);
+    return;
+  }
+  const readonlyElement = element as Readonly<HTMLElement>;
+  setupHideToolTipListener(readonlyElement);
+  setupShowToolTipListener(readonlyElement);
 };
 
 const setupClickListeners = (): void => {
@@ -44,7 +61,13 @@ const setupClickListeners = (): void => {
 const setupListeners = () => {
   setupIncomingMsgListener();
   setupClickListeners();
-  setupHoverListeners();
 };
 
-export { setupClickListeners, setupIncomingMsgListener, setupListeners };
+export {
+  setupClickListeners,
+  setupIncomingMsgListener,
+  setupListeners,
+  setupHideToolTipListener,
+  setupShowToolTipListener,
+  setupTooltipListeners,
+};
