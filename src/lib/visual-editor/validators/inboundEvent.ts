@@ -18,7 +18,7 @@ const inboundEvent = (event: Readonly<IncomingEvent>): boolean => {
         }
         return true;
       case 'changeVariables':
-        if (!event.variables) {
+        if (!event.payload) {
           return false;
         }
         return true;
