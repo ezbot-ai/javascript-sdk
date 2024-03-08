@@ -1,4 +1,4 @@
 import { changeConfig } from './changeConfig';
-import { init } from './init';
+import { initVisualEditorSupport } from './init';
 
-export { init, changeConfig };
+export { initVisualEditorSupport, changeConfig };

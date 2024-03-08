@@ -62,7 +62,6 @@ import {
   PredictionsResponse,
 } from './types';
 import { VisualEditorController } from './visual-editor';
-import { init as initVisualEditorSupport } from './visual-editor/actions';
 import { makeVisualChange, makeVisualChanges } from './visualChanges';
 
 const ezbotTrackerId = 'ezbot';
@@ -104,7 +103,9 @@ async function initEzbot(
   addGlobalContexts([predictionsContext], [tracker.id]);
 
   try {
-    VisualEditorController.mutators.setupListeners();
+    // Start listening for events from visual editor
+    // full visual editor support when an init event is received
+    VisualEditorController.mutators.setupIncomingMsgListener();
   } catch (error) {
     console.error('Failed to setup element click listeners', error);
   }
@@ -118,7 +119,6 @@ async function initEzbot(
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
   };
-  initVisualEditorSupport('ezbot');
 
   return tracker;
 }

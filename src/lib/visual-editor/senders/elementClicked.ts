@@ -7,6 +7,8 @@ import {
 } from '../types';
 import { getSelector } from '../utils';
 
+import { postEventToParent } from './messaging';
+
 const buildElementStyle = (
   element: Readonly<HTMLElement>
 ): ElementStyleSetByAttribute[] => {
@@ -80,4 +82,10 @@ function buildElementClickedPayload(
   return eventPayload;
 }
 
-export { buildElementClickedPayload };
+// eslint-disable-next-line functional/no-return-void
+function sendElementClicked(element: Readonly<HTMLElement>) {
+  const payload = buildElementClickedPayload(element);
+  postEventToParent(payload);
+}
+
+export { buildElementClickedPayload, sendElementClicked };

@@ -1,6 +1,16 @@
-import { ElementClickedPayload, ElementPayload } from '../types.d';
+import {
+  ElementClickedPayload,
+  ElementPayload,
+  InitEvent,
+  InitEventPayload,
+  SDKStatus,
+} from '../types.d';
 
-import { buildElementClickedPayload } from './elementClicked';
+import {
+  buildElementClickedPayload,
+  sendElementClicked,
+} from './elementClicked';
+import { buildInitPayload, sendInit } from './init';
 import { postEventToParent, postMessageToParent } from './messaging';
 
 export {
@@ -9,4 +19,10 @@ export {
   postEventToParent,
   postMessageToParent,
   buildElementClickedPayload,
+  sendElementClicked,
+  buildInitPayload,
+  sendInit,
+  SDKStatus,
+  InitEvent,
+  InitEventPayload,
 };

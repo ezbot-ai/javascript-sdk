@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-return-void */
 import { routeIncomingEvent } from '../msg-router';
-import { buildElementClickedPayload, postEventToParent } from '../senders';
+import { sendElementClicked } from '../senders/elementClicked';
 import { parseIncomingMsg } from '../utils/parseIncomingMsg';
 import * as validators from '../validators';
 
@@ -33,10 +33,9 @@ const setupClickListeners = (): void => {
     event.preventDefault();
     event.stopPropagation();
     const element = event.target as HTMLElement;
-    const elementPayload = buildElementClickedPayload(element);
     unhighlightAllElements();
     highlightElement(element);
-    postEventToParent(elementPayload);
+    sendElementClicked(element);
   });
 };
 

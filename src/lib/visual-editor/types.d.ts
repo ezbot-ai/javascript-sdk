@@ -64,7 +64,18 @@ type ElementClickedPayload = {
   element: ElementPayload;
 };
 
-type OutboundEvent = ElementClickedPayload;
+type OutboundEvent = ElementClickedPayload | InitEventPayload;
+
+type SDKStatus = 'loading' | 'ready' | 'error';
+
+type InitPayload = {
+  status: SDKStatus;
+};
+
+type InitEventPayload = {
+  type: 'init';
+  payload: InitPayload;
+};
 
 export {
   LocalStyles,
@@ -80,4 +91,7 @@ export {
   ElementAttribute,
   ElementClientLocation,
   ElementStyleSetByAttribute,
+  SDKStatus,
+  InitPayload,
+  InitEventPayload,
 };
