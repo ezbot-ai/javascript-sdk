@@ -5,9 +5,9 @@ import { Mode } from '../types';
 
 // eslint-disable-next-line functional/no-return-void
 const initVisualEditorSupport = (mode: Mode) => {
+  logInfo(`Initializing mode ${mode}`);
   if (mode == 'ezbot') {
     try {
-      logInfo(`Initializing mode ${mode}`);
       mutators.setLocalStyles();
       mutators.setupClickListeners();
       mutators.setupUniqueElementIds();
@@ -17,7 +17,9 @@ const initVisualEditorSupport = (mode: Mode) => {
       senders.sendInit('error');
     }
   } else {
-    logInfo(`Mode ${mode} requires no mutations`);
+    mutators.setupClickListeners();
+    mutators.setupUniqueElementIds();
+    senders.sendInit('ready');
   }
 };
 
