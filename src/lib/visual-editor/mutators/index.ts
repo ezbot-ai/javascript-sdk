@@ -5,6 +5,7 @@ import {
   setupListeners,
 } from './listeners';
 import { removeLocalStyles, setLocalStyles } from './localStyles';
+import { markElementVariable } from './markVariableSelector';
 import { setupUniqueElementIds } from './setupUniqueElementIds';
 
 export {
@@ -16,4 +17,5 @@ export {
   setupListeners,
   removeLocalStyles,
   setupUniqueElementIds,
+  markElementVariable,
 };

@@ -5,7 +5,7 @@ const setupUniqueElementIds = (): void => {
   const elements = document.querySelectorAll('*');
   elements.forEach((element) => {
     const elementId = uuidv4();
-    element.setAttribute('data-ezbot-element-id', elementId);
+    element.setAttribute('data-ezbot-temp-id', elementId);
   });
 };
 

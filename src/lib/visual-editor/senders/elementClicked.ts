@@ -56,18 +56,30 @@ function buildElementAttributes(
   });
 }
 
+const buildElementSelector = (element: Readonly<HTMLElement>): string => {
+  const elementVariableSelector = element.getAttribute(
+    'data-ezbot-variable-selector'
+  );
+
+  if (elementVariableSelector) {
+    return elementVariableSelector;
+  }
+
+  return getSelector(element);
+};
+
 function buildElementClickedPayload(
   element: Readonly<HTMLElement>
 ): ElementClickedEvent {
   const elementText = element.innerText;
   const elementTag = element.tagName;
-  const querySelector = getSelector(element);
 
   const elementPayload: ElementPayload = {
+    ezbotTempId: element.getAttribute('data-ezbot-temp-id')!,
     text: elementText,
     attributes: buildElementAttributes(element),
     tag: elementTag,
-    selector: querySelector,
+    selector: buildElementSelector(element),
     innerHTML: element.innerHTML,
     outerHTML: element.outerHTML,
     clientLocation: buildElementClientLocation(element),
