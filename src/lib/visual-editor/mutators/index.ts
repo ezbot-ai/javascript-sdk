@@ -1,4 +1,8 @@
-import { highlightElement, unhighlightAllElements } from './highlighting';
+import {
+  highlightElement,
+  highlightElementWithVariable,
+  unhighlightAllElements,
+} from './highlighting';
 import {
   setupClickListeners,
   setupIncomingMsgListener,
@@ -20,4 +24,5 @@ export {
   setupUniqueElementIds,
   markElementVariable,
   shuffleVariations,
+  highlightElementWithVariable,
 };

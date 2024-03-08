@@ -4,10 +4,13 @@
 
 import { logError } from '../../utils';
 
-const highlightClass = 'ezbot-highlight';
+const elementHighlightClass = 'ezbot-element-highlight';
+const elementWithVariableHighlightClass = 'ezbot-element-variable-highlight';
 
 const unhighlightAllElements = (): void => {
-  const highlightedElements = document.querySelectorAll(`.${highlightClass}`);
+  const highlightedElements = document.querySelectorAll(
+    `.${elementHighlightClass}`
+  );
 
   highlightedElements.forEach((element) => {
     if (!element || !(element instanceof HTMLElement)) {
@@ -20,11 +23,19 @@ const unhighlightAllElements = (): void => {
     }
     (element as HTMLElement).style.border = '';
     (element as HTMLElement).style.backgroundColor = '';
-    element.classList.remove(highlightClass);
+    element.classList.remove(elementHighlightClass);
   });
 };
 const highlightElement = (element: HTMLElement): void => {
-  element.classList.add(highlightClass);
+  element.classList.add(elementHighlightClass);
 };
 
-export { highlightElement, unhighlightAllElements };
+const highlightElementWithVariable = (element: HTMLElement): void => {
+  element.classList.add(elementWithVariableHighlightClass);
+};
+
+export {
+  highlightElement,
+  unhighlightAllElements,
+  highlightElementWithVariable,
+};

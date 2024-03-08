@@ -2,11 +2,16 @@
 /* eslint-disable functional/no-return-void */
 import { LocalStyles } from '../types';
 
+// Order matters
 const defaultLocalStyles: LocalStyles = {
   '*': {
     cursor: 'pointer',
   },
-  '.ezbot-highlight': {
+  '.ezbot-element-variable-highlight': {
+    'box-sizing': 'border-box',
+    'background-color': 'rgba(66, 196, 245, 0.5) !important',
+  },
+  '.ezbot-element-highlight': {
     // border: '2px solid rgb(158, 66, 245)',
     'box-sizing': 'border-box',
     'background-color': 'rgba(158, 66, 245, 0.5) !important',
@@ -20,7 +25,7 @@ const defaultLocalStyles: LocalStyles = {
 const buildLocalStyles = (highlightColor: string): LocalStyles => {
   return {
     ...defaultLocalStyles,
-    '.ezbot-highlight': {
+    '.ezbot-element-highlight': {
       'box-sizing': 'border-box',
       'background-color': `${highlightColor} !important`,
     },

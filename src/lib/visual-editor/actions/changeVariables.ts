@@ -21,7 +21,7 @@ const changeVariables = (variables: readonly DBVariable[]) => {
       }
       mutators.shuffleVariations(variable); // TODO: PROBS DONT DO HERE
       mutators.markElementVariable(element as HTMLElement, variable);
-      mutators.highlightElement(element as HTMLElement);
+      mutators.highlightElementWithVariable(element as HTMLElement);
     } catch (error) {
       logInfo('Error highlighting element', error);
     }
