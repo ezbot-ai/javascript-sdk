@@ -10,11 +10,13 @@ const defaultLocalStyles: LocalStyles = {
   '.ezbot-element-variable-highlight': {
     'box-sizing': 'border-box',
     'background-color': 'rgba(66, 196, 245, 0.5) !important',
+    transition: 'all 0.3s ease-out',
   },
   '.ezbot-element-highlight': {
     // border: '2px solid rgb(158, 66, 245)',
     'box-sizing': 'border-box',
     'background-color': 'rgba(158, 66, 245, 0.5) !important',
+    transition: 'all 0.3s ease-out',
   },
   '.ezbot-hover': {
     'box-sizing': 'border-box',
@@ -28,6 +30,7 @@ const buildLocalStyles = (highlightColor: string): LocalStyles => {
     '.ezbot-element-highlight': {
       'box-sizing': 'border-box',
       'background-color': `${highlightColor} !important`,
+      transition: 'all 0.3s ease-out',
     },
   };
 };
