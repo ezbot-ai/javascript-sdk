@@ -8,13 +8,14 @@ const routeIncomingEvent = (
   event: Readonly<IncomingEvent>
 ): boolean | Error => {
   if (!validators.inboundEvent(event)) {
-    logInfo(`Invalid event: ${event}`);
+    logInfo(`Invalid event with type: ${event.type}`);
     return false;
   }
   switch (event.type) {
     case 'init':
-      actions.init(event.mode);
-      break;
+      logInfo(`Initializing Visual Editor Support in mode ${event.mode}`);
+      actions.initVisualEditorSupport(event.mode);
+      return true;
     case 'changeConfig':
       actions.changeConfig(event.mode, event.config);
       return true;
@@ -23,7 +24,6 @@ const routeIncomingEvent = (
     default:
       throw new Error('Invalid event type');
   }
-  throw new Error('Not implemented');
 };
 
 export { routeIncomingEvent };

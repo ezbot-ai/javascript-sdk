@@ -4,6 +4,6 @@ const logError = (error: Readonly<Error>) => {
 };
 
 const logInfo = (info: Readonly<string>) => {
-  console.info(info);
+  console.info(`[ezbot sdk] ${info}`);
 };
 export { logError, logInfo };

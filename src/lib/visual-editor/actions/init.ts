@@ -1,17 +1,26 @@
-/* eslint-disable functional/no-return-void */
-import { logInfo } from '../../utils';
+import { logError, logInfo } from '../../utils';
 import * as mutators from '../mutators';
+import * as senders from '../senders';
 import { Mode } from '../types';
 
-const init = (mode: Mode) => {
+// eslint-disable-next-line functional/no-return-void
+const initVisualEditorSupport = (mode: Mode) => {
+  logInfo(`Initializing mode ${mode}`);
   if (mode == 'ezbot') {
-    logInfo(`Initializing mode ${mode}`);
-    mutators.setLocalStyles();
+    try {
+      mutators.setLocalStyles();
+      mutators.setupClickListeners();
+      mutators.setupUniqueElementIds();
+      senders.sendInit('ready');
+    } catch (e) {
+      logError(e as Error);
+      senders.sendInit('error');
+    }
+  } else {
     mutators.setupClickListeners();
     mutators.setupUniqueElementIds();
-  } else {
-    logInfo(`Mode ${mode} requires no mutations`);
+    senders.sendInit('ready');
   }
 };
 
-export { init };
+export { initVisualEditorSupport };
