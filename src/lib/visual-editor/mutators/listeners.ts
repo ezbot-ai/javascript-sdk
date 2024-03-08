@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-return-void */
+import { logInfo } from '../../utils';
 import { routeIncomingEvent } from '../msg-router';
 import { sendElementClicked } from '../senders/elementClicked';
 import { parseIncomingMsg } from '../utils/parseIncomingMsg';
@@ -9,6 +10,7 @@ import { highlightElement, unhighlightAllElements } from './highlighting';
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
     if (!validators.inboundMsg(msg)) {
+      logInfo('Invalid incoming message', msg);
       return;
     }
     const incomingEvent = parseIncomingMsg(msg);

@@ -24,7 +24,6 @@ const unhighlightAllElements = (): void => {
   });
 };
 const highlightElement = (element: HTMLElement): void => {
-  unhighlightAllElements();
   element.classList.add(highlightClass);
 };
 

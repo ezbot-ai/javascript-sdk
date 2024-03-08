@@ -13,14 +13,14 @@ const routeIncomingEvent = (
   }
   switch (event.type) {
     case 'init':
-      logInfo(`Initializing Visual Editor Support in mode ${event.mode}`);
       actions.initVisualEditorSupport(event.mode);
       return true;
     case 'changeConfig':
       actions.changeConfig(event.mode, event.config);
       return true;
     case 'changeVariables':
-      throw new Error('Cannot route changeVariables: Not yet implemented');
+      actions.changeVariables(event.payload);
+      return true;
     default:
       throw new Error('Invalid event type');
   }

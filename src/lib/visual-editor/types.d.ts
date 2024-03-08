@@ -15,9 +15,49 @@ type ChangeConfigEvent = {
   mode: Mode;
   config: SDKConfig;
 };
+
+type SetAttributeConfig = {
+  selector: string;
+  action: 'setAttribute';
+  attribute: string;
+};
+type BaseVisualVariableConfig = {
+  selector: string;
+  action:
+    | 'setText'
+    | 'setInnerHTML'
+    | 'setHref'
+    | 'setSrc'
+    | 'hide'
+    | 'show'
+    | 'addClasses'
+    | 'removeClasses'
+    | 'setStyle';
+};
+
+type VariableConstraints = {
+  enumerables: Array<string>;
+};
+
+type VisualVariableConfig = BaseVisualVariableConfig | SetAttributeConfig;
+type DBVariable = {
+  id: number;
+  key: string;
+  type: 'basic' | 'visual';
+  version: string;
+  projectId: number;
+  humanReadableName: string;
+  defaultValue: string;
+  createdBy: number;
+  config: VisualVariableConfig | null;
+  constraints: VariableConstraints;
+  constraintsVersion: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 type ChangeVariablesEvent = {
   type: 'changeVariables';
-  variables: unknown; // TODO: specify variables type
+  payload: DBVariable[];
 };
 
 type IncomingEvent = InitEvent | ChangeConfigEvent | ChangeVariablesEvent;
@@ -82,7 +122,6 @@ export {
   Mode,
   InitEvent,
   ChangeConfigEvent,
-  ChangeVariablesEvent,
   SDKConfig,
   IncomingEvent,
   ElementClickedEvent,
@@ -94,4 +133,10 @@ export {
   SDKStatus,
   SDKStatusChangePayload,
   SDKStatusChangeEvent,
+  DBVariable,
+  VisualVariableConfig,
+  ChangeVariablesEvent,
+  SetAttributeConfig,
+  BaseVisualVariableConfig,
+  VariableConstraints,
 };
