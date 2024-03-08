@@ -1,6 +1,6 @@
 import {
   ElementAttribute,
-  ElementClickedPayload,
+  ElementClickedEvent,
   ElementClientLocation,
   ElementPayload,
   ElementStyleSetByAttribute,
@@ -58,7 +58,7 @@ function buildElementAttributes(
 
 function buildElementClickedPayload(
   element: Readonly<HTMLElement>
-): ElementClickedPayload {
+): ElementClickedEvent {
   const elementText = element.innerText;
   const elementTag = element.tagName;
   const querySelector = getSelector(element);
@@ -74,11 +74,10 @@ function buildElementClickedPayload(
     visible: element.checkVisibility(),
     style: buildElementStyle(element),
   };
-  const eventPayload: ElementClickedPayload = {
+  const eventPayload: ElementClickedEvent = {
     type: 'elementClicked',
     element: elementPayload,
   };
-  console.log(eventPayload);
   return eventPayload;
 }
 

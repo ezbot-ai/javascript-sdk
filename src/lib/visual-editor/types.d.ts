@@ -59,22 +59,22 @@ type ElementPayload = {
   clientLocation: ElementClientLocation;
 };
 
-type ElementClickedPayload = {
+type ElementClickedEvent = {
   type: 'elementClicked';
   element: ElementPayload;
 };
 
-type OutboundEvent = ElementClickedPayload | InitEventPayload;
+type OutboundEvent = ElementClickedEvent | SDKStatusChangeEvent;
 
 type SDKStatus = 'loading' | 'ready' | 'error';
 
-type InitPayload = {
+type SDKStatusChangePayload = {
   status: SDKStatus;
 };
 
-type InitEventPayload = {
-  type: 'init';
-  payload: InitPayload;
+type SDKStatusChangeEvent = {
+  type: 'SDKStatusChange';
+  payload: SDKStatusChangePayload;
 };
 
 export {
@@ -85,13 +85,13 @@ export {
   ChangeVariablesEvent,
   SDKConfig,
   IncomingEvent,
-  ElementClickedPayload,
+  ElementClickedEvent,
   ElementPayload,
   OutboundEvent,
   ElementAttribute,
   ElementClientLocation,
   ElementStyleSetByAttribute,
   SDKStatus,
-  InitPayload,
-  InitEventPayload,
+  SDKStatusChangePayload,
+  SDKStatusChangeEvent,
 };

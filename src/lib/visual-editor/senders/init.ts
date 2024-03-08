@@ -1,10 +1,10 @@
-import { InitEventPayload, SDKStatus } from '../types';
+import { SDKStatus, SDKStatusChangeEvent } from '../types';
 
 import { postEventToParent } from './messaging';
 
-function buildInitPayload(status: SDKStatus): InitEventPayload {
-  const initEventPayload: InitEventPayload = {
-    type: 'init',
+function buildSDKStatusChangeEvent(status: SDKStatus): SDKStatusChangeEvent {
+  const initEventPayload: SDKStatusChangeEvent = {
+    type: 'SDKStatusChange',
     payload: {
       status,
     },
@@ -15,8 +15,8 @@ function buildInitPayload(status: SDKStatus): InitEventPayload {
 
 // eslint-disable-next-line functional/no-return-void
 function sendInit(status: SDKStatus) {
-  const payload = buildInitPayload(status);
+  const payload = buildSDKStatusChangeEvent(status);
   postEventToParent(payload);
 }
 
-export { buildInitPayload, sendInit };
+export { buildSDKStatusChangeEvent, sendInit };

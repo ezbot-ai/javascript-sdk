@@ -73,7 +73,6 @@ async function initEzbot(
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
-    console.log('existing tracker');
     return existingTracker;
   }
   const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {

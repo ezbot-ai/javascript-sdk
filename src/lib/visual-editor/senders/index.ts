@@ -1,28 +1,30 @@
 import {
-  ElementClickedPayload,
+  ElementClickedEvent,
   ElementPayload,
   InitEvent,
-  InitEventPayload,
   SDKStatus,
+  SDKStatusChangeEvent,
+  SDKStatusChangePayload,
 } from '../types.d';
 
 import {
   buildElementClickedPayload,
   sendElementClicked,
 } from './elementClicked';
-import { buildInitPayload, sendInit } from './init';
+import { buildSDKStatusChangeEvent, sendInit } from './init';
 import { postEventToParent, postMessageToParent } from './messaging';
 
 export {
-  ElementClickedPayload,
+  ElementClickedEvent,
   ElementPayload,
   postEventToParent,
   postMessageToParent,
   buildElementClickedPayload,
   sendElementClicked,
-  buildInitPayload,
+  buildSDKStatusChangeEvent,
   sendInit,
   SDKStatus,
   InitEvent,
-  InitEventPayload,
+  SDKStatusChangeEvent,
+  SDKStatusChangePayload,
 };

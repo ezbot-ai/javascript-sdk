@@ -1,4 +1,4 @@
-import { logError } from '../../utils';
+import { logError, logInfo } from '../../utils';
 import { IncomingEvent } from '../types';
 
 const inboundEvent = (event: Readonly<IncomingEvent>): boolean => {
@@ -23,6 +23,7 @@ const inboundEvent = (event: Readonly<IncomingEvent>): boolean => {
         }
         return true;
       default:
+        logInfo(`Invalid event with type: ${(event as IncomingEvent).type}`);
         return false;
     }
   } catch (error) {

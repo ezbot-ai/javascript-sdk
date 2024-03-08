@@ -6,7 +6,7 @@ import * as senders from './senders';
 import {
   ChangeConfigEvent,
   ChangeVariablesEvent,
-  ElementClickedPayload,
+  ElementClickedEvent,
   ElementPayload,
   IncomingEvent,
   InitEvent,
@@ -33,7 +33,7 @@ export {
   ChangeVariablesEvent,
   OutboundEvent,
   IncomingEvent,
-  ElementClickedPayload,
+  ElementClickedEvent,
   ElementPayload,
   Mode,
 };
