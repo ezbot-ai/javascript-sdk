@@ -11,6 +11,7 @@ const initVisualEditorSupport = (mode: Mode) => {
       mutators.setLocalStyles();
       mutators.setupClickListeners();
       mutators.setupUniqueElementIds();
+      // TODO: PROBS CALL SHUFFLE HERE
       senders.sendInit('ready');
     } catch (e) {
       logError(e as Error);

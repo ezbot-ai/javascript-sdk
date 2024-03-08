@@ -19,7 +19,7 @@ const changeVariables = (variables: readonly DBVariable[]) => {
         logInfo('No element found for visual variable');
         return;
       }
-
+      mutators.shuffleVariations(variable); // TODO: PROBS DONT DO HERE
       mutators.markElementVariable(element as HTMLElement, variable);
       mutators.highlightElement(element as HTMLElement);
     } catch (error) {

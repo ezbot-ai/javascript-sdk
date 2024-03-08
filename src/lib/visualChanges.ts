@@ -209,4 +209,5 @@ export {
   validateVisualPrediction,
   makeVisualChange,
   makeVisualChanges,
+  parseCommaSeparatedList,
 };
