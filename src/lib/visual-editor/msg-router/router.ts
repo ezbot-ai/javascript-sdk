@@ -8,7 +8,7 @@ const routeIncomingEvent = (
   event: Readonly<IncomingEvent>
 ): boolean | Error => {
   if (!validators.inboundEvent(event)) {
-    logInfo(`Invalid event with type: ${event.type}`);
+    logInfo(`Received invalid event`, event);
     return false;
   }
   switch (event.type) {
