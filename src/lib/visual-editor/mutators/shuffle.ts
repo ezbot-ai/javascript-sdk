@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-return-void */
 import { animate } from 'motion';
 
-import { logInfo } from '../../utils';
+import { logError, logInfo } from '../../utils';
 import {
   addClassesToElement,
   hideElement,
@@ -96,11 +96,15 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
     logInfo('Cannot shuffle variations without variable config');
     return;
   }
-
-  const element = document.querySelector(variable.config.selector);
+  // eslint-disable-next-line functional/no-let
+  let element: Element | null = null;
+  try {
+    element = document.querySelector(variable.config.selector);
+  } catch (e) {
+    logError(e as unknown as Error);
+  }
 
   if (!element) {
-    logInfo('No element found for visual variable');
     return;
   }
 
@@ -117,14 +121,14 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
   // every second, call makeVisualChange with a random variation
   // eslint-disable-next-line functional/no-let
   let counter = 0;
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     makeVisualChange({
       selector: variable.config!.selector,
       config: variable.config,
       value: variations[counter],
     });
     animate(
-      element,
+      element!,
       {
         opacity: ['0', '1'],
         filter: ['blur(10px)', 'blur(0px)'],
@@ -136,6 +140,17 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
     );
     counter = (counter + 1) % variations.length;
   }, shuffleSeconds * 1000);
+  // eslint-disable-next-line functional/immutable-data
+  window.ezbot.intervals.push(intervalId as unknown as number);
 };
 
-export { shuffleVariations };
+const startVariableShuffle = (variables: readonly DBVariable[]): void => {
+  variables.map(shuffleVariations);
+};
+const stopVariableShuffle = (): void => {
+  window.ezbot.intervals.forEach((interval) => {
+    clearInterval(interval);
+  });
+};
+
+export { shuffleVariations, startVariableShuffle, stopVariableShuffle };

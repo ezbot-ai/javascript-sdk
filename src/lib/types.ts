@@ -87,6 +87,7 @@ declare global {
       trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (config: ActivityTrackingConfiguration) => void;
       makeVisualChanges: () => void;
+      intervals: Array<number>;
     };
   }
 }

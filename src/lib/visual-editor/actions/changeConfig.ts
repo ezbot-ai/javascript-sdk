@@ -10,6 +10,7 @@ const changeConfig = (mode: Mode, config: Readonly<SDKConfig>) => {
     mutators.setLocalStyles(styles);
     mutators.unhighlightAllElements();
   } else {
+    mutators.stopVariableShuffle();
     mutators.removeLocalStyles();
   }
 };

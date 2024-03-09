@@ -118,6 +118,7 @@ async function initEzbot(
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
+    intervals: [],
   };
 
   return tracker;

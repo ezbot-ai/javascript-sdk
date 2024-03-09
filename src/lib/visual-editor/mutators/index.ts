@@ -11,7 +11,11 @@ import {
 import { removeLocalStyles, setLocalStyles } from './localStyles';
 import { markElementVariable } from './markVariableSelector';
 import { setupUniqueElementIds } from './setupUniqueElementIds';
-import { shuffleVariations } from './shuffleVariations';
+import {
+  shuffleVariations,
+  startVariableShuffle,
+  stopVariableShuffle,
+} from './shuffle';
 
 export {
   unhighlightAllElements,
@@ -25,4 +29,6 @@ export {
   markElementVariable,
   shuffleVariations,
   highlightElementWithVariable,
+  stopVariableShuffle,
+  startVariableShuffle,
 };

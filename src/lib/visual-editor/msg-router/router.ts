@@ -19,6 +19,7 @@ const routeIncomingEvent = (
       actions.changeConfig(event.mode, event.config);
       return true;
     case 'changeVariables':
+      logInfo('about to call changeVariables', event.payload);
       actions.changeVariables(event.payload);
       return true;
     default:
