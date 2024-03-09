@@ -127,6 +127,7 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
       element,
       {
         opacity: ['0', '1'],
+        filter: ['blur(10px)', 'blur(0px)'],
       },
       {
         duration: animationSeconds,
