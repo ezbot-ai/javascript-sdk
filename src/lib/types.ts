@@ -7,6 +7,8 @@ import {
   PageViewEvent,
 } from '@snowplow/browser-tracker-core';
 
+import { DBVariable } from './visual-editor/types';
+
 type VariableConfig = {
   selector: string;
   action:
@@ -88,6 +90,7 @@ declare global {
       startActivityTracking: (config: ActivityTrackingConfiguration) => void;
       makeVisualChanges: () => void;
       intervals: Array<number>;
+      visualVariables: Array<DBVariable>;
     };
   }
 }

@@ -7,6 +7,8 @@ const changeVariables = (variables: readonly DBVariable[]) => {
   const visualVariables = variables.filter(
     (variable) => variable.type === 'visual'
   );
+  // eslint-disable-next-line functional/immutable-data
+  window.ezbot.visualVariables = visualVariables;
   visualVariables.map((variable): void => {
     try {
       if (!variable.config) {
@@ -19,9 +21,7 @@ const changeVariables = (variables: readonly DBVariable[]) => {
         logInfo('No element found for visual variable');
         return;
       }
-      logInfo('about to call startVariableShuffle');
-      logInfo('variables', visualVariables);
-      mutators.startVariableShuffle(visualVariables);
+      mutators.startVariableShuffle();
       mutators.markElementVariable(element as HTMLElement, variable);
       mutators.highlightElementWithVariable(element as HTMLElement);
     } catch (error) {

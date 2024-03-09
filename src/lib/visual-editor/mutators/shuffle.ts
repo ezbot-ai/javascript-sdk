@@ -144,7 +144,8 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
   window.ezbot.intervals.push(intervalId as unknown as number);
 };
 
-const startVariableShuffle = (variables: readonly DBVariable[]): void => {
+const startVariableShuffle = (): void => {
+  const variables = window.ezbot.visualVariables;
   variables.map(shuffleVariations);
 };
 const stopVariableShuffle = (): void => {
