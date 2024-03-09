@@ -105,7 +105,10 @@ type ElementClickedEvent = {
   element: ElementPayload;
 };
 
-type OutboundEvent = ElementClickedEvent | SDKStatusChangeEvent;
+type OutboundEvent =
+  | ElementClickedEvent
+  | SDKStatusChangeEvent
+  | SDKReceivingEvent;
 
 type SDKStatus = 'loading' | 'ready' | 'error';
 
@@ -116,6 +119,10 @@ type SDKStatusChangePayload = {
 type SDKStatusChangeEvent = {
   type: 'SDKStatusChange';
   payload: SDKStatusChangePayload;
+};
+
+type SDKReceivingEvent = {
+  type: 'SDKReceiving';
 };
 
 export {
@@ -140,4 +147,5 @@ export {
   SetAttributeConfig,
   BaseVisualVariableConfig,
   VariableConstraints,
+  SDKReceivingEvent,
 };
