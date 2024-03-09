@@ -1,4 +1,6 @@
 /* eslint-disable functional/no-return-void */
+import { animate } from 'motion';
+
 import { logInfo } from '../../utils';
 import {
   addClassesToElement,
@@ -14,6 +16,9 @@ import {
   showElement,
 } from '../../visualChanges';
 import { DBVariable, VisualVariableConfig } from '../types';
+
+const shuffleSeconds = 2;
+const animationSeconds = 1;
 
 type VisualChange = {
   selector: string;
@@ -118,8 +123,18 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
       config: variable.config,
       value: variations[counter],
     });
+    animate(
+      element,
+      {
+        opacity: ['0', '1'],
+      },
+      {
+        duration: animationSeconds,
+        easing: 'ease-in-out',
+      }
+    );
     counter = (counter + 1) % variations.length;
-  }, 2000);
+  }, shuffleSeconds * 1000);
 };
 
 export { shuffleVariations };
