@@ -16,10 +16,9 @@ const routeIncomingEvent = (
       actions.initVisualEditorSupport(event.mode);
       return true;
     case 'changeConfig':
-      actions.changeConfig(event.mode, event.config);
+      actions.changeConfig(event.mode, event.config, event.variables);
       return true;
     case 'changeVariables':
-      logInfo('about to call changeVariables', event.payload);
       actions.changeVariables(event.payload);
       return true;
     default:

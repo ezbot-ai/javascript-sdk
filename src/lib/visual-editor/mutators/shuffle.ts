@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-return-void */
 import { animate } from 'motion';
 
-import { logError, logInfo } from '../../utils';
+import { logInfo } from '../../utils';
 import {
   addClassesToElement,
   hideElement,
@@ -27,7 +27,14 @@ type VisualChange = {
 };
 
 function makeVisualChange(change: Readonly<VisualChange>): void {
-  const element = document.querySelector(change.selector);
+  // eslint-disable-next-line functional/no-let
+  let element: HTMLElement | null;
+  try {
+    element = document.querySelector(change.selector);
+  } catch (e) {
+    element = null;
+  }
+
   if (!element || !(element instanceof HTMLElement)) {
     console.log(
       `No HTML element found for prediction with selector: ${change.selector}. Skipping its shuffle.`
@@ -101,7 +108,7 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
   try {
     element = document.querySelector(variable.config.selector);
   } catch (e) {
-    logError(e as unknown as Error);
+    element = null;
   }
 
   if (!element) {
@@ -144,9 +151,8 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
   window.ezbot.intervals.push(intervalId as unknown as number);
 };
 
-const startVariableShuffle = (): void => {
-  const variables = window.ezbot.visualVariables;
-  variables.map(shuffleVariations);
+const startVariableShuffle = (visualVariables: readonly DBVariable[]): void => {
+  visualVariables.map(shuffleVariations);
 };
 const stopVariableShuffle = (): void => {
   window.ezbot.intervals.forEach((interval) => {

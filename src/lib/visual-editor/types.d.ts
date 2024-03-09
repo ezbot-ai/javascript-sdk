@@ -14,6 +14,7 @@ type ChangeConfigEvent = {
   type: 'changeConfig';
   mode: Mode;
   config: SDKConfig;
+  variables: DBVariable[];
 };
 
 type SetAttributeConfig = {

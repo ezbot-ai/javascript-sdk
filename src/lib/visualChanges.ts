@@ -102,7 +102,14 @@ function makeVisualChange(prediction: Prediction): void {
     return;
   }
 
-  const element = document.querySelector(selector);
+  // eslint-disable-next-line functional/no-let
+  let element: HTMLElement | null;
+  try {
+    element = document.querySelector(selector);
+  } catch (e) {
+    element = null;
+  }
+
   if (!element || !(element instanceof HTMLElement)) {
     console.log(
       `No HTML element found for prediction with key: ${prediction.key}. Skipping its visual change.`

@@ -15,13 +15,20 @@ const changeVariables = (variables: readonly DBVariable[]) => {
         logInfo('No config found for visual variable');
         return;
       }
-      const element = document.querySelector(variable.config.selector);
+      // eslint-disable-next-line functional/no-let
+      let element: HTMLElement | null;
+      try {
+        element = document.querySelector(variable.config.selector);
+      } catch (e) {
+        element = null;
+      }
 
+      // ignore unless element is found
       if (!element) {
-        logInfo('No element found for visual variable');
         return;
       }
-      mutators.startVariableShuffle();
+
+      mutators.startVariableShuffle(visualVariables);
       mutators.markElementVariable(element as HTMLElement, variable);
       mutators.highlightElementWithVariable(element as HTMLElement);
     } catch (error) {

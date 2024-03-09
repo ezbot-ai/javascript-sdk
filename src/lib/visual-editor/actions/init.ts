@@ -11,14 +11,15 @@ const initVisualEditorSupport = (mode: Mode) => {
       mutators.setLocalStyles();
       mutators.setupClickListeners();
       mutators.setupUniqueElementIds();
-      // TODO: PROBS CALL SHUFFLE HERE
+      const visualVariables = window.ezbot.visualVariables;
+      mutators.startVariableShuffle(visualVariables);
       senders.sendInit('ready');
     } catch (e) {
       logError(e as Error);
       senders.sendInit('error');
     }
   } else {
-    mutators.setupClickListeners();
+    mutators.stopVariableShuffle();
     mutators.setupUniqueElementIds();
     senders.sendInit('ready');
   }

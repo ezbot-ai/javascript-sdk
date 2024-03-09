@@ -16,4 +16,31 @@ const markElementVariable = (
   );
 };
 
-export { markElementVariable };
+const markElementVariables = (visualVariables: readonly DBVariable[]): void => {
+  visualVariables.map((variable): void => {
+    try {
+      if (!variable.config) {
+        logInfo('No config found for visual variable');
+        return;
+      }
+      // eslint-disable-next-line functional/no-let
+      let element: HTMLElement | null;
+      try {
+        element = document.querySelector(variable.config.selector);
+      } catch (e) {
+        element = null;
+      }
+
+      // ignore unless element is found
+      if (!element) {
+        return;
+      }
+
+      markElementVariable(element as HTMLElement, variable);
+    } catch (error) {
+      logInfo('Error marking element', error);
+    }
+  });
+};
+
+export { markElementVariable, markElementVariables };
