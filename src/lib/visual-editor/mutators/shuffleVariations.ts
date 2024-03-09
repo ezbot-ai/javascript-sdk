@@ -17,7 +17,7 @@ import {
 } from '../../visualChanges';
 import { DBVariable, VisualVariableConfig } from '../types';
 
-const shuffleSeconds = 2;
+const shuffleSeconds = 3;
 const animationSeconds = 1;
 
 type VisualChange = {
