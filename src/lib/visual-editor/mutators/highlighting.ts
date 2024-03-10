@@ -4,14 +4,20 @@
 
 import { logError } from '../../utils';
 import { DBVariable } from '../types';
+import * as utils from '../utils';
 
 const elementHighlightClass = 'ezbot-element-highlight';
 const elementWithVariableHighlightClass = 'ezbot-element-variable-highlight';
 
 const unhighlightAllElements = (): void => {
-  const highlightedElements = document.querySelectorAll(
+  const highlightedElements = utils.safeQuerySelectorAll(
     `.${elementHighlightClass}`
   );
+
+  if (!highlightedElements) {
+    logError(new Error('No highlighted elements found'));
+    return;
+  }
 
   highlightedElements.forEach((element) => {
     if (!element || !(element instanceof HTMLElement)) {

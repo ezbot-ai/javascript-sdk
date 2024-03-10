@@ -1,4 +1,4 @@
-import { logError } from '../../utils';
+import { logError } from '.';
 
 const safeQuerySelector = (selector: string): HTMLElement | null => {
   // eslint-disable-next-line functional/no-let

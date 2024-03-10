@@ -1,6 +1,6 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-return-void */
-import { LocalStyles } from '../types';
+import { LocalStyles, SDKConfig } from '../types';
 
 // Order matters
 const defaultLocalStyles: LocalStyles = {
@@ -26,12 +26,12 @@ const defaultLocalStyles: LocalStyles = {
   },
 };
 
-const buildLocalStyles = (highlightColor: string): LocalStyles => {
+const buildLocalStyles = (config: Readonly<SDKConfig>): LocalStyles => {
   return {
     ...defaultLocalStyles,
     '.ezbot-element-highlight': {
       'box-sizing': 'border-box',
-      'background-color': `${highlightColor} !important`,
+      'background-color': `${config.highlightColor} !important`,
       border: '2px solid rgb(196, 55, 255)',
       transition: 'all 0.3s ease-out',
     },

@@ -120,6 +120,8 @@ async function initEzbot(
     makeVisualChanges: makeVisualChanges,
     intervals: [],
     visualVariables: [],
+    mode: 'ezbot',
+    config: null,
   };
 
   return tracker;

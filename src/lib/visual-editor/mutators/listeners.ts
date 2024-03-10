@@ -22,18 +22,6 @@ const setupIncomingMsgListener = () => {
   });
 };
 
-const setupHoverListeners = (): void => {
-  // TODO: Tweak and re-enable?
-  // document.addEventListener('mouseover', (event) => {
-  //   const element = event.target as HTMLElement;
-  //   // TODO: Move this logic
-  //   document.querySelectorAll('.ezbot-hover').forEach((el) => {
-  //     el.classList.remove('ezbot-hover');
-  //   });
-  //   element.classList.add('ezbot-hover');
-  // });
-};
-
 const setupClickListeners = (): void => {
   document.addEventListener('click', (event) => {
     event.preventDefault();
@@ -48,7 +36,6 @@ const setupClickListeners = (): void => {
 const setupListeners = () => {
   setupIncomingMsgListener();
   setupClickListeners();
-  setupHoverListeners();
 };
 
 export { setupClickListeners, setupIncomingMsgListener, setupListeners };

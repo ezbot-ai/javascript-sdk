@@ -16,6 +16,7 @@ import {
   showElement,
 } from '../../visualChanges';
 import { DBVariable, VisualVariableConfig } from '../types';
+import * as utils from '../utils';
 
 const shuffleSeconds = 3;
 const animationSeconds = 1;
@@ -27,13 +28,7 @@ type VisualChange = {
 };
 
 function makeVisualChange(change: Readonly<VisualChange>): void {
-  // eslint-disable-next-line functional/no-let
-  let element: HTMLElement | null;
-  try {
-    element = document.querySelector(change.selector);
-  } catch (e) {
-    element = null;
-  }
+  const element = utils.safeQuerySelector(change.selector);
 
   if (!element || !(element instanceof HTMLElement)) {
     console.log(
@@ -103,13 +98,7 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
     logInfo('Cannot shuffle variations without variable config');
     return;
   }
-  // eslint-disable-next-line functional/no-let
-  let element: Element | null = null;
-  try {
-    element = document.querySelector(variable.config.selector);
-  } catch (e) {
-    element = null;
-  }
+  const element = utils.safeQuerySelector(variable.config.selector);
 
   if (!element) {
     return;

@@ -14,6 +14,9 @@ import {
   markElementVariable,
   markElementVariables,
 } from './markVariableSelector';
+import { persistConfig } from './persistConfig';
+import { persistMode } from './persistMode';
+import { persistVisualVariables } from './persistVisualVariables';
 import { setupUniqueElementIds } from './setupUniqueElementIds';
 import {
   shuffleVariations,
@@ -37,4 +40,7 @@ export {
   startVariableShuffle,
   markElementVariables,
   highlightElementsWithVariables,
+  persistMode,
+  persistVisualVariables,
+  persistConfig,
 };

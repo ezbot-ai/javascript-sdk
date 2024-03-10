@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-return-void */
 import { logInfo } from '../../utils';
 import { DBVariable } from '../types';
+import * as utils from '../utils';
 
 const markElementVariable = (
   element: Readonly<HTMLElement>,
@@ -23,13 +24,7 @@ const markElementVariables = (visualVariables: readonly DBVariable[]): void => {
         logInfo('No config found for visual variable');
         return;
       }
-      // eslint-disable-next-line functional/no-let
-      let element: HTMLElement | null;
-      try {
-        element = document.querySelector(variable.config.selector);
-      } catch (e) {
-        element = null;
-      }
+      const element = utils.safeQuerySelector(variable.config.selector);
 
       // ignore unless element is found
       if (!element) {

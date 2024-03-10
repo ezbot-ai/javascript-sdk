@@ -1,5 +1,9 @@
 import { changeConfig } from './changeConfig';
-import { changeVariables } from './changeVariables';
+import {
+  changeVariables,
+  setupVisualVariable,
+  setupVisualVariables,
+} from './changeVariables';
 import { initVisualEditorSupport } from './init';
 import { initEzbotMode } from './initEzbotMode';
 import { initInteractiveMode } from './initInteractiveMode';
@@ -10,4 +14,6 @@ export {
   changeVariables,
   initEzbotMode,
   initInteractiveMode,
+  setupVisualVariable,
+  setupVisualVariables,
 };

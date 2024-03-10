@@ -2,6 +2,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/prefer-immutable-types */
 import { Prediction } from './ezbot';
+import * as utils from './utils';
 
 function setElementText(element: Element, text: string): void {
   element.textContent = text;
@@ -102,13 +103,7 @@ function makeVisualChange(prediction: Prediction): void {
     return;
   }
 
-  // eslint-disable-next-line functional/no-let
-  let element: HTMLElement | null;
-  try {
-    element = document.querySelector(selector);
-  } catch (e) {
-    element = null;
-  }
+  const element = utils.safeQuerySelector(selector);
 
   if (!element || !(element instanceof HTMLElement)) {
     console.log(
