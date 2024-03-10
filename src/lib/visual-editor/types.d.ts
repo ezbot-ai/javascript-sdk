@@ -4,6 +4,7 @@ type Mode = 'ezbot' | 'interactive';
 type InitEvent = {
   type: 'init';
   mode: Mode;
+  config: SDKConfig;
 };
 
 type SDKConfig = {

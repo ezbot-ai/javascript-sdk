@@ -13,7 +13,7 @@ const routeIncomingEvent = (
   }
   switch (event.type) {
     case 'init':
-      actions.initVisualEditorSupport(event.mode);
+      actions.initVisualEditorSupport(event.mode, event.config);
       return true;
     case 'changeConfig':
       actions.changeConfig(event.mode, event.config, event.variables);
