@@ -1,3 +1,4 @@
 import { getSelector } from './getSelector';
+import { safeQuerySelector, safeQuerySelectorAll } from './safeQuerySelector';
 
-export { getSelector };
+export { getSelector, safeQuerySelector, safeQuerySelectorAll };
