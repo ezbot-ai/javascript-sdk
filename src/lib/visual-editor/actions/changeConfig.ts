@@ -18,12 +18,10 @@ const changeConfig = (
     const styles = buildLocalStyles(config);
     mutators.setLocalStyles(styles);
     mutators.setupClickListeners();
-    mutators.setupUniqueElementIds();
-    mutators.unhighlightAllElements();
-    mutators.markElementVariables(visualVariables);
     mutators.highlightElementsWithVariables(visualVariables);
     mutators.startVariableShuffle(visualVariables);
   } else {
+    mutators.unhighlightAllElements();
     mutators.stopVariableShuffle();
     mutators.removeLocalStyles();
   }
