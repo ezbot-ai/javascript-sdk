@@ -89,7 +89,7 @@ type ElementAttribute = {
 };
 
 type ElementPayload = {
-  ezbotTempId: string;
+  ezbotTempId: string | null;
   text: string;
   attributes: ElementAttribute[];
   tag: string;
