@@ -1,6 +1,4 @@
 /* eslint-disable functional/no-throw-statements */
-import { logError } from '../../utils';
-
 const inboundMsg = (msg: Readonly<MessageEvent>): boolean => {
   try {
     const data = JSON.parse(msg.data);
@@ -9,7 +7,7 @@ const inboundMsg = (msg: Readonly<MessageEvent>): boolean => {
     }
     return true;
   } catch (error) {
-    logError(error as Error);
+    // throw away messages that are not valid JSON
     return false;
   }
 };

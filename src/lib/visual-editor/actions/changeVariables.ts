@@ -2,30 +2,50 @@
 import { logInfo } from '../../utils';
 import * as mutators from '../mutators';
 import { DBVariable } from '../types';
+import * as utils from '../utils';
 
-const changeVariables = (variables: readonly DBVariable[]) => {
-  const visualVariables = variables.filter(
-    (variable) => variable.type === 'visual'
-  );
-  visualVariables.map((variable): void => {
-    try {
-      if (!variable.config) {
-        logInfo('No config found for visual variable');
-        return;
-      }
-      const element = document.querySelector(variable.config.selector);
-
-      if (!element) {
-        logInfo('No element found for visual variable');
-        return;
-      }
-      mutators.shuffleVariations(variable); // TODO: PROBS DONT DO HERE
-      mutators.markElementVariable(element as HTMLElement, variable);
-      mutators.highlightElementWithVariable(element as HTMLElement);
-    } catch (error) {
-      logInfo('Error highlighting element', error);
+const setupVisualVariable = (variable: Readonly<DBVariable>): void => {
+  try {
+    // Check for a malformed variable with type 'visual' but no config
+    if (!variable.config) {
+      logInfo('No config found for visual variable');
+      return;
     }
+
+    // Find an element using the selector from the variable config
+    const element = utils.safeQuerySelector(variable.config.selector);
+
+    // If no element is found, return early
+    if (!element) {
+      return;
+    }
+
+    // Mark the element with the variable and highlight it
+    mutators.markElementVariable(element as HTMLElement, variable);
+    mutators.highlightElementWithVariable(element as HTMLElement);
+    // Begin shuffling its variations
+    mutators.shuffleVariations(variable);
+  } catch (error) {
+    logInfo('Error highlighting element', error);
+  }
+};
+const setupVisualVariables = (visualVariables: readonly DBVariable[]): void => {
+  visualVariables.map((variable): void => {
+    setupVisualVariable(variable);
   });
 };
 
-export { changeVariables };
+const changeVariables = (variables: readonly DBVariable[]) => {
+  mutators.persistVisualVariables(variables);
+  const mode = window.ezbot.mode;
+
+  // If the mode is 'interactive', return early
+  if (mode === 'interactive') {
+    return;
+  }
+
+  const visualVariables = window.ezbot.visualVariables;
+  setupVisualVariables(visualVariables);
+};
+
+export { changeVariables, setupVisualVariable, setupVisualVariables };

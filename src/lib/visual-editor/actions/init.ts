@@ -1,26 +1,17 @@
-import { logError, logInfo } from '../../utils';
+import { logInfo } from '../../utils';
+import * as actions from '../actions';
 import * as mutators from '../mutators';
-import * as senders from '../senders';
-import { Mode } from '../types';
+import { Mode, SDKConfig } from '../types';
 
 // eslint-disable-next-line functional/no-return-void
-const initVisualEditorSupport = (mode: Mode) => {
+const initVisualEditorSupport = (mode: Mode, config: Readonly<SDKConfig>) => {
   logInfo(`Initializing support for visual editor in mode: ${mode}`);
+  mutators.persistMode(mode);
+  mutators.persistConfig(config);
   if (mode == 'ezbot') {
-    try {
-      mutators.setLocalStyles();
-      mutators.setupClickListeners();
-      mutators.setupUniqueElementIds();
-      // TODO: PROBS CALL SHUFFLE HERE
-      senders.sendInit('ready');
-    } catch (e) {
-      logError(e as Error);
-      senders.sendInit('error');
-    }
+    actions.initEzbotMode(config);
   } else {
-    mutators.setupClickListeners();
-    mutators.setupUniqueElementIds();
-    senders.sendInit('ready');
+    actions.initInteractiveMode();
   }
 };
 

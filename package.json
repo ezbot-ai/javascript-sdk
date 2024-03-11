@@ -1,6 +1,6 @@
 {
   "name": "@ezbot-ai/javascript-sdk",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "The easiest way to interact with ezbot via JS (node and browser)",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -59,6 +59,7 @@
     "@snowplow/browser-plugin-site-tracking": "^3.19.0",
     "@snowplow/browser-plugin-timezone": "^3.19.0",
     "@snowplow/browser-tracker": "^3.19.0",
+    "motion": "^10.17.0",
     "patch-package": "^8.0.0",
     "uuid": "^9.0.1"
   },

@@ -1,15 +1,28 @@
 /* eslint-disable functional/no-return-void */
 import * as mutators from '../mutators';
 import { buildLocalStyles } from '../mutators/localStyles';
-import { SDKConfig } from '../types';
+import { DBVariable, SDKConfig } from '../types';
 import { Mode } from '../types';
 
-const changeConfig = (mode: Mode, config: Readonly<SDKConfig>) => {
+const changeConfig = (
+  mode: Mode,
+  config: Readonly<SDKConfig>,
+  variables: readonly DBVariable[]
+) => {
+  mutators.persistMode(mode);
+  mutators.persistVisualVariables(variables);
+  mutators.persistConfig(config);
+  const visualVariables = window.ezbot.visualVariables;
+
   if (mode == 'ezbot') {
-    const styles = buildLocalStyles(config.highlightColor);
+    const styles = buildLocalStyles(config);
     mutators.setLocalStyles(styles);
-    mutators.unhighlightAllElements();
+    mutators.setupClickListeners();
+    mutators.highlightElementsWithVariables(visualVariables);
+    mutators.startVariableShuffle(visualVariables);
   } else {
+    mutators.unhighlightAllElements();
+    mutators.stopVariableShuffle();
     mutators.removeLocalStyles();
   }
 };

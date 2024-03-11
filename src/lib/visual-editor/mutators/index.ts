@@ -1,5 +1,6 @@
 import {
   highlightElement,
+  highlightElementsWithVariables,
   highlightElementWithVariable,
   unhighlightAllElements,
 } from './highlighting';
@@ -9,9 +10,19 @@ import {
   setupListeners,
 } from './listeners';
 import { removeLocalStyles, setLocalStyles } from './localStyles';
-import { markElementVariable } from './markVariableSelector';
+import {
+  markElementVariable,
+  markElementVariables,
+} from './markVariableSelector';
+import { persistConfig } from './persistConfig';
+import { persistMode } from './persistMode';
+import { persistVisualVariables } from './persistVisualVariables';
 import { setupUniqueElementIds } from './setupUniqueElementIds';
-import { shuffleVariations } from './shuffleVariations';
+import {
+  shuffleVariations,
+  startVariableShuffle,
+  stopVariableShuffle,
+} from './shuffle';
 
 export {
   unhighlightAllElements,
@@ -25,4 +36,11 @@ export {
   markElementVariable,
   shuffleVariations,
   highlightElementWithVariable,
+  stopVariableShuffle,
+  startVariableShuffle,
+  markElementVariables,
+  highlightElementsWithVariables,
+  persistMode,
+  persistVisualVariables,
+  persistConfig,
 };

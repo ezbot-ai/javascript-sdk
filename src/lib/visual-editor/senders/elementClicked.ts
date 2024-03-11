@@ -75,7 +75,7 @@ function buildElementClickedPayload(
   const elementTag = element.tagName;
 
   const elementPayload: ElementPayload = {
-    ezbotTempId: element.getAttribute('data-ezbot-temp-id')!,
+    ezbotTempId: element.getAttribute('data-ezbot-temp-id'),
     text: elementText,
     attributes: buildElementAttributes(element),
     tag: elementTag,

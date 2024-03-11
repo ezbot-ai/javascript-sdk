@@ -2,6 +2,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/prefer-immutable-types */
 import { Prediction } from './ezbot';
+import * as utils from './utils';
 
 function setElementText(element: Element, text: string): void {
   element.textContent = text;
@@ -102,7 +103,8 @@ function makeVisualChange(prediction: Prediction): void {
     return;
   }
 
-  const element = document.querySelector(selector);
+  const element = utils.safeQuerySelector(selector);
+
   if (!element || !(element instanceof HTMLElement)) {
     console.log(
       `No HTML element found for prediction with key: ${prediction.key}. Skipping its visual change.`

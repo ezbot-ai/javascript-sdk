@@ -105,6 +105,7 @@ async function initEzbot(
     // Start listening for events from visual editor
     // full visual editor support when an init event is received
     VisualEditorController.mutators.setupIncomingMsgListener();
+    VisualEditorController.senders.sendReceivingEvent();
   } catch (error) {
     console.error('Failed to setup element click listeners', error);
   }
@@ -117,6 +118,10 @@ async function initEzbot(
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
+    intervals: [],
+    visualVariables: [],
+    mode: 'ezbot',
+    config: null,
   };
 
   return tracker;

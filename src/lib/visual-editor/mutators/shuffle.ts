@@ -1,4 +1,6 @@
 /* eslint-disable functional/no-return-void */
+import { animate } from 'motion';
+
 import { logInfo } from '../../utils';
 import {
   addClassesToElement,
@@ -14,6 +16,10 @@ import {
   showElement,
 } from '../../visualChanges';
 import { DBVariable, VisualVariableConfig } from '../types';
+import * as utils from '../utils';
+
+const shuffleSeconds = 3;
+const animationSeconds = 1;
 
 type VisualChange = {
   selector: string;
@@ -22,7 +28,8 @@ type VisualChange = {
 };
 
 function makeVisualChange(change: Readonly<VisualChange>): void {
-  const element = document.querySelector(change.selector);
+  const element = utils.safeQuerySelector(change.selector);
+
   if (!element || !(element instanceof HTMLElement)) {
     console.log(
       `No HTML element found for prediction with selector: ${change.selector}. Skipping its shuffle.`
@@ -91,11 +98,9 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
     logInfo('Cannot shuffle variations without variable config');
     return;
   }
-
-  const element = document.querySelector(variable.config.selector);
+  const element = utils.safeQuerySelector(variable.config.selector);
 
   if (!element) {
-    logInfo('No element found for visual variable');
     return;
   }
 
@@ -112,14 +117,36 @@ const shuffleVariations = (variable: Readonly<DBVariable>): void => {
   // every second, call makeVisualChange with a random variation
   // eslint-disable-next-line functional/no-let
   let counter = 0;
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     makeVisualChange({
       selector: variable.config!.selector,
       config: variable.config,
       value: variations[counter],
     });
+    animate(
+      element!,
+      {
+        opacity: ['0', '1'],
+        filter: ['blur(10px)', 'blur(0px)'],
+      },
+      {
+        duration: animationSeconds,
+        easing: 'ease-in-out',
+      }
+    );
     counter = (counter + 1) % variations.length;
-  }, 2000);
+  }, shuffleSeconds * 1000);
+  // eslint-disable-next-line functional/immutable-data
+  window.ezbot.intervals.push(intervalId as unknown as number);
 };
 
-export { shuffleVariations };
+const startVariableShuffle = (visualVariables: readonly DBVariable[]): void => {
+  visualVariables.map(shuffleVariations);
+};
+const stopVariableShuffle = (): void => {
+  window.ezbot.intervals.forEach((interval) => {
+    clearInterval(interval);
+  });
+};
+
+export { shuffleVariations, startVariableShuffle, stopVariableShuffle };

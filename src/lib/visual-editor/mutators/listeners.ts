@@ -9,6 +9,10 @@ import { highlightElement, unhighlightAllElements } from './highlighting';
 
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
+    // Don't listen for messages sent from self
+    if (msg.origin == window.location.origin) {
+      return;
+    }
     if (!validators.inboundMsg(msg)) {
       logInfo('Invalid incoming message', msg);
       return;
@@ -16,18 +20,6 @@ const setupIncomingMsgListener = () => {
     const incomingEvent = parseIncomingMsg(msg);
     routeIncomingEvent(incomingEvent);
   });
-};
-
-const setupHoverListeners = (): void => {
-  // TODO: Tweak and re-enable?
-  // document.addEventListener('mouseover', (event) => {
-  //   const element = event.target as HTMLElement;
-  //   // TODO: Move this logic
-  //   document.querySelectorAll('.ezbot-hover').forEach((el) => {
-  //     el.classList.remove('ezbot-hover');
-  //   });
-  //   element.classList.add('ezbot-hover');
-  // });
 };
 
 const setupClickListeners = (): void => {
@@ -44,7 +36,6 @@ const setupClickListeners = (): void => {
 const setupListeners = () => {
   setupIncomingMsgListener();
   setupClickListeners();
-  setupHoverListeners();
 };
 
 export { setupClickListeners, setupIncomingMsgListener, setupListeners };

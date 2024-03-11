@@ -7,6 +7,8 @@ import {
   PageViewEvent,
 } from '@snowplow/browser-tracker-core';
 
+import { DBVariable, SDKConfig } from './visual-editor/types';
+
 type VariableConfig = {
   selector: string;
   action:
@@ -87,6 +89,10 @@ declare global {
       trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (config: ActivityTrackingConfiguration) => void;
       makeVisualChanges: () => void;
+      intervals: Array<number>;
+      visualVariables: Array<DBVariable>;
+      mode: 'ezbot' | 'interactive';
+      config: SDKConfig | null;
     };
   }
 }
