@@ -44,6 +44,7 @@ const changeVariables = (variables: readonly DBVariable[]) => {
     return;
   }
 
+  mutators.stopVariableShuffle();
   const visualVariables = window.ezbot.visualVariables;
   setupVisualVariables(visualVariables);
 };
