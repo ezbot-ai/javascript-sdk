@@ -166,7 +166,9 @@ const startVariableShuffle = (visualVariables: readonly DBVariable[]): void => {
   visualVariables.map(shuffleVariations);
 };
 const stopVariableShuffle = (): void => {
+  logInfo('Stopping variable shuffle');
   window.ezbot.intervals.forEach((interval) => {
+    logInfo('Clearing interval');
     clearInterval(interval);
   });
 };

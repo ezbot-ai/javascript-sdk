@@ -16,6 +16,7 @@ const changeConfig = (
 
   mutators.persistConfig(config);
   const visualVariables = window.ezbot.visualVariables;
+  mutators.stopVariableShuffle();
 
   if (mode == 'ezbot') {
     const styles = buildLocalStyles(config);
@@ -23,7 +24,6 @@ const changeConfig = (
     mutators.setupClickListeners();
     mutators.startVariableShuffle(visualVariables);
   } else {
-    mutators.stopVariableShuffle();
     mutators.removeLocalStyles();
   }
 
