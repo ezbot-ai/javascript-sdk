@@ -22,9 +22,13 @@ const setupVisualVariable = (variable: Readonly<DBVariable>): void => {
 
     // Mark the element with the variable and highlight it
     mutators.markElementVariable(element as HTMLElement, variable);
-    mutators.highlightElementWithVariable(element as HTMLElement);
+    if (window.ezbot.config?.highlightEnabled) {
+      mutators.highlightElementWithVariable(element as HTMLElement);
+    }
     // Begin shuffling its variations
-    mutators.shuffleVariations(variable);
+    if (window.ezbot.config?.shuffleEnabled) {
+      mutators.shuffleVariations(variable);
+    }
   } catch (error) {
     logInfo('Error highlighting element', error);
   }

@@ -33,6 +33,7 @@ const changeConfig = (
   }
 
   if (config.shuffleEnabled) {
+    mutators.stopVariableShuffle();
     mutators.startVariableShuffle(visualVariables);
   }
 };
