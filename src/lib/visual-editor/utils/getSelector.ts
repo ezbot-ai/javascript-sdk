@@ -1,11 +1,20 @@
 import { finder } from '@medv/finder';
 
+const ignoreClasses = [
+  'ezbot-element-highlight',
+  'ezbot-element-variable-highlight',
+  'ezbot-hover',
+];
+
 const getSelector = (element: Readonly<Element>) => {
   // eslint-disable-next-line functional/no-let
   let selector = '';
   try {
     selector = finder(element, {
       seedMinLength: 3,
+      className: (name) => {
+        return !ignoreClasses.includes(name);
+      },
     });
   } catch (e) {
     selector =

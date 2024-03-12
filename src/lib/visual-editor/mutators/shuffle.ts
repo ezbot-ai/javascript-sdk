@@ -86,6 +86,28 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
     case 'show':
       showElement(element);
       break;
+    case 'setFontSize':
+      setElementStyle(element, `font-size: ${change.value}`);
+      break;
+    case 'setFontColor':
+      setElementStyle(element, `color: ${change.value}`);
+      break;
+    case 'setBackgroundColor':
+      setElementStyle(element, `background-color: ${change.value}`);
+      break;
+    case 'setVisibility':
+      // eslint-disable-next-line no-case-declarations
+      const val = change.value.toLowerCase();
+      if (val === 'hide') {
+        hideElement(element);
+        break;
+      } else if (val === 'show') {
+        showElement(element);
+        break;
+      }
+      logInfo("unsupported value for 'setVisibility' action", change.value);
+      break;
+
     default:
       console.log(
         `Unsupported action for prediction with selector: ${change.selector}. Skipping its visual change.`

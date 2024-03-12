@@ -25,6 +25,7 @@ type SetAttributeConfig = {
 };
 type BaseVisualVariableConfig = {
   selector: string;
+  attribute?: string;
   action:
     | 'setText'
     | 'setInnerHTML'
@@ -34,7 +35,13 @@ type BaseVisualVariableConfig = {
     | 'show'
     | 'addClasses'
     | 'removeClasses'
-    | 'setStyle';
+    | 'setStyle'
+    | 'setAttribute'
+    | 'setFontSize'
+    | 'setFontColor'
+    | 'setBackgroundColor'
+    | 'setVisibility'
+    | 'setOuterHTML';
 };
 
 type VariableConstraints = {

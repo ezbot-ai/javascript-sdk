@@ -61,6 +61,9 @@ function showElement(element: HTMLElement): void {
   element.style.display = 'block';
   element.style.visibility = 'visible';
 }
+function setElementOuterHTML(element: HTMLElement, value: string): void {
+  element.outerHTML = value;
+}
 
 function validateVisualPrediction(prediction: Prediction): string | null {
   if (prediction.config == null) {
@@ -169,6 +172,33 @@ function makeVisualChange(prediction: Prediction): void {
       break;
     case 'show':
       showElement(element);
+      break;
+    case 'setFontSize':
+      setElementStyle(element, `font-size: ${prediction.value}`);
+      break;
+    case 'setFontColor':
+      setElementStyle(element, `color: ${prediction.value}`);
+      break;
+    case 'setBackgroundColor':
+      setElementStyle(element, `background-color: ${prediction.value}`);
+      break;
+    case 'setVisibility':
+      // eslint-disable-next-line no-case-declarations
+      const val = prediction.value.toLowerCase();
+      if (val === 'hide') {
+        hideElement(element);
+        break;
+      } else if (val === 'show') {
+        showElement(element);
+        break;
+      }
+      utils.logInfo(
+        "unsupported value for 'setVisibility' action",
+        prediction.value
+      );
+      break;
+    case 'setOuterHTML':
+      setElementOuterHTML(element, prediction.value);
       break;
     default:
       console.log(
