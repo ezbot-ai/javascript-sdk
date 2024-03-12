@@ -10,6 +10,7 @@ type InitEvent = {
 type SDKConfig = {
   highlightColor: string;
   highlightEnabled: boolean;
+  shuffleEnabled: boolean;
 };
 
 type ChangeConfigEvent = {

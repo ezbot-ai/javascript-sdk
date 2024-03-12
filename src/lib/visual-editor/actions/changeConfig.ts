@@ -22,7 +22,6 @@ const changeConfig = (
     const styles = buildLocalStyles(config);
     mutators.setLocalStyles(styles);
     mutators.setupClickListeners();
-    mutators.startVariableShuffle(visualVariables);
   } else {
     mutators.removeLocalStyles();
   }
@@ -31,6 +30,10 @@ const changeConfig = (
     mutators.highlightElementsWithVariables(visualVariables);
   } else {
     mutators.unhighlightAllElementsWithVariables();
+  }
+
+  if (config.shuffleEnabled) {
+    mutators.startVariableShuffle(visualVariables);
   }
 };
 
