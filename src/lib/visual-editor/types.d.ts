@@ -9,13 +9,14 @@ type InitEvent = {
 
 type SDKConfig = {
   highlightColor: string;
+  highlightEnabled: boolean;
 };
 
 type ChangeConfigEvent = {
   type: 'changeConfig';
   mode: Mode;
   config: SDKConfig;
-  variables: DBVariable[];
+  variables?: DBVariable[];
 };
 
 type SetAttributeConfig = {

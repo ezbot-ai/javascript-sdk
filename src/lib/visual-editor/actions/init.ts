@@ -13,6 +13,11 @@ const initVisualEditorSupport = (mode: Mode, config: Readonly<SDKConfig>) => {
   } else {
     actions.initInteractiveMode();
   }
+  if (config.highlightEnabled) {
+    mutators.highlightElementsWithVariables(window.ezbot.visualVariables);
+  } else {
+    mutators.unhighlightAllElementsWithVariables();
+  }
 };
 
 export { initVisualEditorSupport };
