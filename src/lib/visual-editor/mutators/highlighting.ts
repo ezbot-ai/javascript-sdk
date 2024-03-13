@@ -9,6 +9,31 @@ import * as utils from '../utils';
 const elementHighlightClass = 'ezbot-element-highlight';
 const elementWithVariableHighlightClass = 'ezbot-element-variable-highlight';
 
+const unhighlightAllElementsWithVariables = (): void => {
+  const highlightedElements = utils.safeQuerySelectorAll(
+    `.${elementWithVariableHighlightClass}`
+  );
+
+  if (!highlightedElements) {
+    logError(new Error('No highlighted elements found'));
+    return;
+  }
+
+  highlightedElements.forEach((element) => {
+    if (!element || !(element instanceof HTMLElement)) {
+      logError(
+        new Error(
+          'Element is not an instance of HTMLElement, cannot unhighlight'
+        )
+      );
+      return;
+    }
+    (element as HTMLElement).style.border = '';
+    (element as HTMLElement).style.backgroundColor = '';
+    element.classList.remove(elementWithVariableHighlightClass);
+  });
+};
+
 const unhighlightAllElements = (): void => {
   const highlightedElements = utils.safeQuerySelectorAll(
     `.${elementHighlightClass}`
@@ -71,4 +96,5 @@ export {
   unhighlightAllElements,
   highlightElementWithVariable,
   highlightElementsWithVariables,
+  unhighlightAllElementsWithVariables,
 };

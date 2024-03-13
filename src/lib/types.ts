@@ -21,7 +21,12 @@ type VariableConfig = {
     | 'addClasses'
     | 'removeClasses'
     | 'setStyle'
-    | 'setAttribute';
+    | 'setAttribute'
+    | 'setFontSize'
+    | 'setFontColor'
+    | 'setBackgroundColor'
+    | 'setVisibility'
+    | 'setOuterHTML';
   attribute?: string;
 };
 

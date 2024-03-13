@@ -4,7 +4,7 @@ import { Prediction } from './types';
 import * as visualChanges from './visualChanges';
 
 // Mock console.log
-const logSpy = jest.spyOn(console, 'log');
+const logSpy = jest.spyOn(console, 'info');
 logSpy.mockImplementation(() => {});
 
 describe('visualChanges', () => {
@@ -50,7 +50,9 @@ describe('visualChanges', () => {
       const classes: string[] = [];
 
       visualChanges.addClassesToElement(div, classes);
-      expect(logSpy).toHaveBeenCalledWith(`No classes to add to element.`);
+      expect(logSpy).toHaveBeenCalledWith(
+        `[ezbot sdk] No classes to add to element.`
+      );
     });
   });
   describe('removeClassesFromElement', () => {
@@ -69,7 +71,9 @@ describe('visualChanges', () => {
       const classes: string[] = [];
 
       visualChanges.removeClassesFromElement(div, classes);
-      expect(logSpy).toHaveBeenCalledWith(`No classes to remove from element.`);
+      expect(logSpy).toHaveBeenCalledWith(
+        `[ezbot sdk] No classes to remove from element.`
+      );
     });
   });
   describe('setElementStyle', () => {
@@ -229,7 +233,7 @@ describe('visualChanges', () => {
 
         visualChanges.makeVisualChange(prediction);
         expect(logSpy).toHaveBeenCalledWith(
-          `No attribute found for prediction with key: ${prediction.key}. Skipping its visual change.`
+          `[ezbot sdk] No attribute found for prediction with key: ${prediction.key}. Skipping its visual change.`
         );
       });
     });
@@ -263,7 +267,9 @@ describe('visualChanges', () => {
         };
 
         visualChanges.makeVisualChange(prediction);
-        expect(logSpy).toHaveBeenCalledWith(`No classes to add to element.`);
+        expect(logSpy).toHaveBeenCalledWith(
+          `[ezbot sdk] No classes to add to element.`
+        );
       });
     });
     describe('with a removeClasses action', () => {
@@ -299,7 +305,7 @@ describe('visualChanges', () => {
 
         visualChanges.makeVisualChange(prediction);
         expect(logSpy).toHaveBeenCalledWith(
-          `No classes to remove from element.`
+          `[ezbot sdk] No classes to remove from element.`
         );
       });
     });

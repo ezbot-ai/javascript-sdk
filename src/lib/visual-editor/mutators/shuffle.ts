@@ -31,7 +31,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
   const element = utils.safeQuerySelector(change.selector);
 
   if (!element || !(element instanceof HTMLElement)) {
-    console.log(
+    logInfo(
       `No HTML element found for prediction with selector: ${change.selector}. Skipping its shuffle.`
     );
     return;
@@ -46,7 +46,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       break;
     case 'setAttribute':
       if (!change.config?.attribute) {
-        console.log(
+        logInfo(
           `No attribute found for prediction with selector: ${change.selector}. Skipping its visual change.`
         );
         return;
@@ -63,7 +63,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       if (element instanceof HTMLAnchorElement) {
         setElementHref(element, change.value);
       } else {
-        console.log(
+        logInfo(
           `Element with selector: ${change.selector} is not an anchor element. Skipping its visual change.`
         );
       }
@@ -75,7 +75,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       if (element instanceof HTMLImageElement) {
         setElementSrc(element, change.value);
       } else {
-        console.log(
+        logInfo(
           `Element with selector: ${change.selector} is not an image element. Skipping its visual change.`
         );
       }
@@ -86,8 +86,30 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
     case 'show':
       showElement(element);
       break;
+    case 'setFontSize':
+      setElementStyle(element, `font-size: ${change.value}`);
+      break;
+    case 'setFontColor':
+      setElementStyle(element, `color: ${change.value}`);
+      break;
+    case 'setBackgroundColor':
+      setElementStyle(element, `background-color: ${change.value}`);
+      break;
+    case 'setVisibility':
+      // eslint-disable-next-line no-case-declarations
+      const val = change.value.toLowerCase();
+      if (val === 'hide') {
+        hideElement(element);
+        break;
+      } else if (val === 'show') {
+        showElement(element);
+        break;
+      }
+      logInfo("unsupported value for 'setVisibility' action", change.value);
+      break;
+
     default:
-      console.log(
+      logInfo(
         `Unsupported action for prediction with selector: ${change.selector}. Skipping its visual change.`
       );
   }

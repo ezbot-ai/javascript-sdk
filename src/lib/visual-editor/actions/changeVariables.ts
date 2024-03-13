@@ -22,9 +22,13 @@ const setupVisualVariable = (variable: Readonly<DBVariable>): void => {
 
     // Mark the element with the variable and highlight it
     mutators.markElementVariable(element as HTMLElement, variable);
-    mutators.highlightElementWithVariable(element as HTMLElement);
+    if (window.ezbot.config?.highlightEnabled) {
+      mutators.highlightElementWithVariable(element as HTMLElement);
+    }
     // Begin shuffling its variations
-    mutators.shuffleVariations(variable);
+    if (window.ezbot.config?.shuffleEnabled) {
+      mutators.shuffleVariations(variable);
+    }
   } catch (error) {
     logInfo('Error highlighting element', error);
   }
@@ -36,6 +40,7 @@ const setupVisualVariables = (visualVariables: readonly DBVariable[]): void => {
 };
 
 const changeVariables = (variables: readonly DBVariable[]) => {
+  logInfo('Changing visual variables');
   mutators.persistVisualVariables(variables);
   const mode = window.ezbot.mode;
 
@@ -44,7 +49,9 @@ const changeVariables = (variables: readonly DBVariable[]) => {
     return;
   }
 
+  mutators.stopVariableShuffle();
   const visualVariables = window.ezbot.visualVariables;
+  mutators.unhighlightAllElementsWithVariables();
   setupVisualVariables(visualVariables);
 };
 

@@ -3,6 +3,7 @@ import {
   highlightElementsWithVariables,
   highlightElementWithVariable,
   unhighlightAllElements,
+  unhighlightAllElementsWithVariables,
 } from './highlighting';
 import {
   setupClickListeners,
@@ -25,6 +26,7 @@ import {
 } from './shuffle';
 
 export {
+  unhighlightAllElementsWithVariables,
   unhighlightAllElements,
   highlightElement,
   setLocalStyles,

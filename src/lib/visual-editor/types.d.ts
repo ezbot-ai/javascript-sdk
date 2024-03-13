@@ -9,13 +9,15 @@ type InitEvent = {
 
 type SDKConfig = {
   highlightColor: string;
+  highlightEnabled: boolean;
+  shuffleEnabled: boolean;
 };
 
 type ChangeConfigEvent = {
   type: 'changeConfig';
   mode: Mode;
   config: SDKConfig;
-  variables: DBVariable[];
+  variables?: DBVariable[];
 };
 
 type SetAttributeConfig = {
@@ -25,6 +27,7 @@ type SetAttributeConfig = {
 };
 type BaseVisualVariableConfig = {
   selector: string;
+  attribute?: string;
   action:
     | 'setText'
     | 'setInnerHTML'
@@ -34,7 +37,13 @@ type BaseVisualVariableConfig = {
     | 'show'
     | 'addClasses'
     | 'removeClasses'
-    | 'setStyle';
+    | 'setStyle'
+    | 'setAttribute'
+    | 'setFontSize'
+    | 'setFontColor'
+    | 'setBackgroundColor'
+    | 'setVisibility'
+    | 'setOuterHTML';
 };
 
 type VariableConstraints = {
