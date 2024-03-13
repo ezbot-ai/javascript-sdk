@@ -22,7 +22,7 @@ function setElementAttribute(
 
 function addClassesToElement(element: HTMLElement, classes: string[]): void {
   if (classes.length === 0) {
-    console.log(`No classes to add to element.`);
+    utils.logInfo(`No classes to add to element.`);
     return;
   }
   classes.forEach((className) => {
@@ -34,7 +34,7 @@ function removeClassesFromElement(
   classes: string[]
 ): void {
   if (classes.length === 0) {
-    console.log(`No classes to remove from element.`);
+    utils.logInfo(`No classes to remove from element.`);
     return;
   }
   classes.forEach((className) => {
@@ -93,14 +93,14 @@ function parseCommaSeparatedList(list: string): string[] {
 
 function makeVisualChange(prediction: Prediction): void {
   if (!prediction.config) {
-    console.log(
+    utils.logInfo(
       `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`
     );
     return;
   }
   const selector = prediction.config.selector;
   if (!selector) {
-    console.log(
+    utils.logInfo(
       `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`
     );
     return;
@@ -109,7 +109,7 @@ function makeVisualChange(prediction: Prediction): void {
   const element = utils.safeQuerySelector(selector);
 
   if (!element || !(element instanceof HTMLElement)) {
-    console.log(
+    utils.logInfo(
       `No HTML element found for prediction with key: ${prediction.key}. Skipping its visual change.`
     );
     return;
@@ -126,7 +126,7 @@ function makeVisualChange(prediction: Prediction): void {
       break;
     case 'setAttribute':
       if (!prediction.config.attribute) {
-        console.log(
+        utils.logInfo(
           `No attribute found for prediction with key: ${prediction.key}. Skipping its visual change.`
         );
         return;
@@ -150,7 +150,7 @@ function makeVisualChange(prediction: Prediction): void {
       if (element instanceof HTMLAnchorElement) {
         setElementHref(element, prediction.value);
       } else {
-        console.log(
+        utils.logInfo(
           `Element with selector: ${prediction.config.selector} is not an anchor element. Skipping its visual change.`
         );
       }
@@ -162,7 +162,7 @@ function makeVisualChange(prediction: Prediction): void {
       if (element instanceof HTMLImageElement) {
         setElementSrc(element, prediction.value);
       } else {
-        console.log(
+        utils.logInfo(
           `Element with selector: ${prediction.config.selector} is not an image element. Skipping its visual change.`
         );
       }
@@ -201,7 +201,7 @@ function makeVisualChange(prediction: Prediction): void {
       setElementOuterHTML(element, prediction.value);
       break;
     default:
-      console.log(
+      utils.logInfo(
         `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
       );
   }
@@ -210,7 +210,7 @@ function makeVisualChange(prediction: Prediction): void {
 function makeVisualChanges(): void {
   const predictions = window.ezbot?.predictions;
   if (!predictions) {
-    console.log('No predictions found. Skipping visual changes.');
+    utils.logInfo('No predictions found. Skipping visual changes.');
     return;
   }
   predictions.forEach((prediction) => {
@@ -220,7 +220,7 @@ function makeVisualChanges(): void {
 
     const validationError = validateVisualPrediction(prediction);
     if (validationError != null) {
-      console.log(validationError);
+      utils.logInfo(validationError);
       return;
     }
 

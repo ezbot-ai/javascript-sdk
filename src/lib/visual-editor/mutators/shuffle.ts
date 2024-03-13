@@ -31,7 +31,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
   const element = utils.safeQuerySelector(change.selector);
 
   if (!element || !(element instanceof HTMLElement)) {
-    console.log(
+    logInfo(
       `No HTML element found for prediction with selector: ${change.selector}. Skipping its shuffle.`
     );
     return;
@@ -46,7 +46,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       break;
     case 'setAttribute':
       if (!change.config?.attribute) {
-        console.log(
+        logInfo(
           `No attribute found for prediction with selector: ${change.selector}. Skipping its visual change.`
         );
         return;
@@ -63,7 +63,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       if (element instanceof HTMLAnchorElement) {
         setElementHref(element, change.value);
       } else {
-        console.log(
+        logInfo(
           `Element with selector: ${change.selector} is not an anchor element. Skipping its visual change.`
         );
       }
@@ -75,7 +75,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       if (element instanceof HTMLImageElement) {
         setElementSrc(element, change.value);
       } else {
-        console.log(
+        logInfo(
           `Element with selector: ${change.selector} is not an image element. Skipping its visual change.`
         );
       }
@@ -109,7 +109,7 @@ function makeVisualChange(change: Readonly<VisualChange>): void {
       break;
 
     default:
-      console.log(
+      logInfo(
         `Unsupported action for prediction with selector: ${change.selector}. Skipping its visual change.`
       );
   }
