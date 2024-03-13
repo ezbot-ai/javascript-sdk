@@ -40,6 +40,7 @@ const setupVisualVariables = (visualVariables: readonly DBVariable[]): void => {
 };
 
 const changeVariables = (variables: readonly DBVariable[]) => {
+  logInfo('Changing visual variables');
   mutators.persistVisualVariables(variables);
   const mode = window.ezbot.mode;
 
@@ -50,6 +51,7 @@ const changeVariables = (variables: readonly DBVariable[]) => {
 
   mutators.stopVariableShuffle();
   const visualVariables = window.ezbot.visualVariables;
+  mutators.unhighlightAllElementsWithVariables();
   setupVisualVariables(visualVariables);
 };
 
