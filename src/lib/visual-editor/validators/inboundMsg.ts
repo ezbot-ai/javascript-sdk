@@ -1,3 +1,5 @@
+import { logError } from '../../utils';
+
 const inboundMsg = (msg: Readonly<MessageEvent>): boolean => {
   try {
     const data = JSON.parse(msg.data);
@@ -7,7 +9,7 @@ const inboundMsg = (msg: Readonly<MessageEvent>): boolean => {
     }
     return true;
   } catch (error) {
-    // throw away messages that are not valid JSON
+    logError(error as Error);
     return false;
   }
 };

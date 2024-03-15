@@ -9,11 +9,10 @@ import { highlightElement, unhighlightAllElements } from './highlighting';
 
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
-    if (msg.origin == window.location.origin) {
-      logInfo('Event received from same origin.');
-    }
+    logInfo('Received message: ', msg);
+
     if (!validators.inboundMsg(msg)) {
-      logInfo('Non-ezbot event received. Skipping.');
+      logInfo('Event without a type was received. Skipping.');
       return;
     }
     const incomingEvent = parseIncomingMsg(msg);
