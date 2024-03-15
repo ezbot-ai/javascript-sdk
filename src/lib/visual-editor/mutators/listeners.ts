@@ -9,12 +9,8 @@ import { highlightElement, unhighlightAllElements } from './highlighting';
 
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
-    // Don't listen for messages sent from self
-    if (msg.origin == window.location.origin) {
-      return;
-    }
     if (!validators.inboundMsg(msg)) {
-      logInfo('Invalid incoming message', msg);
+      logInfo('Invalid incoming message', msg); // I dont see this
       return;
     }
     const incomingEvent = parseIncomingMsg(msg);
