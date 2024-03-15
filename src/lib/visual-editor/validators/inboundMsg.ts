@@ -1,9 +1,9 @@
-/* eslint-disable functional/no-throw-statements */
 const inboundMsg = (msg: Readonly<MessageEvent>): boolean => {
   try {
     const data = JSON.parse(msg.data);
+    // TODO: consider better validation
     if (!data.type) {
-      throw new Error('Event type not found on incoming event');
+      return false;
     }
     return true;
   } catch (error) {
