@@ -1,4 +1,4 @@
-import { finder } from '@medv/finder';
+import { finder } from '../../../vendor/finder';
 
 const ignoreClasses = [
   'ezbot-element-highlight',

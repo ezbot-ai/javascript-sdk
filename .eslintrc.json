@@ -10,7 +10,8 @@
   "ignorePatterns": [
     "node_modules",
     "build",
-    "coverage"
+    "coverage",
+    "src/vendor/finder.ts"
   ],
   "plugins": [
     "import",
