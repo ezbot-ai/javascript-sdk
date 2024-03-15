@@ -157,7 +157,7 @@ First-party code is stored in the `src` directory.
 
 ### Third-party Code
 
-Third-party code is brought in via npm, with a full manifest available in the `package.json` file.
+Third-party code is brought in via npm, with a full manifest available in the `package.json` file. 3rd party code is also present in the `vendor` directory. 
 
 ### Special Thanks
 
