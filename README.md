@@ -153,11 +153,11 @@ Below is just an example. After initializing ezbot, you can use the `window.ezbo
 
 ### First-party Code
 
-First-party code is stored in the `src` directory.
+First-party code is stored in the `src` directory, with the exception of the `vendor` subdirectory.
 
 ### Third-party Code
 
-Third-party code is brought in via npm, with a full manifest available in the `package.json` file. 3rd party code is also present in the `vendor` directory. 
+Third-party code is brought in via npm, with a full manifest available in the `package.json` file. 3rd party code is also present in the `src/vendor` directory. 
 
 ### Special Thanks
 
