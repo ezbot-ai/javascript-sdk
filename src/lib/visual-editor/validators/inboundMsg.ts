@@ -1,15 +1,12 @@
-import { logError } from '../../utils';
+import { logError, logInfo } from '../../utils';
 
 const inboundMsg = (msg: Readonly<MessageEvent>): boolean => {
   try {
-    const data = JSON.parse(msg.data);
-    // TODO: consider better validation
-    if (!data.type) {
-      return false;
-    }
+    JSON.parse(msg.data);
     return true;
   } catch (error) {
     logError(error as Error);
+    logInfo('error was with msg: ', msg);
     return false;
   }
 };

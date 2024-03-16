@@ -87,6 +87,7 @@ function buildElementClickedPayload(
     style: buildElementStyle(element),
   };
   const eventPayload: ElementClickedEvent = {
+    sender: 'ezbotSDK',
     type: 'elementClicked',
     element: elementPayload,
   };

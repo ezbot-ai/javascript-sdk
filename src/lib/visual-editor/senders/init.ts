@@ -4,6 +4,7 @@ import { postEventToParent } from './messaging';
 
 function buildSDKStatusChangeEvent(status: SDKStatus): SDKStatusChangeEvent {
   const initEventPayload: SDKStatusChangeEvent = {
+    sender: 'ezbotSDK',
     type: 'SDKStatusChange',
     payload: {
       status,

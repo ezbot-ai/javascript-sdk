@@ -9,10 +9,8 @@ import { highlightElement, unhighlightAllElements } from './highlighting';
 
 const setupIncomingMsgListener = () => {
   window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
-    logInfo('Received message: ', msg);
-
     if (!validators.inboundMsg(msg)) {
-      logInfo('Event without a type was received. Skipping.');
+      logInfo('Event received with invalid data prop. Skipping.');
       return;
     }
     const incomingEvent = parseIncomingMsg(msg);

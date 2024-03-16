@@ -5,6 +5,7 @@ import { postEventToParent } from './messaging';
 // Tell Admin UI the SDK is ready to receive events, including an init event
 function buildReceivingEvent(): SDKReceivingEvent {
   const initEventPayload: SDKReceivingEvent = {
+    sender: 'ezbotSDK',
     type: 'SDKReceiving',
   };
 
