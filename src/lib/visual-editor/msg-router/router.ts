@@ -1,11 +1,19 @@
+import { logInfo } from '../../utils';
 import * as actions from '../actions';
 import { IncomingEvent } from '../types';
+import { documentIsParent } from '../utils';
 import * as validators from '../validators';
 
 const routeIncomingEvent = (
   event: Readonly<IncomingEvent>
 ): boolean | Error => {
   if (!validators.inboundEvent(event)) {
+    return false;
+  }
+  if (documentIsParent()) {
+    logInfo(
+      `Will not process event because ezbot installed in the same window as the visual editor.`
+    );
     return false;
   }
   switch (event.type) {
