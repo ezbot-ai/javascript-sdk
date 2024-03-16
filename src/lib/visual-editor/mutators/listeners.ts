@@ -7,17 +7,34 @@ import * as validators from '../validators';
 
 import { highlightElement, unhighlightAllElements } from './highlighting';
 
-const setupIncomingMsgListener = () => {
-  window.addEventListener('message', (msg: Readonly<MessageEvent>) => {
-    logInfo('Received message: ', msg);
+function initPort(e: Readonly<MessageEvent>) {
+  if (!e.ports || e.ports.length == 0) {
+    logInfo('No port was received. Skipping.');
+    return;
+  }
+  const port2 = e.ports[0];
+  // eslint-disable-next-line functional/immutable-data
+  port2.onmessage = onMessage(e, port2);
+}
 
-    if (!validators.inboundMsg(msg)) {
-      logInfo('Event without a type was received. Skipping.');
-      return;
-    }
-    const incomingEvent = parseIncomingMsg(msg);
-    routeIncomingEvent(incomingEvent);
-  });
+const onMessage = (
+  msg: Readonly<MessageEvent>,
+  port: Readonly<MessagePort>
+): null => {
+  logInfo('Received message on port2: ', msg);
+  if (!validators.inboundMsg(msg)) {
+    logInfo('Event without a type was received. Skipping.');
+    return null;
+  }
+  // port.postMessage(`Message received by IFrame: "${msg.data}"`);
+  const incomingEvent = parseIncomingMsg(msg);
+  routeIncomingEvent(incomingEvent);
+  return null;
+};
+
+const setupIncomingMsgListener = () => {
+  logInfo('Setting up incoming message listener');
+  window.addEventListener('message', initPort);
 };
 
 const setupClickListeners = (): void => {

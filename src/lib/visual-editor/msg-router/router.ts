@@ -1,16 +1,13 @@
-/* eslint-disable functional/no-throw-statements */
-import { logInfo } from '../../utils';
 import * as actions from '../actions';
 import { IncomingEvent } from '../types';
-import * as validators from '../validators';
 
 const routeIncomingEvent = (
   event: Readonly<IncomingEvent>
 ): boolean | Error => {
-  if (!validators.inboundEvent(event)) {
-    logInfo(`Received invalid event`, event);
-    return false;
-  }
+  // if (!validators.inboundEvent(event)) {
+  //   logInfo(`Received invalid event`, event);
+  //   return false;
+  // }
   switch (event.type) {
     case 'init':
       actions.initVisualEditorSupport(event.mode, event.config);
@@ -22,6 +19,7 @@ const routeIncomingEvent = (
       actions.changeVariables(event.payload);
       return true;
     default:
+      // eslint-disable-next-line functional/no-throw-statements
       throw new Error('Invalid event type');
   }
 };
