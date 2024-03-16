@@ -2,6 +2,7 @@ type Mode = 'ezbot' | 'interactive';
 
 // Inbound events
 type InitEvent = {
+  sender: 'ezbotVisualEditor' | 'ezbotSDK'; // since our event listener will pick up both senders
   type: 'init';
   mode: Mode;
   config: SDKConfig;
@@ -14,6 +15,7 @@ type SDKConfig = {
 };
 
 type ChangeConfigEvent = {
+  sender: 'ezbotVisualEditor' | 'ezbotSDK'; // since our event listener will pick up both senders
   type: 'changeConfig';
   mode: Mode;
   config: SDKConfig;
@@ -67,6 +69,7 @@ type DBVariable = {
   updatedAt: Date;
 };
 type ChangeVariablesEvent = {
+  sender: 'ezbotVisualEditor' | 'ezbotSDK'; // since our event listener will pick up both senders
   type: 'changeVariables';
   payload: DBVariable[];
 };
@@ -112,6 +115,7 @@ type ElementPayload = {
 };
 
 type ElementClickedEvent = {
+  sender: 'ezbotSDK';
   type: 'elementClicked';
   element: ElementPayload;
 };
@@ -128,11 +132,13 @@ type SDKStatusChangePayload = {
 };
 
 type SDKStatusChangeEvent = {
+  sender: 'ezbotSDK';
   type: 'SDKStatusChange';
   payload: SDKStatusChangePayload;
 };
 
 type SDKReceivingEvent = {
+  sender: 'ezbotSDK';
   type: 'SDKReceiving';
 };
 
