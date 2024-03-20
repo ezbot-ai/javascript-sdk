@@ -26,7 +26,8 @@ type VariableConfig = {
     | 'setFontColor'
     | 'setBackgroundColor'
     | 'setVisibility'
-    | 'setOuterHTML';
+    | 'setOuterHTML'
+    | 'addGlobalCSS';
   attribute?: string;
 };
 

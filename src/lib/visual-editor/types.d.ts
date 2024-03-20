@@ -45,7 +45,8 @@ type BaseVisualVariableConfig = {
     | 'setFontColor'
     | 'setBackgroundColor'
     | 'setVisibility'
-    | 'setOuterHTML';
+    | 'setOuterHTML'
+    | 'addGlobalCSS';
 };
 
 type VariableConstraints = {

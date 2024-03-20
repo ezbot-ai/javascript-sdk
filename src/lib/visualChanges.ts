@@ -64,6 +64,20 @@ function showElement(element: HTMLElement): void {
 function setElementOuterHTML(element: HTMLElement, value: string): void {
   element.outerHTML = value;
 }
+function addGlobalCSS(value: string): void {
+  // eslint-disable-next-line functional/no-let
+  let globalStyleSheet = document.getElementById('ezbot-global-css');
+  if (!globalStyleSheet) {
+    globalStyleSheet = document.createElement('style');
+    globalStyleSheet.id = 'ezbot-global-css';
+    globalStyleSheet.innerText = value;
+    document.head.appendChild(globalStyleSheet);
+  } else {
+    const oldContent = globalStyleSheet.innerText;
+    const spacer = '\n\n';
+    globalStyleSheet.innerText = oldContent + spacer + value;
+  }
+}
 
 function validateVisualPrediction(prediction: Prediction): string | null {
   if (prediction.config == null) {
@@ -200,6 +214,9 @@ function makeVisualChange(prediction: Prediction): void {
     case 'setOuterHTML':
       setElementOuterHTML(element, prediction.value);
       break;
+    case 'addGlobalCSS':
+      addGlobalCSS(prediction.value);
+      break;
     default:
       utils.logInfo(
         `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
@@ -231,6 +248,7 @@ export {
   setElementText,
   setElementInnerHTML,
   setElementAttribute,
+  addGlobalCSS,
   setElementHref,
   setElementSrc,
   addClassesToElement,
