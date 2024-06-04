@@ -31,6 +31,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { enableButtonClickTracking } from '@snowplow/browser-plugin-button-click-tracking';
+import { enableLinkClickTracking } from '@snowplow/browser-plugin-link-click-tracking';
 import {
   addGlobalContexts,
   BrowserTracker,
@@ -123,6 +125,13 @@ async function initEzbot(
     mode: 'ezbot',
     config: null,
   };
+
+  try {
+    enableLinkClickTracking();
+    enableButtonClickTracking();
+  } catch (error) {
+    console.error('Failed to enable click tracking', error);
+  }
 
   return tracker;
 }
