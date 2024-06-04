@@ -1,4 +1,5 @@
 import { BrowserFeaturesPlugin } from '@snowplow/browser-plugin-browser-features';
+import { ButtonClickTrackingPlugin } from '@snowplow/browser-plugin-button-click-tracking';
 import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
 import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
 import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
@@ -20,6 +21,7 @@ const plugins = [
   EcommercePlugin(),
   SiteTrackingPlugin(),
   BrowserFeaturesPlugin(),
+  ButtonClickTrackingPlugin(),
 ];
 const ezbotTrackerDomain = 'https://api.ezbot.ai';
 const ezbotRewardEventSchemaPath =
