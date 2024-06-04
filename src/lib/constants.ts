@@ -3,20 +3,16 @@ import { ButtonClickTrackingPlugin } from '@snowplow/browser-plugin-button-click
 import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
 import { ConsentPlugin } from '@snowplow/browser-plugin-consent';
 import { EcommercePlugin } from '@snowplow/browser-plugin-ecommerce';
-import { FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
 import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
-import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
 import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
 import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
 import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
 import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 const plugins = [
   GaCookiesPlugin(),
-  GeolocationPlugin(),
   ClientHintsPlugin(),
   ConsentPlugin(),
   LinkClickTrackingPlugin(),
-  FormTrackingPlugin(),
   TimezonePlugin(),
   EcommercePlugin(),
   SiteTrackingPlugin(),
