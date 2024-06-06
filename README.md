@@ -1,6 +1,6 @@
-# ezbot-javascript
+# ezbot Javascript SDK
 
-The easiest way to interact with ezbot via JS (node and browser). For ease of use, our Javascript library wraps Snowplow's [Browser Tracker](https://www.npmjs.com/package/@snowplow/browser-tracker) (BSD-3 License).
+The easiest way to interact with ezbot via JS (browser). For ease of use, our Javascript library wraps Snowplow's [Browser Tracker](https://www.npmjs.com/package/@snowplow/browser-tracker) (BSD-3 License).
 
 ## Docs
 
@@ -8,7 +8,7 @@ For full documentation, please visit [docs.ezbot.ai](https://docsezbot.ai/).
 
 ## Credits
 
-`ezbot/ezbot-javascript` is maintained by [ezbot](ezbot.ai) and many [constributors](https://github.com/ezbot/ezbot-javascript/graphs/contributors).
+`ezbot-ai/ezbot-javascript-sdk` is maintained by [ezbot](ezbot.ai) and many [constributors](https://github.com/ezbot-ai/javascript-sdk/graphs/contributors).
 
 ### First-party Code
 
