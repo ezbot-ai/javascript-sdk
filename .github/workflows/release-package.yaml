@@ -70,6 +70,12 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::581316994213:role/GithubDeployRole
           aws-region: us-east-1
+      - name: Invalidate CloudFront
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          DISTRIBUTION: ${{ secrets.CDN_DISTRIBUTION }}
+          PATHS: '/*'
+          AWS_REGION: 'us-east-1'
       - name: Copy files to the production website with the AWS CLI
         run: |
           cd ./build/web-snippets && aws s3 sync --delete . s3://ezbot-prod-javascript-tracker/web-snippets
