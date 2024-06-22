@@ -3,6 +3,7 @@
 /* eslint-disable functional/prefer-immutable-types */
 import { Prediction } from './ezbot';
 import * as utils from './utils';
+import { logInfo } from './utils';
 
 function setElementText(element: Element, text: string): void {
   element.textContent = text;
@@ -67,7 +68,7 @@ function setElementOuterHTML(element: HTMLElement, value: string): void {
 function addGlobalCSS(key: string, value: string): void {
   const head = document.head;
   if (!head) {
-    console.log('No document head found: unable to add global css');
+    logInfo('No document head found: unable to add global css');
     return;
   }
   const newStyleElement = document.createElement('style');
