@@ -1,8 +1,10 @@
 /* eslint-disable functional/no-return-void */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/prefer-immutable-types */
+import { globalVisualChanges } from './constants';
 import { Prediction } from './ezbot';
 import * as utils from './utils';
+import { logInfo } from './utils';
 
 function setElementText(element: Element, text: string): void {
   element.textContent = text;
@@ -64,24 +66,23 @@ function showElement(element: HTMLElement): void {
 function setElementOuterHTML(element: HTMLElement, value: string): void {
   element.outerHTML = value;
 }
-function addGlobalCSS(value: string): void {
-  // eslint-disable-next-line functional/no-let
-  let globalStyleSheet = document.getElementById('ezbot-global-css');
-  if (!globalStyleSheet) {
-    globalStyleSheet = document.createElement('style');
-    globalStyleSheet.id = 'ezbot-global-css';
-    globalStyleSheet.innerText = value;
-    document.head.appendChild(globalStyleSheet);
-  } else {
-    const oldContent = globalStyleSheet.innerText;
-    const spacer = '\n\n';
-    globalStyleSheet.innerText = oldContent + spacer + value;
+function addGlobalCSS(key: string, value: string): void {
+  const head = document.head;
+  if (!head) {
+    logInfo('No document head found: unable to add global css');
+    return;
   }
+  const newStyleElement = document.createElement('style');
+  newStyleElement.innerText = value;
+  newStyleElement.id = 'ezbot-global-css-' + key;
+  head.appendChild(newStyleElement);
 }
-
 function validateVisualPrediction(prediction: Prediction): string | null {
   if (prediction.config == null) {
     return `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`;
+  }
+  if (prediction.config.action === 'addGlobalCSS') {
+    return null;
   }
   if (!prediction.config.selector) {
     return `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`;
@@ -103,6 +104,20 @@ function parseCommaSeparatedList(list: string): string[] {
   }
   const listArray = list.split(',').map((item) => item.trim());
   return listArray;
+}
+
+function makeGlobalVisualChange(prediction: Prediction): void {
+  const action = prediction.config?.action;
+
+  switch (action) {
+    case 'addGlobalCSS':
+      addGlobalCSS(prediction.key, prediction.value);
+      break;
+    default:
+      utils.logInfo(
+        `Unsupported action for prediction with key: ${prediction.key}. Skipping its global change.`
+      );
+  }
 }
 
 function makeVisualChange(prediction: Prediction): void {
@@ -214,9 +229,6 @@ function makeVisualChange(prediction: Prediction): void {
     case 'setOuterHTML':
       setElementOuterHTML(element, prediction.value);
       break;
-    case 'addGlobalCSS':
-      addGlobalCSS(prediction.value);
-      break;
     default:
       utils.logInfo(
         `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
@@ -240,7 +252,13 @@ function makeVisualChanges(): void {
       utils.logInfo(validationError);
       return;
     }
-
+    if (
+      prediction.config &&
+      globalVisualChanges.includes(prediction.config.action)
+    ) {
+      makeGlobalVisualChange(prediction);
+      return;
+    }
     makeVisualChange(prediction);
   });
 }
@@ -260,4 +278,5 @@ export {
   makeVisualChange,
   makeVisualChanges,
   parseCommaSeparatedList,
+  makeGlobalVisualChange,
 };

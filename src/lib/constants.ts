@@ -33,6 +33,7 @@ const defaultWebConfiguration: TrackerConfiguration = {
   plugins: plugins,
 };
 const ezbotTrackerId = 'ezbot';
+const globalVisualChanges = ['addGlobalCSS'];
 
 export {
   ezbotTrackerDomain,
@@ -42,4 +43,5 @@ export {
   ezbotPredictionsContextSchemaPath,
   defaultWebConfiguration,
   plugins,
+  globalVisualChanges,
 };

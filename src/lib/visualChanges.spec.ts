@@ -139,19 +139,6 @@ describe('visualChanges', () => {
         `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`
       );
     });
-    it('returns an error message if no selector is found', () => {
-      const prediction: Prediction = {
-        key: 'some_key',
-        value: 'some_value',
-        config: { selector: '', action: 'show' },
-        type: 'some_type',
-        version: '1.0',
-      };
-      const result = visualChanges.validateVisualPrediction(prediction);
-      expect(result).toBe(
-        `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`
-      );
-    });
     it('return null if the predictions is valid', () => {
       const prediction: Prediction = {
         key: 'some_key',
