@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-return-void */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/prefer-immutable-types */
+import { globalVisualChanges } from './constants';
 import { Prediction } from './ezbot';
 import * as utils from './utils';
 import { logInfo } from './utils';
@@ -105,7 +106,7 @@ function parseCommaSeparatedList(list: string): string[] {
   return listArray;
 }
 
-function makeGlobalChange(prediction: Prediction): void {
+function makeGlobalVisualChange(prediction: Prediction): void {
   const action = prediction.config?.action;
 
   switch (action) {
@@ -228,9 +229,6 @@ function makeVisualChange(prediction: Prediction): void {
     case 'setOuterHTML':
       setElementOuterHTML(element, prediction.value);
       break;
-    case 'addGlobalCSS':
-      addGlobalCSS(prediction.key, prediction.value);
-      break;
     default:
       utils.logInfo(
         `Unsupported action for prediction with key: ${prediction.key}. Skipping its visual change.`
@@ -254,8 +252,11 @@ function makeVisualChanges(): void {
       utils.logInfo(validationError);
       return;
     }
-    if (prediction.config?.action === 'addGlobalCSS') {
-      makeGlobalChange(prediction);
+    if (
+      prediction.config &&
+      globalVisualChanges.includes(prediction.config.action)
+    ) {
+      makeGlobalVisualChange(prediction);
       return;
     }
     makeVisualChange(prediction);
@@ -277,5 +278,5 @@ export {
   makeVisualChange,
   makeVisualChanges,
   parseCommaSeparatedList,
-  makeGlobalChange,
+  makeGlobalVisualChange,
 };
