@@ -80,6 +80,9 @@ function validateVisualPrediction(prediction: Prediction): string | null {
   if (prediction.config == null) {
     return `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`;
   }
+  if (prediction.config.action === 'addGlobalCSS') {
+    return null;
+  }
   if (!prediction.config.selector) {
     return `No selector found for prediction with key: ${prediction.key}. Skipping its visual change.`;
   }
@@ -100,6 +103,20 @@ function parseCommaSeparatedList(list: string): string[] {
   }
   const listArray = list.split(',').map((item) => item.trim());
   return listArray;
+}
+
+function makeGlobalChange(prediction: Prediction): void {
+  const action = prediction.config?.action;
+
+  switch (action) {
+    case 'addGlobalCSS':
+      addGlobalCSS(prediction.key, prediction.value);
+      break;
+    default:
+      utils.logInfo(
+        `Unsupported action for prediction with key: ${prediction.key}. Skipping its global change.`
+      );
+  }
 }
 
 function makeVisualChange(prediction: Prediction): void {
@@ -237,7 +254,10 @@ function makeVisualChanges(): void {
       utils.logInfo(validationError);
       return;
     }
-
+    if (prediction.config?.action === 'addGlobalCSS') {
+      makeGlobalChange(prediction);
+      return;
+    }
     makeVisualChange(prediction);
   });
 }
@@ -257,4 +277,5 @@ export {
   makeVisualChange,
   makeVisualChanges,
   parseCommaSeparatedList,
+  makeGlobalChange,
 };
