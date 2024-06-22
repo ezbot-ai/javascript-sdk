@@ -64,21 +64,17 @@ function showElement(element: HTMLElement): void {
 function setElementOuterHTML(element: HTMLElement, value: string): void {
   element.outerHTML = value;
 }
-function addGlobalCSS(value: string): void {
-  // eslint-disable-next-line functional/no-let
-  let globalStyleSheet = document.getElementById('ezbot-global-css');
-  if (!globalStyleSheet) {
-    globalStyleSheet = document.createElement('style');
-    globalStyleSheet.id = 'ezbot-global-css';
-    globalStyleSheet.innerText = value;
-    document.head.appendChild(globalStyleSheet);
-  } else {
-    const oldContent = globalStyleSheet.innerText;
-    const spacer = '\n\n';
-    globalStyleSheet.innerText = oldContent + spacer + value;
+function addGlobalCSS(key: string, value: string): void {
+  const head = document.head;
+  if (!head) {
+    console.log('No document head found: unable to add global css');
+    return;
   }
+  const newStyleElement = document.createElement('style');
+  newStyleElement.innerText = value;
+  newStyleElement.id = 'ezbot-global-css-' + key;
+  head.appendChild(newStyleElement);
 }
-
 function validateVisualPrediction(prediction: Prediction): string | null {
   if (prediction.config == null) {
     return `No config found for prediction with key: ${prediction.key}. Skipping its visual change.`;
@@ -215,7 +211,7 @@ function makeVisualChange(prediction: Prediction): void {
       setElementOuterHTML(element, prediction.value);
       break;
     case 'addGlobalCSS':
-      addGlobalCSS(prediction.value);
+      addGlobalCSS(prediction.key, prediction.value);
       break;
     default:
       utils.logInfo(
