@@ -85,7 +85,11 @@ describe('ezbot js tracker', () => {
   it('initializes', () => {
     expect(tracker).toBeDefined();
     const sessionId = (tracker.getDomainUserInfo() as unknown as string[])[6];
-    const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}&pageUrlPath=%2F`;
+    const domainSessionIdx = tracker.getDomainSessionIndex();
+    const tz = encodeURIComponent(
+      Intl.DateTimeFormat().resolvedOptions().timeZone
+    );
+    const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}&pageUrlPath=%2F&domainSessionIdx=${domainSessionIdx}&tz=${tz}`;
     expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
   });
   afterEach(async () => {

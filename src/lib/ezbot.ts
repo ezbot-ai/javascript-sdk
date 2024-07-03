@@ -82,7 +82,7 @@ async function initEzbot(
     plugins: plugins,
     stateStorageStrategy: 'localStorage',
   });
-  if (tracker === null) {
+  if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
 
@@ -90,7 +90,8 @@ async function initEzbot(
   const sessionId: string = (domainUserInfo as string[])[6];
   const predictions: Array<Prediction> = await getPredictions(
     projectId,
-    sessionId
+    sessionId,
+    tracker
   );
   const predictionsContext: EzbotPredictionsContext = {
     schema: ezbotPredictionsContextSchemaPath,
