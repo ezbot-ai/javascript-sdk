@@ -1,6 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-return-void */
 
+import { initEzbot } from './ezbot';
 import { getPredictions } from './predictions';
 const predictions = [
   {
@@ -27,9 +28,6 @@ const projectId = 123;
 const sessionId = 'abc123';
 
 describe('getPredictions', () => {
-  beforeAll(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
-  });
   describe('when the fetch is successful', () => {
     beforeEach(async () => {
       // Mock the fetch function to return a resolved Promise with the predictions object
@@ -41,6 +39,7 @@ describe('getPredictions', () => {
           },
         } as Response;
       });
+      await initEzbot(projectId);
     });
     it('should return an array of predictions', async () => {
       // Call the getPredictions function
