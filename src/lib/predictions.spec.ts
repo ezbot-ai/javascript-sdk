@@ -1,5 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-return-void */
+
+import { initEzbot } from './ezbot';
 import { getPredictions } from './predictions';
 const predictions = [
   {
@@ -37,6 +39,7 @@ describe('getPredictions', () => {
           },
         } as Response;
       });
+      await initEzbot(projectId);
     });
     it('should return an array of predictions', async () => {
       // Call the getPredictions function
