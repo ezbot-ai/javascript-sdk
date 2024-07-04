@@ -27,6 +27,9 @@ const projectId = 123;
 const sessionId = 'abc123';
 
 describe('getPredictions', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
   describe('when the fetch is successful', () => {
     beforeEach(async () => {
       // Mock the fetch function to return a resolved Promise with the predictions object
