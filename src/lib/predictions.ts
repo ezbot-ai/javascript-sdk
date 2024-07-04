@@ -1,4 +1,4 @@
-import { BrowserTracker } from '@snowplow/browser-tracker-core';
+import { BrowserTracker } from '@snowplow/browser-tracker';
 
 import { Prediction, PredictionsResponse } from './types';
 import { logError } from './utils';
@@ -17,7 +17,7 @@ type PredictionsParams = RequiredPredictionsParams & OptionalPredictionsParams;
 function buildParams(
   projectId: number,
   sessionId: string,
-  tracker: Readonly<BrowserTracker>
+  tracker?: Readonly<BrowserTracker>
 ): PredictionsParams {
   const requiredParams = {
     projectId: projectId.toString(),
@@ -26,11 +26,14 @@ function buildParams(
   try {
     // TODO: should allow params to fail and fallback to "unknowns"
     // one by one, not as a whole
-    if (!tracker) {
+    if (!tracker && !window.ezbot?.tracker) {
       logError(
         new Error('Tracker is not available. Skipping optional params.')
       );
       return requiredParams;
+    }
+    if (!tracker) {
+      tracker = window.ezbot.tracker;
     }
     const optionalParams = {
       pageUrlPath: window.location.pathname,
@@ -53,7 +56,7 @@ const buildQueryParams = (params: Record<string, string | number>): string => {
 async function getPredictions(
   projectId: number,
   sessionId: string,
-  tracker: Readonly<BrowserTracker>
+  tracker?: Readonly<BrowserTracker>
 ): Promise<Array<Prediction>> {
   const basePredictionsURL = `https://api.ezbot.ai/predict`;
   const params = buildParams(projectId, sessionId, tracker);
