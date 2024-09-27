@@ -85,10 +85,10 @@ describe('ezbot js tracker', () => {
   it('initializes', () => {
     expect(tracker).toBeDefined();
     const sessionId = (tracker.getDomainUserInfo() as unknown as string[])[6];
-    const domainSessionIdx = tracker.getDomainSessionIndex();
-    const tz = encodeURIComponent(
-      Intl.DateTimeFormat().resolvedOptions().timeZone
-    );
+    const domainSessionIdx =
+      tracker.getDomainSessionIndex() as unknown as number;
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     const urlParams = new URLSearchParams(window.location.search);
     const utmSource = urlParams.get('utm_source') || 'unknown';
     const utmMedium = urlParams.get('utm_medium') || 'unknown';
@@ -96,8 +96,26 @@ describe('ezbot js tracker', () => {
     const utmTerm = urlParams.get('utm_term') || 'unknown';
     const utmContent = urlParams.get('utm_content') || 'unknown';
     const referrer = document.referrer || 'unknown';
-    const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}&pageUrlPath=%2F&domainSessionIdx=${domainSessionIdx}&utmContent=${utmContent}&utmMedium=${utmMedium}&utmCampaign=${utmCampaign}&utmSource=${utmSource}&utmTerm=${utmTerm}&referrer=${referrer}&tz=${tz}`;
-    expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
+    const predictionsURL = new URL('https://api.ezbot.ai/predict');
+    predictionsURL.searchParams.set('projectId', '1');
+    predictionsURL.searchParams.set('sessionId', sessionId);
+    predictionsURL.searchParams.set('pageUrlPath', window.location.pathname);
+    predictionsURL.searchParams.set(
+      'domainSessionIdx',
+      domainSessionIdx.toString()
+    );
+    predictionsURL.searchParams.set('utmContent', utmContent);
+    predictionsURL.searchParams.set('utmMedium', utmMedium);
+    predictionsURL.searchParams.set('utmCampaign', utmCampaign);
+    predictionsURL.searchParams.set('utmSource', utmSource);
+    predictionsURL.searchParams.set('utmTerm', utmTerm);
+    predictionsURL.searchParams.set('referrer', referrer);
+    predictionsURL.searchParams.set('tz', tz);
+
+    const calledURL = new URL((global.fetch as jest.Mock).mock.calls[0][0]);
+    predictionsURL.searchParams.forEach((value, key) => {
+      expect(calledURL.searchParams.get(key)).toEqual(value);
+    });
   });
   afterEach(async () => {
     clearEventQueue();
