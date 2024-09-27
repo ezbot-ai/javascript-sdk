@@ -89,7 +89,14 @@ describe('ezbot js tracker', () => {
     const tz = encodeURIComponent(
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
-    const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}&pageUrlPath=%2F&domainSessionIdx=${domainSessionIdx}&tz=${tz}`;
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get('utm_source') || 'unknown';
+    const utmMedium = urlParams.get('utm_medium') || 'unknown';
+    const utmCampaign = urlParams.get('utm_campaign') || 'unknown';
+    const utmTerm = urlParams.get('utm_term') || 'unknown';
+    const utmContent = urlParams.get('utm_content') || 'unknown';
+    const referrer = document.referrer || 'unknown';
+    const predictionsURL = `https://api.ezbot.ai/predict?projectId=1&sessionId=${sessionId}&pageUrlPath=%2F&domainSessionIdx=${domainSessionIdx}&utmContent=${utmContent}&utmMedium=${utmMedium}&utmCampaign=${utmCampaign}&utmSource=${utmSource}&utmTerm=${utmTerm}&referrer=${referrer}&tz=${tz}`;
     expect(global.fetch).toHaveBeenCalledWith(predictionsURL);
   });
   afterEach(async () => {
