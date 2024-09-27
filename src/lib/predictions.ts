@@ -39,11 +39,11 @@ function buildParams(
     const optionalParams = {
       pageUrlPath: window.location.pathname,
       domainSessionIdx: tracker.getDomainSessionIndex(),
-      utm_content: urlParams.get('utm_content') || 'unknown',
-      utm_medium: urlParams.get('utm_medium') || 'unknown',
-      utm_source: urlParams.get('utm_source') || 'unknown',
-      utm_campaign: urlParams.get('utm_campaign') || 'unknown',
-      utm_term: urlParams.get('utm_term') || 'unknown',
+      utmContent: urlParams.get('utm_content') || 'unknown',
+      utmMedium: urlParams.get('utm_medium') || 'unknown',
+      utmSource: urlParams.get('utm_source') || 'unknown',
+      utmCampaign: urlParams.get('utm_campaign') || 'unknown',
+      utmTerm: urlParams.get('utm_term') || 'unknown',
       referrer: document.referrer || 'unknown',
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
