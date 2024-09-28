@@ -35,9 +35,16 @@ function buildParams(
     if (!tracker) {
       tracker = window.ezbot.tracker;
     }
+    const urlParams = new URLSearchParams(window.location.search);
     const optionalParams = {
       pageUrlPath: window.location.pathname,
       domainSessionIdx: tracker.getDomainSessionIndex(),
+      utmContent: urlParams.get('utm_content') || 'unknown',
+      utmMedium: urlParams.get('utm_medium') || 'unknown',
+      utmSource: urlParams.get('utm_source') || 'unknown',
+      utmCampaign: urlParams.get('utm_campaign') || 'unknown',
+      utmTerm: urlParams.get('utm_term') || 'unknown',
+      referrer: document.referrer || 'unknown',
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
     };
     return { ...requiredParams, ...optionalParams };
