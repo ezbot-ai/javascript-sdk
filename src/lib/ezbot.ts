@@ -64,7 +64,12 @@ import {
   PredictionsResponse,
 } from './types';
 import { VisualEditorController } from './visual-editor';
-import { makeVisualChange, makeVisualChanges } from './visualChanges';
+import {
+  makeVisualChange,
+  makeVisualChanges,
+  visualChanges,
+  visualUtils,
+} from './visualChanges';
 
 const ezbotTrackerId = 'ezbot';
 
@@ -121,6 +126,12 @@ async function initEzbot(
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
     makeVisualChanges: makeVisualChanges,
+    utils: {
+      visual: visualUtils,
+    },
+    actions: {
+      visual: visualChanges,
+    },
     intervals: [],
     visualVariables: [],
     mode: 'ezbot',

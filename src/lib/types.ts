@@ -8,6 +8,7 @@ import {
 } from '@snowplow/browser-tracker-core';
 
 import { DBVariable, SDKConfig } from './visual-editor/types';
+import { visualChanges, visualUtils } from './visualChanges';
 
 type VariableConfig = {
   selector: string;
@@ -95,6 +96,13 @@ declare global {
       trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (config: ActivityTrackingConfiguration) => void;
       makeVisualChanges: () => void;
+      utils: {
+        visual: typeof visualUtils;
+      };
+      actions: {
+        visual: typeof visualChanges;
+      };
+
       intervals: Array<number>;
       visualVariables: Array<DBVariable>;
       mode: 'ezbot' | 'interactive';
