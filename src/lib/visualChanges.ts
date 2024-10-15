@@ -262,7 +262,32 @@ function makeVisualChanges(): void {
     makeVisualChange(prediction);
   });
 }
+
+const visualUtils = {
+  validateVisualPrediction,
+  parseCommaSeparatedList,
+};
+
+const visualChanges = {
+  setElementText,
+  setElementInnerHTML,
+  setElementAttribute,
+  addGlobalCSS,
+  setElementHref,
+  setElementSrc,
+  addClassesToElement,
+  removeClassesFromElement,
+  setElementStyle,
+  hideElement,
+  showElement,
+  makeVisualChange,
+  makeVisualChanges,
+  makeGlobalVisualChange,
+};
+
 export {
+  visualUtils,
+  visualChanges,
   setElementText,
   setElementInnerHTML,
   setElementAttribute,
