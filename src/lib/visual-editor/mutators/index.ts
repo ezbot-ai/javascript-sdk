@@ -5,11 +5,7 @@ import {
   unhighlightAllElements,
   unhighlightAllElementsWithVariables,
 } from './highlighting';
-import {
-  setupClickListeners,
-  setupIncomingMsgListener,
-  setupListeners,
-} from './listeners';
+import { setupClickListeners, setupListeners } from './listeners';
 import { removeLocalStyles, setLocalStyles } from './localStyles';
 import {
   markElementVariable,
@@ -31,7 +27,6 @@ export {
   highlightElement,
   setLocalStyles,
   setupClickListeners,
-  setupIncomingMsgListener,
   setupListeners,
   removeLocalStyles,
   setupUniqueElementIds,
