@@ -19,7 +19,7 @@ const plugins = [
   BrowserFeaturesPlugin(),
   ButtonClickTrackingPlugin(),
 ];
-const ezbotTrackerDomain = 'https://data.api.ezbot.ai';
+const ezbotTrackerDomain = 'https://api.ezbot.ai';
 const ezbotRewardEventSchemaPath =
   'iglu:com.ezbot/reward_event/jsonschema/1-0-0';
 const ezbotLinkClickEventSchemaPath =
