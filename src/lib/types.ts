@@ -7,7 +7,6 @@ import {
   PageViewEvent,
 } from '@snowplow/browser-tracker-core';
 
-import { DBVariable, SDKConfig } from './visual-editor/types';
 import { visualChanges, visualUtils } from './visualChanges';
 
 type VariableConfig = {
@@ -104,9 +103,7 @@ declare global {
       };
 
       intervals: Array<number>;
-      visualVariables: Array<DBVariable>;
       mode: 'ezbot' | 'interactive';
-      config: SDKConfig | null;
     };
   }
 }
