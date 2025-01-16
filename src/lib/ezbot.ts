@@ -125,7 +125,6 @@ async function initEzbot(
     intervals: [],
     mode: 'ezbot',
   };
-
   try {
     enableLinkClickTracking();
     enableButtonClickTracking();
