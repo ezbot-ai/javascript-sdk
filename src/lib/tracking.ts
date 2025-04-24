@@ -58,15 +58,11 @@ function trackPageView(
   Snowplow.trackPageView(config);
 }
 
-function setUserId(
-  userId?: string | null
-): void {
+function setUserId(userId?: string | null): void {
   Snowplow.setUserId(userId);
 }
 
-function setUserIdFromCookie(
-  cookieName: string
-): void {
+function setUserIdFromCookie(cookieName: string): void {
   Snowplow.setUserIdFromCookie(cookieName);
 }
 
@@ -76,5 +72,5 @@ export {
   startActivityTracking,
   trackPageView,
   setUserId,
-  setUserIdFromCookie
+  setUserIdFromCookie,
 };

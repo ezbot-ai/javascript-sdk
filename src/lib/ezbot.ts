@@ -48,12 +48,12 @@ import {
 } from './constants';
 import { getPredictions } from './predictions';
 import {
+  setUserId,
+  setUserIdFromCookie,
   startActivityTracking,
   trackLinkClick,
   trackPageView,
   trackRewardEvent,
-  setUserId,
-  setUserIdFromCookie,
 } from './tracking';
 import {
   EzbotLinkClickEvent,
@@ -76,12 +76,13 @@ const ezbotTrackerId = 'ezbot';
 
 async function initEzbot(
   projectId: number,
-  userId: string | null = null,
+  userId?: string | null,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _config: TrackerConfiguration = defaultWebConfiguration,
+  _config: TrackerConfiguration = defaultWebConfiguration
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
+    existingTracker.setUserId(userId);
     return existingTracker;
   }
   const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {
@@ -92,7 +93,7 @@ async function initEzbot(
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
-  tracker.setUserId(userId)
+  tracker.setUserId(userId);
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId: string = (domainUserInfo as string[])[6];

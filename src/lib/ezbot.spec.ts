@@ -80,7 +80,7 @@ describe('ezbot js tracker', () => {
       } as Response;
     });
     // Add ezbot tracker to jsdom DOM
-    tracker = await initEzbot(1, { appId: 'test-app-id' });
+    tracker = await initEzbot(1, undefined, { appId: 'test-app-id' });
   });
   it('initializes', () => {
     expect(tracker).toBeDefined();
@@ -189,5 +189,16 @@ describe('ezbot js tracker', () => {
   });
   it('exposes a global makeVisualChanges function', async () => {
     expect(window.ezbot.makeVisualChanges).toBeDefined();
+  });
+  it('can initialize with userId without config', async () => {
+    const testUserId = 'test-user-123';
+    const customTracker = await initEzbot(1, testUserId);
+    expect(customTracker).toBeDefined();
+    expect(customTracker.getUserId()).toEqual(testUserId);
+  });
+  it('can initialize without userId without config', async () => {
+    const customTracker = await initEzbot(98);
+    expect(customTracker).toBeDefined();
+    expect(customTracker.getUserId()).toEqual(undefined);
   });
 });
