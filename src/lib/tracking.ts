@@ -58,9 +58,19 @@ function trackPageView(
   Snowplow.trackPageView(config);
 }
 
+function setUserId(userId?: string | null): void {
+  Snowplow.setUserId(userId);
+}
+
+function setUserIdFromCookie(cookieName: string): void {
+  Snowplow.setUserIdFromCookie(cookieName);
+}
+
 export {
   trackRewardEvent,
   trackLinkClick,
   startActivityTracking,
   trackPageView,
+  setUserId,
+  setUserIdFromCookie,
 };

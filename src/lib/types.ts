@@ -94,6 +94,8 @@ declare global {
       ) => void;
       trackRewardEvent: (payload: Readonly<EzbotRewardEventPayload>) => void;
       startActivityTracking: (config: ActivityTrackingConfiguration) => void;
+      setUserId: (userId?: string | null) => void;
+      setUserIdFromCookie: (cookieName: string) => void;
       makeVisualChanges: () => void;
       utils: {
         visual: typeof visualUtils;
