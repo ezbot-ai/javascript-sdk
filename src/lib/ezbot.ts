@@ -81,7 +81,7 @@ async function initEzbot(
   _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
-  if (existingTracker) {
+  if (existingTracker && userId) {
     existingTracker.setUserId(userId);
     return existingTracker;
   }
@@ -123,7 +123,10 @@ async function initEzbot(
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
-  tracker.setUserId(userId);
+
+  if (userId) {
+    tracker.setUserId(userId);
+  }
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId: string = (domainUserInfo as string[])[6];
