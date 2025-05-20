@@ -54,6 +54,7 @@ function startActivityTracking(
 
 function removeSnowplowQueryParams(): void {
   // TODO: Remove this return after we implement a way to persist the sessionId in the snowplow instance & events
+
   return;
   // Only proceed if the _sp parameter exists
   if (window.location.href.includes('_sp=')) {
