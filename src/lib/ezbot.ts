@@ -36,6 +36,7 @@ import { enableLinkClickTracking } from '@snowplow/browser-plugin-link-click-tra
 import {
   addGlobalContexts,
   BrowserTracker,
+  ExtendedCrossDomainLinkerOptions,
   newTracker,
   TrackerConfiguration,
 } from '@snowplow/browser-tracker';
@@ -99,6 +100,13 @@ async function initEzbot(
     if (!_config?.crossDomain.domains.length) {
       throw new Error('Cross-domain tracking enabled but no domains provided');
     }
+
+    const extendedCrossDomainLinkerOptions: ExtendedCrossDomainLinkerOptions = {
+      userId: true,
+      sessionId: true,
+    };
+    trackerConfig.useExtendedCrossDomainLinker =
+      extendedCrossDomainLinkerOptions;
     trackerConfig.crossDomainLinker = function (linkElement) {
       // Only decorate links to different domains in our allowed list
       if (linkElement.hostname === location.hostname) {

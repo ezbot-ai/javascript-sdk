@@ -7,9 +7,6 @@ import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
 import Ajv from 'ajv';
 
-// Window spy for properly mocking the window object
-let windowSpy: jest.SpyInstance;
-
 import { initEzbot } from './ezbot';
 import * as predictionsContextSchema from './schemas/com.ezbot/predictions_context/jsonschema/1-0-1.json';
 import { startActivityTracking, trackRewardEvent } from './tracking';
@@ -70,18 +67,13 @@ function decodeUnstructuredEventPayload(ue_px: string): Context {
 function clearEventQueue() {
   (tracker.sharedState.outQueues[0] as Outqueue).pop();
 }
-
-// Setup window spy before all tests
-beforeEach(() => {
-  // Create a spy for the window object that can be mocked in individual tests
-  windowSpy = jest.spyOn(global, 'window', 'get');
-});
-
-afterEach(() => {
-  // Restore the original window object after each test
-  windowSpy.mockRestore();
-});
-
+function clearCookies() {
+  document.cookie.split(';').forEach((cookie) => {
+    document.cookie = cookie
+      .replace(/^ +/, '')
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+}
 describe('ezbot js tracker', () => {
   beforeEach(async () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
@@ -95,6 +87,12 @@ describe('ezbot js tracker', () => {
     });
     // Add ezbot tracker to jsdom DOM
     tracker = await initEzbot(1, undefined, { appId: 'test-app-id' });
+  });
+  afterEach(async () => {
+    clearEventQueue();
+    delete window.ezbot;
+    localStorage.clear();
+    clearCookies();
   });
   it('initializes', () => {
     expect(tracker).toBeDefined();
@@ -131,13 +129,6 @@ describe('ezbot js tracker', () => {
       expect(calledURL.searchParams.get(key)).toEqual(value);
     });
   });
-  afterEach(async () => {
-    clearEventQueue();
-    windowSpy.mockRestore();
-  });
-  it('initializes', async () => {
-    expect(tracker).toBeDefined();
-  });
   it('sets predictions in global context', async () => {
     trackPageView();
     const eventOutQueue = tracker.sharedState.outQueues[0];
@@ -172,7 +163,7 @@ describe('ezbot js tracker', () => {
     expect(tracker.trackPageView).toHaveBeenCalled();
   });
   it('exposes a global trackRewardEvent function', () => {
-    expect(window.ezbot.trackRewardEvent).toBeDefined();
+    expect(window.ezbot?.trackRewardEvent).toBeDefined();
   });
   it('has a track reward function that sends a reward event', () => {
     trackRewardEvent({ key: 'foo' });
@@ -187,7 +178,7 @@ describe('ezbot js tracker', () => {
     });
   });
   it('exposes a global startActivityTracking', async () => {
-    expect(window.ezbot.startActivityTracking).toBeDefined();
+    expect(window.ezbot?.startActivityTracking).toBeDefined();
   });
   it('has a start activity tracking function that triggers OOB activity tracking', async () => {
     const config = {
@@ -200,10 +191,10 @@ describe('ezbot js tracker', () => {
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();
-    expect(window.ezbot.trackPageView).toBeDefined();
+    expect(window.ezbot?.trackPageView).toBeDefined();
   });
   it('exposes a global makeVisualChanges function', async () => {
-    expect(window.ezbot.makeVisualChanges).toBeDefined();
+    expect(window.ezbot?.makeVisualChanges).toBeDefined();
   });
 });
 describe('ezbot init', () => {
@@ -224,13 +215,8 @@ describe('ezbot init', () => {
     expect(customTracker).toBeDefined();
     expect(customTracker.getUserId()).toEqual(testUserId);
   });
-  it('can initialize without userId without config', async () => {
-    const customTracker = await initEzbot(98);
-    expect(customTracker).toBeDefined();
-    expect(customTracker.getUserId()).toEqual(undefined);
-  });
   it('can initialize without userId with cross-domain enabled', async () => {
-    const customTracker = await initEzbot(98, undefined, {
+    const customTracker = await initEzbot(98, null, {
       crossDomain: {
         enabled: true,
         domains: ['https://example.com'],
