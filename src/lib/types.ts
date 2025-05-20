@@ -5,6 +5,7 @@ import {
   ActivityTrackingConfiguration,
   BrowserTracker,
   PageViewEvent,
+  TrackerConfiguration,
 } from '@snowplow/browser-tracker-core';
 
 import { visualChanges, visualUtils } from './visualChanges';
@@ -110,6 +111,15 @@ declare global {
   }
 }
 
+type CrossDomainConfig = {
+  enabled: boolean;
+  domains: string[];
+};
+
+type EzbotTrackerConfig = TrackerConfiguration & {
+  crossDomain?: CrossDomainConfig;
+};
+
 export {
   VariableConfig,
   Prediction,
@@ -121,4 +131,6 @@ export {
   EzbotLinkClickEventPayload,
   EzbotPredictionsContext,
   PredictionForContext,
+  CrossDomainConfig,
+  EzbotTrackerConfig,
 };

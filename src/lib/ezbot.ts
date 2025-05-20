@@ -61,6 +61,7 @@ import {
   EzbotPredictionsContext,
   EzbotRewardEvent,
   EzbotRewardEventPayload,
+  EzbotTrackerConfig,
   Prediction,
   Predictions,
   PredictionsResponse,
@@ -77,19 +78,47 @@ const ezbotTrackerId = 'ezbot';
 async function initEzbot(
   projectId: number,
   userId?: string | null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _config: TrackerConfiguration = defaultWebConfiguration
+  config: EzbotTrackerConfig = defaultWebConfiguration
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
     existingTracker.setUserId(userId);
     return existingTracker;
   }
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {
+
+  // Prepare tracker configuration
+  const trackerConfig: TrackerConfiguration = {
     appId: projectId.toString(),
     plugins: plugins,
     stateStorageStrategy: 'localStorage',
-  });
+  };
+
+  // Handle cross-domain tracking if enabled
+  if (config.crossDomain?.enabled) {
+    if (!config.crossDomain.domains.length) {
+      throw new Error('Cross-domain tracking enabled but no domains provided');
+    }
+    trackerConfig.crossDomainLinker = function (linkElement) {
+      // Only decorate links to different domains in our allowed list
+      if (linkElement.hostname === location.hostname) {
+        return false;
+      }
+
+      // Ensure this function always returns a boolean
+      return (
+        config.crossDomain?.domains.some((domain) => {
+          // Handle domains that may or may not include protocol
+          const domainPattern = domain.replace(/^https?:\/\//, '');
+          return (
+            linkElement.hostname === domainPattern ||
+            linkElement.hostname.endsWith('.' + domainPattern)
+          );
+        }) || false
+      );
+    };
+  }
+
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
