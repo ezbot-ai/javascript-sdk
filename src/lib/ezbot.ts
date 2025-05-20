@@ -88,6 +88,7 @@ async function initEzbot(
 
   // Prepare tracker configuration
   const trackerConfig: TrackerConfiguration = {
+    ...defaultWebConfiguration,
     appId: projectId.toString(),
     plugins: plugins,
     stateStorageStrategy: 'localStorage',
@@ -126,11 +127,14 @@ async function initEzbot(
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
   const sessionId: string = (domainUserInfo as string[])[6];
-  const predictions: Array<Prediction> = await getPredictions(
-    projectId,
-    sessionId,
-    tracker
-  );
+
+  // eslint-disable-next-line functional/no-let
+  let predictions: Array<Prediction> = [];
+  try {
+    predictions = await getPredictions(projectId, sessionId, tracker);
+  } catch (error) {
+    console.error('Failed to get predictions', error);
+  }
   const predictionsContext: EzbotPredictionsContext = {
     schema: ezbotPredictionsContextSchemaPath,
     data: {
@@ -143,7 +147,7 @@ async function initEzbot(
   addGlobalContexts([predictionsContext], [tracker.id]);
 
   window.ezbot = {
-    config: _config,
+    trackerConfig: trackerConfig,
     tracker: tracker,
     predictions: predictions,
     sessionId: sessionId,

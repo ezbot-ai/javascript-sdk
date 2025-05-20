@@ -87,7 +87,7 @@ type EzbotPredictionsContext = {
 declare global {
   interface Window {
     ezbot: {
-      config: EzbotTrackerConfig;
+      trackerConfig: EzbotTrackerConfig;
       tracker: BrowserTracker;
       predictions: Array<Prediction>;
       sessionId: string;
