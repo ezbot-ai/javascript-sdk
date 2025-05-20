@@ -8,3 +8,8 @@ coverage
 *.log
 yarn.lock
 .DS_STORE
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v4/cache.db
+.aider.tags.cache.v4/cache.db-shm
+.aider.tags.cache.v4/cache.db-wal
