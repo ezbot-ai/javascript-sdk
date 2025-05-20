@@ -67,6 +67,7 @@ import {
   Predictions,
   PredictionsResponse,
 } from './types';
+import { createCrossDomainLinkChecker } from './utils/crossDomainLinker';
 import {
   makeVisualChange,
   makeVisualChanges,
@@ -107,24 +108,10 @@ async function initEzbot(
     };
     trackerConfig.useExtendedCrossDomainLinker =
       extendedCrossDomainLinkerOptions;
-    trackerConfig.crossDomainLinker = function (linkElement) {
-      // Only decorate links to different domains in our allowed list
-      if (linkElement.hostname === location.hostname) {
-        return false;
-      }
-
-      // Ensure this function always returns a boolean
-      return (
-        _config?.crossDomain?.domains.some((domain) => {
-          // Handle domains that may or may not include protocol
-          const domainPattern = domain.replace(/^https?:\/\//, '');
-          return (
-            linkElement.hostname === domainPattern ||
-            linkElement.hostname.endsWith('.' + domainPattern)
-          );
-        }) || false
-      );
-    };
+    const crossDomainLinkerFunction = createCrossDomainLinkChecker(
+      _config.crossDomain.domains
+    );
+    trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
   }
 
   const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);

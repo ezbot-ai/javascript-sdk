@@ -53,6 +53,7 @@ function startActivityTracking(
 }
 
 function removeSnowplowQueryParams(): void {
+  console.log('removing snowplow query params');
   // Only proceed if the _sp parameter exists
   if (window.location.href.includes('_sp=')) {
     // Create a URL object from the current location
@@ -72,6 +73,7 @@ function removeSnowplowQueryParams(): void {
 function trackPageView(
   config?: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
 ): void {
+  console.log('tracking page view');
   Snowplow.trackPageView(config);
   removeSnowplowQueryParams();
 }
