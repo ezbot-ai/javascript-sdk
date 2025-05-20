@@ -37,8 +37,8 @@ import {
   addGlobalContexts,
   BrowserTracker,
   newTracker,
+  TrackerConfiguration,
 } from '@snowplow/browser-tracker';
-import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 import {
   defaultWebConfiguration,

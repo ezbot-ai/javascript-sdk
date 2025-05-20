@@ -32,10 +32,6 @@ const defaultWebConfiguration: EzbotTrackerConfig = {
   encodeBase64: true,
   cookieName: '_ezbot_',
   plugins: plugins,
-  crossDomain: {
-    enabled: false,
-    domains: [],
-  },
 };
 const ezbotTrackerId = 'ezbot';
 const globalVisualChanges = ['addGlobalCSS'];
