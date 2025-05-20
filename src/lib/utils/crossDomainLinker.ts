@@ -1,6 +1,6 @@
 /**
  * Checks if a link is a cross-domain link that should be tracked.
- * 
+ *
  * @param linkElement - The anchor element to check
  * @param allowedDomains - List of allowed domains for cross-domain tracking
  * @returns boolean indicating if this is a cross-domain link to an allowed domain
@@ -58,14 +58,16 @@ export function isCrossDomainLink(
 /**
  * Creates a cross-domain link checker function that only requires the linkElement parameter.
  * The allowed domains are captured in the closure.
- * 
+ *
  * @param allowedDomains - List of allowed domains for cross-domain tracking
  * @returns A function that takes only a linkElement and checks if it's a cross-domain link
  */
 export function createCrossDomainLinkChecker(
   allowedDomains: readonly string[]
 ): (linkElement: Readonly<HTMLAnchorElement | HTMLAreaElement>) => boolean {
-  return (linkElement: Readonly<HTMLAnchorElement | HTMLAreaElement>): boolean => {
+  return (
+    linkElement: Readonly<HTMLAnchorElement | HTMLAreaElement>
+  ): boolean => {
     return isCrossDomainLink(linkElement, allowedDomains);
   };
 }
