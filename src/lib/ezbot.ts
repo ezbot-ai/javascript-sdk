@@ -49,7 +49,6 @@ import {
 } from './constants';
 import { getPredictions } from './predictions';
 import {
-  determineSessionId,
   setupCrossDomainLinking,
   setUserId,
   setUserIdFromCookie,
