@@ -5,6 +5,7 @@ import {
   ActivityTrackingConfiguration,
   BrowserTracker,
   PageViewEvent,
+  TrackerConfiguration,
 } from '@snowplow/browser-tracker-core';
 
 import { visualChanges, visualUtils } from './visualChanges';
@@ -83,6 +84,56 @@ type EzbotPredictionsContext = {
   };
 };
 
+/**
+ * Function to determine which links to decorate for cross-domain tracking
+ */
+type CrossDomainLinkerFilter = (
+  elt: HTMLAnchorElement | HTMLAreaElement
+) => boolean;
+
+/**
+ * Configuration options for cross-domain tracking
+ */
+type CrossDomainConfiguration = {
+  /**
+   * Enable cross-domain tracking
+   * @default false
+   */
+  enabled: boolean;
+  /**
+   * If specified, uses this session ID instead of creating a new one
+   */
+  sessionId?: string;
+  /**
+   * Domains to link sessions between
+   */
+  domains?: string[];
+  /**
+   * Query parameter name used when linking to other domains
+   * @default "_ezbot_"
+   */
+  linkQueryParameterName?: string;
+  /**
+   * Decorate all links which pass the crossDomainLinker function
+   * @default true
+   */
+  decorateLinks?: boolean;
+  /**
+   * Function to determine which links to decorate
+   * Takes an HTMLAnchorElement or HTMLAreaElement, and returns true if the link should be decorated
+   */
+  crossDomainLinkerFilter?: CrossDomainLinkerFilter;
+  /**
+   * Use POST for cross-domain tracking when links are clicked
+   * @default false
+   */
+  usePostForCrossDomainDelivery?: boolean;
+};
+
+type EzbotTrackerConfiguration = TrackerConfiguration & {
+  crossDomain?: CrossDomainConfiguration;
+};
+
 declare global {
   interface Window {
     ezbot: {
@@ -121,4 +172,7 @@ export {
   EzbotLinkClickEventPayload,
   EzbotPredictionsContext,
   PredictionForContext,
+  CrossDomainLinkerFilter,
+  CrossDomainConfiguration,
+  EzbotTrackerConfiguration,
 };

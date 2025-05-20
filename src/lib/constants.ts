@@ -51,6 +51,8 @@ const onSessionUpdateCallback = (clientSession?: Readonly<ClientSession>) => {
 const defaultCrossDomainConfiguration: CrossDomainConfiguration = {
   enabled: false,
   linkQueryParameterName: '_ezbot_',
+  decorateLinks: true,
+  usePostForCrossDomainDelivery: false,
 };
 
 const defaultWebConfiguration: TrackerConfiguration = {

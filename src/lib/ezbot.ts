@@ -41,6 +41,7 @@ import {
 import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 import {
+  defaultCrossDomainConfiguration,
   defaultWebConfiguration,
   ezbotPredictionsContextSchemaPath,
   ezbotTrackerDomain,
@@ -48,6 +49,8 @@ import {
 } from './constants';
 import { getPredictions } from './predictions';
 import {
+  determineSessionId,
+  setupCrossDomainLinking,
   setUserId,
   setUserIdFromCookie,
   startActivityTracking,
@@ -61,6 +64,7 @@ import {
   EzbotPredictionsContext,
   EzbotRewardEvent,
   EzbotRewardEventPayload,
+  EzbotTrackerConfiguration,
   Prediction,
   Predictions,
   PredictionsResponse,
@@ -77,26 +81,42 @@ const ezbotTrackerId = 'ezbot';
 async function initEzbot(
   projectId: number,
   userId?: string | null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _config: TrackerConfiguration = defaultWebConfiguration
+  _config: EzbotTrackerConfiguration = defaultWebConfiguration as EzbotTrackerConfiguration
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
     existingTracker.setUserId(userId);
     return existingTracker;
   }
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {
+
+  // Merge default cross domain config with given config
+  const crossDomainConfig = {
+    ...defaultCrossDomainConfiguration,
+    ...(_config.crossDomain || {}),
+  };
+
+  // Prepare tracker configuration
+  const trackerConfig: TrackerConfiguration = {
     appId: projectId.toString(),
     plugins: plugins,
     stateStorageStrategy: 'localStorage',
-  });
+    ..._config,
+  };
+
+  // Initialize the tracker
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
   tracker.setUserId(userId);
 
-  const domainUserInfo = tracker.getDomainUserInfo() as unknown;
-  const sessionId: string = (domainUserInfo as string[])[6];
+  // Determine the session ID to use (from config, URL, or auto-generated)
+  const sessionId = determineSessionId(tracker, crossDomainConfig);
+
+  // Setup cross-domain linking if configured
+  if (crossDomainConfig?.enabled) {
+    setupCrossDomainLinking(crossDomainConfig);
+  }
   const predictions: Array<Prediction> = await getPredictions(
     projectId,
     sessionId,
@@ -157,6 +177,7 @@ export {
   EzbotLinkClickEventPayload,
   EzbotRewardEventPayload,
   EzbotPredictionsContext,
+  EzbotTrackerConfiguration,
   Prediction,
   Predictions,
   PredictionsResponse,
