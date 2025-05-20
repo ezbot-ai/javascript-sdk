@@ -119,6 +119,11 @@ describe('ezbot js tracker', () => {
   });
   afterEach(async () => {
     clearEventQueue();
+    // Clear window.ezbot to prevent test contagion
+    if (window.ezbot) {
+      // @ts-expect-error - Expecting TS error about deleting potentially undefined property
+      delete window.ezbot;
+    }
   });
   it('initializes', async () => {
     expect(tracker).toBeDefined();
@@ -200,5 +205,26 @@ describe('ezbot js tracker', () => {
     const customTracker = await initEzbot(98);
     expect(customTracker).toBeDefined();
     expect(customTracker.getUserId()).toEqual(undefined);
+  });
+  it('can initialize without userId with cross-domain enabled', async () => {
+    const customTracker = await initEzbot(98, undefined, {
+      crossDomain: {
+        enabled: true,
+        domains: ['https://example.com'],
+      },
+    });
+    expect(customTracker).toBeDefined();
+    expect(customTracker.getUserId()).toEqual(undefined);
+  });
+  it('can initialize with userId with cross-domain enabled', async () => {
+    const testUserId = 'test-user-123';
+    const customTracker = await initEzbot(1, testUserId, {
+      crossDomain: {
+        enabled: true,
+        domains: ['https://example.com'],
+      },
+    });
+    expect(customTracker).toBeDefined();
+    expect(customTracker.getUserId()).toEqual(testUserId);
   });
 });
