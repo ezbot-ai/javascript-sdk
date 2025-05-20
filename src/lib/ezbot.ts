@@ -151,6 +151,7 @@ async function initEzbot(
 
   window.ezbot = {
     trackerConfig: trackerConfig,
+    userId: userId,
     tracker: tracker,
     predictions: predictions,
     sessionId: sessionId,
