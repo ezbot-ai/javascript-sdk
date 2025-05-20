@@ -78,7 +78,7 @@ const ezbotTrackerId = 'ezbot';
 async function initEzbot(
   projectId: number,
   userId?: string | null,
-  config: EzbotTrackerConfig = defaultWebConfiguration
+  _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
@@ -94,8 +94,8 @@ async function initEzbot(
   };
 
   // Handle cross-domain tracking if enabled
-  if (config.crossDomain?.enabled) {
-    if (!config.crossDomain.domains.length) {
+  if (_config?.crossDomain?.enabled) {
+    if (!_config?.crossDomain.domains.length) {
       throw new Error('Cross-domain tracking enabled but no domains provided');
     }
     trackerConfig.crossDomainLinker = function (linkElement) {
@@ -106,7 +106,7 @@ async function initEzbot(
 
       // Ensure this function always returns a boolean
       return (
-        config.crossDomain?.domains.some((domain) => {
+        _config?.crossDomain?.domains.some((domain) => {
           // Handle domains that may or may not include protocol
           const domainPattern = domain.replace(/^https?:\/\//, '');
           return (
@@ -143,6 +143,7 @@ async function initEzbot(
   addGlobalContexts([predictionsContext], [tracker.id]);
 
   window.ezbot = {
+    config: _config,
     tracker: tracker,
     predictions: predictions,
     sessionId: sessionId,
