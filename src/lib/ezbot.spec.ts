@@ -7,6 +7,9 @@ import { trackPageView } from '@snowplow/browser-tracker';
 import { BrowserTracker } from '@snowplow/browser-tracker-core';
 import Ajv from 'ajv';
 
+// Window spy for properly mocking the window object
+let windowSpy: jest.SpyInstance;
+
 import { initEzbot } from './ezbot';
 import * as predictionsContextSchema from './schemas/com.ezbot/predictions_context/jsonschema/1-0-1.json';
 import { startActivityTracking, trackRewardEvent } from './tracking';
@@ -68,6 +71,17 @@ function clearEventQueue() {
   (tracker.sharedState.outQueues[0] as Outqueue).pop();
 }
 
+// Setup window spy before all tests
+beforeEach(() => {
+  // Create a spy for the window object that can be mocked in individual tests
+  windowSpy = jest.spyOn(global, 'window', 'get');
+});
+
+afterEach(() => {
+  // Restore the original window object after each test
+  windowSpy.mockRestore();
+});
+
 describe('ezbot js tracker', () => {
   beforeEach(async () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
@@ -119,11 +133,7 @@ describe('ezbot js tracker', () => {
   });
   afterEach(async () => {
     clearEventQueue();
-    // Clear window.ezbot to prevent test contagion
-    if (window.ezbot) {
-      // @ts-expect-error - Expecting TS error about deleting potentially undefined property
-      delete window.ezbot;
-    }
+    windowSpy.mockRestore();
   });
   it('initializes', async () => {
     expect(tracker).toBeDefined();
@@ -194,6 +204,19 @@ describe('ezbot js tracker', () => {
   });
   it('exposes a global makeVisualChanges function', async () => {
     expect(window.ezbot.makeVisualChanges).toBeDefined();
+  });
+});
+describe('ezbot init', () => {
+  beforeEach(async () => {
+    // Mock the fetch function to return a resolved Promise with the predictions object
+    global.fetch = jest.fn(async () => {
+      return {
+        status: 200,
+        json: async () => {
+          return predictionsResponseBody;
+        },
+      } as Response;
+    });
   });
   it('can initialize with userId without config', async () => {
     const testUserId = 'test-user-123';
