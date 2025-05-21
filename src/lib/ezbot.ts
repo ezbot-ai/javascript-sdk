@@ -127,17 +127,18 @@ async function initEzbot(
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
 
-  const sessionId: string = (domainUserInfo as string[])[6];
+  // eslint-disable-next-line functional/no-let
+  let sessionId: string = (domainUserInfo as string[])[6];
 
   // TODO: this should happen automatically somehow
-  // if (window.location.href.includes('_sp=')) {
-  //   // get sessionId for cross-domain linking
-  //   const urlParams = new URLSearchParams(window.location.search);
-  //   const snowPlowParams = urlParams.get('_sp');
-  //   if (snowPlowParams != null) {
-  //     sessionId = snowPlowParams.split('.')[2];
-  //   }
-  // }
+  if (window.location.href.includes('_sp=')) {
+    // get sessionId for cross-domain linking
+    const urlParams = new URLSearchParams(window.location.search);
+    const snowPlowParams = urlParams.get('_sp');
+    if (snowPlowParams != null) {
+      sessionId = snowPlowParams.split('.')[2];
+    }
+  }
 
   // eslint-disable-next-line functional/no-let
   let predictions: Array<Prediction> = [];
