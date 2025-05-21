@@ -29,7 +29,7 @@ function buildParams(
 
     //eslint-disable-next-line functional/no-let
     let trackerToUse = tracker;
-    if (trackerToUse) {
+    if (!trackerToUse) {
       trackerToUse = window.ezbot?.tracker;
     }
     if (!trackerToUse) {
