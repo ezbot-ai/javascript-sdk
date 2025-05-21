@@ -53,9 +53,6 @@ function startActivityTracking(
 }
 
 function removeSnowplowQueryParams(): void {
-  // TODO: Remove this return after we implement a way to persist the sessionId in the snowplow instance & events
-
-  return;
   // Only proceed if the _sp parameter exists
   if (window.location.href.includes('_sp=')) {
     // Create a URL object from the current location
@@ -76,7 +73,6 @@ function trackPageView(
   config?: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
 ): void {
   Snowplow.trackPageView(config);
-  removeSnowplowQueryParams();
 }
 
 function setUserId(userId?: string | null): void {
@@ -94,4 +90,5 @@ export {
   trackPageView,
   setUserId,
   setUserIdFromCookie,
+  removeSnowplowQueryParams,
 };

@@ -90,10 +90,10 @@ async function initEzbot(
 
   // Prepare tracker configuration
   const trackerConfig: TrackerConfiguration = {
-    ...defaultWebConfiguration,
     appId: projectId.toString(),
     plugins: plugins,
     stateStorageStrategy: 'localStorage',
+    discoverRootDomain: true,
   };
 
   // Handle cross-domain tracking if enabled
@@ -123,18 +123,21 @@ async function initEzbot(
     tracker.setUserId(userId);
   }
 
-  const domainUserInfo = tracker.getDomainUserInfo() as unknown;
-  // eslint-disable-next-line functional/no-let
-  let sessionId: string = (domainUserInfo as string[])[6];
+  tracker.setUserIdFromReferrer('_sp');
 
-  if (window.location.href.includes('_sp=')) {
-    // get sessionId for cross-domain linking
-    const urlParams = new URLSearchParams(window.location.search);
-    const snowPlowParams = urlParams.get('_sp');
-    if (snowPlowParams != null) {
-      sessionId = snowPlowParams.split('.')[2];
-    }
-  }
+  const domainUserInfo = tracker.getDomainUserInfo() as unknown;
+
+  const sessionId: string = (domainUserInfo as string[])[6];
+
+  // TODO: this should happen automatically somehow
+  // if (window.location.href.includes('_sp=')) {
+  //   // get sessionId for cross-domain linking
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const snowPlowParams = urlParams.get('_sp');
+  //   if (snowPlowParams != null) {
+  //     sessionId = snowPlowParams.split('.')[2];
+  //   }
+  // }
 
   // eslint-disable-next-line functional/no-let
   let predictions: Array<Prediction> = [];
