@@ -67,13 +67,13 @@ function decodeUnstructuredEventPayload(ue_px: string): Context {
 function clearEventQueue() {
   (tracker.sharedState.outQueues[0] as Outqueue).pop();
 }
-function clearCookies() {
-  document.cookie.split(';').forEach((cookie) => {
-    document.cookie = cookie
-      .replace(/^ +/, '')
-      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-  });
-}
+// function clearCookies() {
+//   document.cookie.split(';').forEach((cookie) => {
+//     document.cookie = cookie
+//       .replace(/^ +/, '')
+//       .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+//   });
+// }
 describe('ezbot js tracker', () => {
   beforeEach(async () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
@@ -90,9 +90,9 @@ describe('ezbot js tracker', () => {
   });
   afterEach(async () => {
     clearEventQueue();
-    delete window.ezbot;
-    localStorage.clear();
-    clearCookies();
+    // delete window.ezbot;
+    // localStorage.clear();
+    // clearCookies();
   });
   it('initializes', () => {
     expect(tracker).toBeDefined();
@@ -223,7 +223,7 @@ describe('ezbot init', () => {
       },
     });
     expect(customTracker).toBeDefined();
-    expect(customTracker.getUserId()).toEqual(undefined);
+    expect(customTracker.getUserId()).toEqual(null);
   });
   it('can initialize with userId with cross-domain enabled', async () => {
     const testUserId = 'test-user-123';

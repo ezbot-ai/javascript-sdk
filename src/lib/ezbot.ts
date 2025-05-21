@@ -83,7 +83,7 @@ async function initEzbot(
   _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
-  if (existingTracker && userId) {
+  if (existingTracker) {
     existingTracker.setUserId(userId);
     return existingTracker;
   }
