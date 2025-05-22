@@ -67,7 +67,13 @@ function decodeUnstructuredEventPayload(ue_px: string): Context {
 function clearEventQueue() {
   (tracker.sharedState.outQueues[0] as Outqueue).pop();
 }
-
+// function clearCookies() {
+//   document.cookie.split(';').forEach((cookie) => {
+//     document.cookie = cookie
+//       .replace(/^ +/, '')
+//       .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+//   });
+// }
 describe('ezbot js tracker', () => {
   beforeEach(async () => {
     // Mock the fetch function to return a resolved Promise with the predictions object
@@ -81,6 +87,12 @@ describe('ezbot js tracker', () => {
     });
     // Add ezbot tracker to jsdom DOM
     tracker = await initEzbot(1, undefined, { appId: 'test-app-id' });
+  });
+  afterEach(async () => {
+    clearEventQueue();
+    // delete window.ezbot;
+    // localStorage.clear();
+    // clearCookies();
   });
   it('initializes', () => {
     expect(tracker).toBeDefined();
@@ -117,12 +129,6 @@ describe('ezbot js tracker', () => {
       expect(calledURL.searchParams.get(key)).toEqual(value);
     });
   });
-  afterEach(async () => {
-    clearEventQueue();
-  });
-  it('initializes', async () => {
-    expect(tracker).toBeDefined();
-  });
   it('sets predictions in global context', async () => {
     trackPageView();
     const eventOutQueue = tracker.sharedState.outQueues[0];
@@ -157,7 +163,7 @@ describe('ezbot js tracker', () => {
     expect(tracker.trackPageView).toHaveBeenCalled();
   });
   it('exposes a global trackRewardEvent function', () => {
-    expect(window.ezbot.trackRewardEvent).toBeDefined();
+    expect(window.ezbot?.trackRewardEvent).toBeDefined();
   });
   it('has a track reward function that sends a reward event', () => {
     trackRewardEvent({ key: 'foo' });
@@ -172,7 +178,7 @@ describe('ezbot js tracker', () => {
     });
   });
   it('exposes a global startActivityTracking', async () => {
-    expect(window.ezbot.startActivityTracking).toBeDefined();
+    expect(window.ezbot?.startActivityTracking).toBeDefined();
   });
   it('has a start activity tracking function that triggers OOB activity tracking', async () => {
     const config = {
@@ -185,10 +191,23 @@ describe('ezbot js tracker', () => {
   });
   it('exposes a global trackPageView function', async () => {
     expect(tracker.trackPageView).toBeDefined();
-    expect(window.ezbot.trackPageView).toBeDefined();
+    expect(window.ezbot?.trackPageView).toBeDefined();
   });
   it('exposes a global makeVisualChanges function', async () => {
-    expect(window.ezbot.makeVisualChanges).toBeDefined();
+    expect(window.ezbot?.makeVisualChanges).toBeDefined();
+  });
+});
+describe('ezbot init', () => {
+  beforeEach(async () => {
+    // Mock the fetch function to return a resolved Promise with the predictions object
+    global.fetch = jest.fn(async () => {
+      return {
+        status: 200,
+        json: async () => {
+          return predictionsResponseBody;
+        },
+      } as Response;
+    });
   });
   it('can initialize with userId without config', async () => {
     const testUserId = 'test-user-123';
@@ -196,9 +215,25 @@ describe('ezbot js tracker', () => {
     expect(customTracker).toBeDefined();
     expect(customTracker.getUserId()).toEqual(testUserId);
   });
-  it('can initialize without userId without config', async () => {
-    const customTracker = await initEzbot(98);
+  it('can initialize without userId with cross-domain enabled', async () => {
+    const customTracker = await initEzbot(98, null, {
+      crossDomain: {
+        enabled: true,
+        domains: ['https://example.com'],
+      },
+    });
     expect(customTracker).toBeDefined();
-    expect(customTracker.getUserId()).toEqual(undefined);
+    expect(customTracker.getUserId()).toEqual(null);
+  });
+  it('can initialize with userId with cross-domain enabled', async () => {
+    const testUserId = 'test-user-123';
+    const customTracker = await initEzbot(1, testUserId, {
+      crossDomain: {
+        enabled: true,
+        domains: ['https://example.com'],
+      },
+    });
+    expect(customTracker).toBeDefined();
+    expect(customTracker.getUserId()).toEqual(testUserId);
   });
 });

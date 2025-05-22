@@ -36,9 +36,10 @@ import { enableLinkClickTracking } from '@snowplow/browser-plugin-link-click-tra
 import {
   addGlobalContexts,
   BrowserTracker,
+  ExtendedCrossDomainLinkerOptions,
   newTracker,
+  TrackerConfiguration,
 } from '@snowplow/browser-tracker';
-import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
 
 import {
   defaultWebConfiguration,
@@ -61,10 +62,12 @@ import {
   EzbotPredictionsContext,
   EzbotRewardEvent,
   EzbotRewardEventPayload,
+  EzbotTrackerConfig,
   Prediction,
   Predictions,
   PredictionsResponse,
 } from './types';
+import { createCrossDomainLinkChecker } from './utils/crossDomainLinker';
 import {
   makeVisualChange,
   makeVisualChanges,
@@ -77,31 +80,73 @@ const ezbotTrackerId = 'ezbot';
 async function initEzbot(
   projectId: number,
   userId?: string | null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _config: TrackerConfiguration = defaultWebConfiguration
+  _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
 ): Promise<BrowserTracker> {
   const existingTracker = window.ezbot?.tracker;
   if (existingTracker) {
     existingTracker.setUserId(userId);
     return existingTracker;
   }
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, {
+
+  // Prepare tracker configuration
+  const trackerConfig: TrackerConfiguration = {
     appId: projectId.toString(),
     plugins: plugins,
     stateStorageStrategy: 'localStorage',
-  });
+    discoverRootDomain: true,
+  };
+
+  // Handle cross-domain tracking if enabled
+  if (_config?.crossDomain?.enabled) {
+    if (!_config?.crossDomain.domains.length) {
+      throw new Error('Cross-domain tracking enabled but no domains provided');
+    }
+
+    const extendedCrossDomainLinkerOptions: ExtendedCrossDomainLinkerOptions = {
+      userId: true,
+      sessionId: true,
+    };
+    trackerConfig.useExtendedCrossDomainLinker =
+      extendedCrossDomainLinkerOptions;
+    const crossDomainLinkerFunction = createCrossDomainLinkChecker(
+      _config.crossDomain.domains
+    );
+    trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
+  }
+
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
-  tracker.setUserId(userId);
+
+  if (userId) {
+    tracker.setUserId(userId);
+  }
+
+  tracker.setUserIdFromReferrer('_sp');
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
-  const sessionId: string = (domainUserInfo as string[])[6];
-  const predictions: Array<Prediction> = await getPredictions(
-    projectId,
-    sessionId,
-    tracker
-  );
+
+  // eslint-disable-next-line functional/no-let
+  let sessionId: string = (domainUserInfo as string[])[6];
+
+  // TODO: this should happen automatically somehow
+  if (window.location.href.includes('_sp=')) {
+    // get sessionId for cross-domain linking
+    const urlParams = new URLSearchParams(window.location.search);
+    const snowPlowParams = urlParams.get('_sp');
+    if (snowPlowParams != null) {
+      sessionId = snowPlowParams.split('.')[2];
+    }
+  }
+
+  // eslint-disable-next-line functional/no-let
+  let predictions: Array<Prediction> = [];
+  try {
+    predictions = await getPredictions(projectId, sessionId, tracker);
+  } catch (error) {
+    console.error('Failed to get predictions', error);
+  }
   const predictionsContext: EzbotPredictionsContext = {
     schema: ezbotPredictionsContextSchemaPath,
     data: {
@@ -114,6 +159,8 @@ async function initEzbot(
   addGlobalContexts([predictionsContext], [tracker.id]);
 
   window.ezbot = {
+    trackerConfig: trackerConfig,
+    userId: userId,
     tracker: tracker,
     predictions: predictions,
     sessionId: sessionId,

@@ -7,7 +7,8 @@ import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
 import { LinkClickTrackingPlugin } from '@snowplow/browser-plugin-link-click-tracking';
 import { SiteTrackingPlugin } from '@snowplow/browser-plugin-site-tracking';
 import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
-import { TrackerConfiguration } from '@snowplow/browser-tracker-core';
+
+import { EzbotTrackerConfig } from './types';
 const plugins = [
   GaCookiesPlugin(),
   ClientHintsPlugin(),
@@ -26,7 +27,7 @@ const ezbotLinkClickEventSchemaPath =
   'iglu:com.ezbot/link_click/jsonschema/1-0-0';
 const ezbotPredictionsContextSchemaPath =
   'iglu:com.ezbot/predictions_context/jsonschema/1-0-1';
-const defaultWebConfiguration: TrackerConfiguration = {
+const defaultWebConfiguration: EzbotTrackerConfig = {
   appId: 'default-ezbot-app-id',
   encodeBase64: true,
   cookieName: '_ezbot_',

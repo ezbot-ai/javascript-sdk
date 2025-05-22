@@ -26,19 +26,22 @@ function buildParams(
   try {
     // TODO: should allow params to fail and fallback to "unknowns"
     // one by one, not as a whole
-    if (!tracker && !window.ezbot?.tracker) {
+
+    //eslint-disable-next-line functional/no-let
+    let trackerToUse = tracker;
+    if (!trackerToUse) {
+      trackerToUse = window.ezbot?.tracker;
+    }
+    if (!trackerToUse) {
       logError(
         new Error('Tracker is not available. Skipping optional params.')
       );
       return requiredParams;
     }
-    if (!tracker) {
-      tracker = window.ezbot.tracker;
-    }
     const urlParams = new URLSearchParams(window.location.search);
     const optionalParams = {
       pageUrlPath: window.location.pathname,
-      domainSessionIdx: tracker.getDomainSessionIndex(),
+      domainSessionIdx: trackerToUse.getDomainSessionIndex(),
       utmContent: urlParams.get('utm_content') || 'unknown',
       utmMedium: urlParams.get('utm_medium') || 'unknown',
       utmSource: urlParams.get('utm_source') || 'unknown',

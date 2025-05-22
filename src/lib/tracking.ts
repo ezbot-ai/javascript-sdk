@@ -52,6 +52,23 @@ function startActivityTracking(
   Snowplow.enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
+function removeSnowplowQueryParams(): void {
+  // Only proceed if the _sp parameter exists
+  if (window.location.href.includes('_sp=')) {
+    // Create a URL object from the current location
+    const url = new URL(window.location.href);
+
+    // Remove the _sp parameter
+    url.searchParams.delete('_sp');
+
+    // Get the new URL string (this automatically handles the case where no parameters remain)
+    const newUrl = url.toString();
+
+    // Update the browser history without reloading the page
+    history.replaceState(history.state, '', newUrl);
+  }
+}
+
 function trackPageView(
   config?: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
 ): void {
@@ -73,4 +90,5 @@ export {
   trackPageView,
   setUserId,
   setUserIdFromCookie,
+  removeSnowplowQueryParams,
 };

@@ -5,6 +5,7 @@ import {
   ActivityTrackingConfiguration,
   BrowserTracker,
   PageViewEvent,
+  TrackerConfiguration,
 } from '@snowplow/browser-tracker-core';
 
 import { visualChanges, visualUtils } from './visualChanges';
@@ -85,7 +86,9 @@ type EzbotPredictionsContext = {
 
 declare global {
   interface Window {
-    ezbot: {
+    ezbot?: {
+      trackerConfig: EzbotTrackerConfig;
+      userId?: string | null;
       tracker: BrowserTracker;
       predictions: Array<Prediction>;
       sessionId: string;
@@ -110,6 +113,15 @@ declare global {
   }
 }
 
+type CrossDomainConfig = {
+  enabled: boolean;
+  domains: string[];
+};
+
+type EzbotTrackerConfig = TrackerConfiguration & {
+  crossDomain?: CrossDomainConfig;
+};
+
 export {
   VariableConfig,
   Prediction,
@@ -121,4 +133,6 @@ export {
   EzbotLinkClickEventPayload,
   EzbotPredictionsContext,
   PredictionForContext,
+  CrossDomainConfig,
+  EzbotTrackerConfig,
 };
