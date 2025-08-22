@@ -189,9 +189,107 @@ async function initEzbot(
   return tracker;
 }
 
+async function initEzbotWithServerSidePredictions(
+  projectId: number,
+  predictions: Array<Prediction>,
+  userId?: string | null,
+  _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
+): Promise<BrowserTracker> {
+  const existingTracker = window.ezbot?.tracker;
+  if (existingTracker) {
+    existingTracker.setUserId(userId);
+    return existingTracker;
+  }
+
+  // Prepare tracker configuration
+  const trackerConfig: TrackerConfiguration = {
+    appId: projectId.toString(),
+    plugins: plugins,
+    stateStorageStrategy: 'localStorage',
+    discoverRootDomain: true,
+  };
+
+  // Handle cross-domain tracking if enabled
+  if (_config?.crossDomain?.enabled) {
+    if (!_config?.crossDomain.domains.length) {
+      throw new Error('Cross-domain tracking enabled but no domains provided');
+    }
+
+    const extendedCrossDomainLinkerOptions: ExtendedCrossDomainLinkerOptions = {
+      userId: true,
+      sessionId: true,
+    };
+    trackerConfig.useExtendedCrossDomainLinker =
+      extendedCrossDomainLinkerOptions;
+    const crossDomainLinkerFunction = createCrossDomainLinkChecker(
+      _config.crossDomain.domains
+    );
+    trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
+  }
+
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
+  if (!tracker) {
+    throw new Error('Failed to initialize tracker');
+  }
+
+  if (userId) {
+    tracker.setUserId(userId);
+  }
+
+  tracker.setUserIdFromReferrer('_sp');
+
+  const domainUserInfo = tracker.getDomainUserInfo() as unknown;
+
+  // eslint-disable-next-line functional/no-let
+  let sessionId: string = (domainUserInfo as string[])[6];
+
+  // Use provided predictions instead of fetching them
+  const predictionsContext: EzbotPredictionsContext = {
+    schema: ezbotPredictionsContextSchemaPath,
+    data: {
+      predictions: predictions.map((pred) => ({
+        variable: pred.key,
+        value: pred.value,
+      })),
+    },
+  };
+  addGlobalContexts([predictionsContext], [tracker.id]);
+
+  window.ezbot = {
+    trackerConfig: trackerConfig,
+    userId: userId,
+    tracker: tracker,
+    predictions: predictions,
+    sessionId: sessionId,
+    trackPageView: trackPageView, // only send to ezbot tracker
+    trackRewardEvent: trackRewardEvent,
+    startActivityTracking: startActivityTracking,
+    makeVisualChanges: makeVisualChanges,
+    setUserId: setUserId,
+    setUserIdFromCookie: setUserIdFromCookie,
+    utils: {
+      visual: visualUtils,
+    },
+    actions: {
+      visual: visualChanges,
+    },
+    intervals: [],
+    mode: 'ezbot',
+  };
+  try {
+    enableLinkClickTracking();
+    enableButtonClickTracking();
+  } catch (error) {
+    console.error('Failed to enable click tracking', error);
+  }
+  console.log('Tracker initialized with predictions:', predictions);
+  return tracker;
+}
+
 export {
   trackRewardEvent,
   initEzbot,
+  initEzbotWithServerSidePredictions,
   makeVisualChange,
   makeVisualChanges,
   startActivityTracking,
