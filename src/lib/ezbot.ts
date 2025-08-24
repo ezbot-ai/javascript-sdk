@@ -162,7 +162,7 @@ async function initEzbot(
     trackerConfig: trackerConfig,
     userId: userId,
     tracker: tracker,
-    predictions: predictions,
+    predictions: [...predictions],
     sessionId: sessionId,
     trackPageView: trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
@@ -258,7 +258,7 @@ async function initEzbotWithServerSidePredictions(
     trackerConfig: trackerConfig,
     userId: userId,
     tracker: tracker,
-    predictions: predictions,
+    predictions: [...predictions],
     sessionId: sessionId,
     trackPageView: trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
