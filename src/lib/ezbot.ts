@@ -191,7 +191,7 @@ async function initEzbot(
 
 async function initEzbotWithServerSidePredictions(
   projectId: number,
-  predictions: Array<Prediction>,
+  predictions: ReadonlyArray<Prediction>,
   userId?: string | null,
   _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
 ): Promise<BrowserTracker> {
@@ -240,8 +240,7 @@ async function initEzbotWithServerSidePredictions(
 
   const domainUserInfo = tracker.getDomainUserInfo() as unknown;
 
-  // eslint-disable-next-line functional/no-let
-  let sessionId: string = (domainUserInfo as string[])[6];
+  const sessionId: string = (domainUserInfo as string[])[6];
 
   // Use provided predictions instead of fetching them
   const predictionsContext: EzbotPredictionsContext = {
