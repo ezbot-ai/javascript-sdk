@@ -4,7 +4,7 @@ The easiest way to interact with ezbot via JS (browser). For ease of use, our Ja
 
 ## Docs
 
-For full documentation, please visit [docs.ezbot.ai](https://docsezbot.ai/).
+For full documentation, please visit [docs.ezbot.ai](https://docs.ezbot.ai/).
 
 ## Server-side predictions (Node)
 
