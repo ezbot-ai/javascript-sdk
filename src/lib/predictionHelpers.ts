@@ -16,47 +16,42 @@ export function getVisualForSelector(
  * Converts visual predictions into a CSS string suitable for server-side rendering
  * within a single <style> tag.
  */
-export function predictionsToCss(predictions: ReadonlyArray<Prediction>): string {
-  const cssRules: string[] = [];
+export function predictionsToCss(
+  predictions: ReadonlyArray<Prediction>
+): string {
+  return predictions
+    .filter(
+      (prediction) =>
+        !!prediction && prediction.type === 'visual' && !!prediction.config
+    )
+    .map((prediction) => {
+      const { selector, action, attribute } = prediction.config!;
+      const value = prediction.value;
 
-  for (const prediction of predictions) {
-    if (!prediction || prediction.type !== 'visual' || !prediction.config) continue;
-
-    const { selector, action, attribute } = prediction.config;
-    const value = prediction.value;
-
-    switch (action) {
-      case 'hide':
-        cssRules.push(`${selector} { display: none !important; }`);
-        break;
-      case 'show':
-        cssRules.push(`${selector} { display: block !important; }`);
-        break;
-      case 'setStyle':
-        if (attribute) {
-          cssRules.push(`${selector} { ${attribute}: ${value} !important; }`);
-        }
-        break;
-      case 'setFontSize':
-        cssRules.push(`${selector} { font-size: ${value} !important; }`);
-        break;
-      case 'setFontColor':
-        cssRules.push(`${selector} { color: ${value} !important; }`);
-        break;
-      case 'setBackgroundColor':
-        cssRules.push(`${selector} { background-color: ${value} !important; }`);
-        break;
-      case 'setVisibility':
-        cssRules.push(`${selector} { visibility: ${value} !important; }`);
-        break;
-      case 'addGlobalCSS':
-        cssRules.push(value);
-        break;
-      default:
-        // ignore unsupported actions in SSR CSS generation
-        break;
-    }
-  }
-
-  return cssRules.join('\n');
+      switch (action) {
+        case 'hide':
+          return `${selector} { display: none !important; }`;
+        case 'show':
+          return `${selector} { display: block !important; }`;
+        case 'setStyle':
+          return attribute
+            ? `${selector} { ${attribute}: ${value} !important; }`
+            : '';
+        case 'setFontSize':
+          return `${selector} { font-size: ${value} !important; }`;
+        case 'setFontColor':
+          return `${selector} { color: ${value} !important; }`;
+        case 'setBackgroundColor':
+          return `${selector} { background-color: ${value} !important; }`;
+        case 'setVisibility':
+          return `${selector} { visibility: ${value} !important; }`;
+        case 'addGlobalCSS':
+          return String(value ?? '');
+        default:
+          // ignore unsupported actions in SSR CSS generation
+          return '';
+      }
+    })
+    .filter((rule) => rule.length > 0)
+    .join('\n');
 }
