@@ -68,7 +68,7 @@ async function getPredictions(
   sessionId: string,
   tracker?: Readonly<BrowserTracker>
 ): Promise<Array<Prediction>> {
-  const basePredictionsURL = `https://api.ezbot.ai/predict`;
+  const basePredictionsURL = `https://${projectId}.api.ezbot.ai/predict`;
   const params = buildParams(projectId, sessionId, tracker);
   const queryParams = buildQueryParams(params);
   const predictionsURL = `${basePredictionsURL}?${queryParams}`;
