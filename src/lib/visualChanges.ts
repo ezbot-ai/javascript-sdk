@@ -237,6 +237,10 @@ function makeVisualChange(prediction: Prediction): void {
 }
 
 function makeVisualChanges(): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   const predictions = window.ezbot?.predictions;
   if (!predictions) {
     utils.logInfo('No predictions found. Skipping visual changes.');

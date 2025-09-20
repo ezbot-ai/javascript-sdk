@@ -92,6 +92,8 @@ declare global {
       tracker: BrowserTracker;
       predictions: Array<Prediction>;
       sessionId: string;
+      disabled?: boolean;
+      disabledReason?: string;
       trackPageView: (
         config: Readonly<PageViewEvent & CommonEventProperties>
       ) => void;
@@ -122,6 +124,16 @@ type EzbotTrackerConfig = TrackerConfiguration & {
   crossDomain?: CrossDomainConfig;
 };
 
+class EzbotPaymentError extends Error {
+  public readonly statusCode: number;
+  
+  constructor(statusCode: number, message?: string) {
+    super(message || `Payment or subscription error: ${statusCode}`);
+    this.name = 'EzbotPaymentError';
+    this.statusCode = statusCode;
+  }
+}
+
 export {
   VariableConfig,
   Prediction,
@@ -135,4 +147,5 @@ export {
   PredictionForContext,
   CrossDomainConfig,
   EzbotTrackerConfig,
+  EzbotPaymentError,
 };

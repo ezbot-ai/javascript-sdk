@@ -59,6 +59,7 @@ import {
 import {
   EzbotLinkClickEvent,
   EzbotLinkClickEventPayload,
+  EzbotPaymentError,
   EzbotPredictionsContext,
   EzbotRewardEvent,
   EzbotRewardEventPayload,
@@ -149,6 +150,34 @@ async function initEzbot(
   try {
     predictions = await getPredictions(projectId, sessionId, tracker);
   } catch (error) {
+    if (error instanceof EzbotPaymentError) {
+      // Payment or subscription issue - disable the SDK
+      console.error('SDK disabled due to payment/subscription issue:', error.message);
+      window.ezbot = {
+        trackerConfig: trackerConfig,
+        userId: userId,
+        tracker: tracker,
+        predictions: [],
+        sessionId: sessionId,
+        disabled: true,
+        disabledReason: error.message,
+        trackPageView: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        trackRewardEvent: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        startActivityTracking: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        setUserId: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        setUserIdFromCookie: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        makeVisualChanges: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        utils: {
+          visual: visualUtils,
+        },
+        actions: {
+          visual: visualChanges,
+        },
+        intervals: [],
+        mode: 'ezbot',
+      };
+      throw error; // Re-throw to let the caller know the SDK is disabled
+    }
     console.error('Failed to get predictions', error);
   }
   const predictionsContext: EzbotPredictionsContext = {
@@ -264,6 +293,8 @@ async function initEzbotWithServerSidePredictions(
     tracker: tracker,
     predictions: [...predictions],
     sessionId: sessionId,
+    disabled: false,
+    disabledReason: undefined,
     trackPageView: trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,
