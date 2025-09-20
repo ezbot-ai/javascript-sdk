@@ -150,9 +150,10 @@ async function initEzbot(
   try {
     predictions = await getPredictions(projectId, sessionId, tracker);
   } catch (error) {
-    if (error instanceof EzbotPaymentError) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === 'EzbotPaymentError') {
+      const paymentError = error as EzbotPaymentError;
       // Payment or subscription issue - disable the SDK
-      console.error('SDK disabled due to payment/subscription issue:', error.message);
+      console.error('SDK disabled due to payment/subscription issue:', paymentError.message);
       window.ezbot = {
         trackerConfig: trackerConfig,
         userId: userId,
@@ -160,13 +161,31 @@ async function initEzbot(
         predictions: [],
         sessionId: sessionId,
         disabled: true,
-        disabledReason: error.message,
-        trackPageView: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
-        trackRewardEvent: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
-        startActivityTracking: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
-        setUserId: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
-        setUserIdFromCookie: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
-        makeVisualChanges: () => console.warn('Ezbot SDK is disabled due to payment/subscription issue'),
+        disabledReason: paymentError.message,
+        trackPageView: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        trackRewardEvent: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        startActivityTracking: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        setUserId: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        setUserIdFromCookie: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        makeVisualChanges: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
         utils: {
           visual: visualUtils,
         },

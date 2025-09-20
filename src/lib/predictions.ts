@@ -1,6 +1,6 @@
 import { BrowserTracker } from '@snowplow/browser-tracker';
 
-import { Prediction, PredictionsResponse, EzbotPaymentError } from './types';
+import { createEzbotPaymentError, Prediction, PredictionsResponse } from './types';
 import { logError } from './utils';
 
 type RequiredPredictionsParams = {
@@ -75,7 +75,7 @@ async function getPredictions(
 
   const response = await fetch(predictionsURL);
   if (response.status === 402 || response.status === 410) {
-    throw new EzbotPaymentError(
+    throw createEzbotPaymentError(
       response.status,
       `Payment or subscription issue: ${response.status === 402 ? 'Payment Required' : 'Gone - Subscription Cancelled'}`
     );

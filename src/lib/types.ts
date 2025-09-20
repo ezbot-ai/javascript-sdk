@@ -124,15 +124,19 @@ type EzbotTrackerConfig = TrackerConfiguration & {
   crossDomain?: CrossDomainConfig;
 };
 
-class EzbotPaymentError extends Error {
-  public readonly statusCode: number;
-  
-  constructor(statusCode: number, message?: string) {
-    super(message || `Payment or subscription error: ${statusCode}`);
-    this.name = 'EzbotPaymentError';
-    this.statusCode = statusCode;
-  }
-}
+type EzbotPaymentError = Error & {
+  readonly statusCode: number;
+};
+
+const createEzbotPaymentError = (statusCode: number, message?: string): EzbotPaymentError => {
+  const baseError = new Error(message || `Payment or subscription error: ${statusCode}`);
+
+  return {
+    ...baseError,
+    name: 'EzbotPaymentError',
+    statusCode: statusCode
+  } as EzbotPaymentError;
+};
 
 export {
   VariableConfig,
@@ -148,4 +152,5 @@ export {
   CrossDomainConfig,
   EzbotTrackerConfig,
   EzbotPaymentError,
+  createEzbotPaymentError,
 };
