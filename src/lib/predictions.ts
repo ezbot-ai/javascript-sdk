@@ -74,7 +74,7 @@ async function getPredictions(
   const predictionsURL = `${basePredictionsURL}?${queryParams}`;
 
   const response = await fetch(predictionsURL);
-  if (response.status === 402 || response.status === 410) {
+  if (response.status === 402 || response.status === 410 || response.status === 403) {
     throw createEzbotPaymentError(
       response.status,
       `Payment or subscription issue: ${response.status === 402 ? 'Payment Required' : 'Gone - Subscription Cancelled'}`
