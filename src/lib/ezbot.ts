@@ -281,7 +281,7 @@ async function initEzbotWithServerSidePredictions(
   } catch (error) {
     console.error('Failed to enable click tracking', error);
   }
-  console.log('Tracker initialized with predictions:', predictions);
+
   return tracker;
 }
 
