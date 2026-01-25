@@ -279,7 +279,7 @@ async function initEzbotWithServerSidePredictions(
     trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
   }
 
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain(projectId), trackerConfig);
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
