@@ -59,6 +59,7 @@ import {
 import {
   EzbotLinkClickEvent,
   EzbotLinkClickEventPayload,
+  EzbotPaymentError,
   EzbotPredictionsContext,
   EzbotRewardEvent,
   EzbotRewardEventPayload,
@@ -114,7 +115,11 @@ async function initEzbot(
     trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
   }
 
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
+  const tracker = newTracker(
+    ezbotTrackerId,
+    ezbotTrackerDomain(projectId),
+    trackerConfig
+  );
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
@@ -145,6 +150,53 @@ async function initEzbot(
   try {
     predictions = await getPredictions(projectId, sessionId, tracker);
   } catch (error) {
+    if (error && typeof error === 'object' && 'name' in error && error.name === 'EzbotPaymentError') {
+      const paymentError = error as EzbotPaymentError;
+      // Payment or subscription issue - disable the SDK
+      console.error('SDK disabled due to payment/subscription issue:', paymentError.message);
+      window.ezbot = {
+        trackerConfig: trackerConfig,
+        userId: userId,
+        tracker: tracker,
+        predictions: [],
+        sessionId: sessionId,
+        disabled: true,
+        disabledReason: paymentError.message,
+        trackPageView: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        trackRewardEvent: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        startActivityTracking: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        setUserId: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        setUserIdFromCookie: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        makeVisualChanges: () => {
+          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          return undefined;
+        },
+        utils: {
+          visual: visualUtils,
+        },
+        actions: {
+          visual: visualChanges,
+        },
+        intervals: [],
+        mode: 'ezbot',
+      };
+      throw error; // Re-throw to let the caller know the SDK is disabled
+    }
     console.error('Failed to get predictions', error);
   }
   const predictionsContext: EzbotPredictionsContext = {
@@ -227,7 +279,7 @@ async function initEzbotWithServerSidePredictions(
     trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
   }
 
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain, trackerConfig);
+  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain(projectId), trackerConfig);
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
@@ -260,6 +312,8 @@ async function initEzbotWithServerSidePredictions(
     tracker: tracker,
     predictions: [...predictions],
     sessionId: sessionId,
+    disabled: false,
+    disabledReason: undefined,
     trackPageView: trackPageView, // only send to ezbot tracker
     trackRewardEvent: trackRewardEvent,
     startActivityTracking: startActivityTracking,

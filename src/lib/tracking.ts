@@ -18,6 +18,10 @@ import {
 } from './types';
 
 function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   const event: EzbotRewardEvent = {
     schema: ezbotRewardEventSchemaPath,
     data: payload,
@@ -29,6 +33,10 @@ function trackRewardEvent(payload: Readonly<EzbotRewardEventPayload>): void {
 }
 
 function trackLinkClick(payload: Readonly<EzbotLinkClickEventPayload>): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   const event: EzbotLinkClickEvent = {
     schema: ezbotLinkClickEventSchemaPath,
     data: payload,
@@ -49,6 +57,10 @@ const defaultActivityTrackingConfiguration: ActivityTrackingConfiguration = {
 function startActivityTracking(
   config: ActivityTrackingConfiguration = defaultActivityTrackingConfiguration
 ): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   Snowplow.enableActivityTracking(config, [ezbotTrackerId]); // only send to ezbot tracker
 }
 
@@ -72,14 +84,26 @@ function removeSnowplowQueryParams(): void {
 function trackPageView(
   config?: Readonly<PageViewEvent & Snowplow.CommonEventProperties>
 ): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   Snowplow.trackPageView(config);
 }
 
 function setUserId(userId?: string | null): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   Snowplow.setUserId(userId);
 }
 
 function setUserIdFromCookie(cookieName: string): void {
+  if (window.ezbot?.disabled) {
+    console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+    return;
+  }
   Snowplow.setUserIdFromCookie(cookieName);
 }
 

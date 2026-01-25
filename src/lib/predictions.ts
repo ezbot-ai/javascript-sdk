@@ -1,6 +1,6 @@
 import { BrowserTracker } from '@snowplow/browser-tracker';
 
-import { Prediction, PredictionsResponse } from './types';
+import { createEzbotPaymentError, Prediction, PredictionsResponse } from './types';
 import { logError } from './utils';
 
 type RequiredPredictionsParams = {
@@ -68,15 +68,20 @@ async function getPredictions(
   sessionId: string,
   tracker?: Readonly<BrowserTracker>
 ): Promise<Array<Prediction>> {
-  const basePredictionsURL = `https://api.ezbot.ai/predict`;
+  const basePredictionsURL = `https://${projectId}.api.ezbot.ai/predict`;
   const params = buildParams(projectId, sessionId, tracker);
   const queryParams = buildQueryParams(params);
   const predictionsURL = `${basePredictionsURL}?${queryParams}`;
 
   const response = await fetch(predictionsURL);
+  if (response.status === 402 || response.status === 410 || response.status === 403) {
+    throw createEzbotPaymentError(
+      response.status,
+      `Payment or subscription issue: ${response.status === 402 ? 'Payment Required' : 'Gone - Subscription Cancelled'}`
+    );
+  }
   if (response.status !== 200) {
-    throw new Error(`Failed to fetch predictions: Got a ${response.status} response;
-      }`);
+    throw new Error(`Failed to fetch predictions: Got a ${response.status} response`);
   }
   const responseJSON = (await response.json()) as PredictionsResponse;
   return responseJSON.predictions;

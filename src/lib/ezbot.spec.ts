@@ -108,7 +108,7 @@ describe('ezbot js tracker', () => {
     const utmTerm = urlParams.get('utm_term') || 'unknown';
     const utmContent = urlParams.get('utm_content') || 'unknown';
     const referrer = document.referrer || 'unknown';
-    const predictionsURL = new URL('https://api.ezbot.ai/predict');
+    const predictionsURL = new URL(`https://1.api.ezbot.ai/predict`);
     predictionsURL.searchParams.set('projectId', '1');
     predictionsURL.searchParams.set('sessionId', sessionId);
     predictionsURL.searchParams.set('pageUrlPath', window.location.pathname);
