@@ -11,7 +11,6 @@ const warned = new Set<string>();
 
 const logShutdown = (name: string): void => {
   try {
-     
     const first = !warned.has(name) && (warned.add(name), true);
     if (first) {
       console.warn(`[ezbot sdk] ${name}(): ${SHUTDOWN_MESSAGE}`);
@@ -49,4 +48,13 @@ const createNoopObject = <T>(): T => {
   return noop as T;
 };
 
-export { SHUTDOWN_MESSAGE, guard, createNoopObject, logShutdown };
+/** Resets the once-per-method log dedupe (for tests). Does not re-enable anything. */
+const resetShutdownLog = (): void => warned.clear();
+
+export {
+  resetShutdownLog,
+  SHUTDOWN_MESSAGE,
+  guard,
+  createNoopObject,
+  logShutdown,
+};
