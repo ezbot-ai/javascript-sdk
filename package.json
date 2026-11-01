@@ -1,6 +1,6 @@
 {
   "name": "@ezbot-ai/javascript-sdk",
-  "version": "2.0.1",
+  "version": "2.0.0",
   "description": "DEPRECATED: ezbot.ai has been shut down. All methods are no-ops.",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
