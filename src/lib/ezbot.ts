@@ -48,6 +48,7 @@ import {
   plugins,
 } from './constants';
 import { getPredictions } from './predictions';
+import { createNoopObject, guard } from './shutdown';
 import {
   setUserId,
   setUserIdFromCookie,
@@ -78,7 +79,7 @@ import {
 
 const ezbotTrackerId = 'ezbot';
 
-async function initEzbot(
+async function _initEzbot(
   projectId: number,
   userId?: string | null,
   _config: EzbotTrackerConfig = defaultWebConfiguration as EzbotTrackerConfig
@@ -150,10 +151,18 @@ async function initEzbot(
   try {
     predictions = await getPredictions(projectId, sessionId, tracker);
   } catch (error) {
-    if (error && typeof error === 'object' && 'name' in error && error.name === 'EzbotPaymentError') {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'name' in error &&
+      error.name === 'EzbotPaymentError'
+    ) {
       const paymentError = error as EzbotPaymentError;
       // Payment or subscription issue - disable the SDK
-      console.error('SDK disabled due to payment/subscription issue:', paymentError.message);
+      console.error(
+        'SDK disabled due to payment/subscription issue:',
+        paymentError.message
+      );
       window.ezbot = {
         trackerConfig: trackerConfig,
         userId: userId,
@@ -163,27 +172,39 @@ async function initEzbot(
         disabled: true,
         disabledReason: paymentError.message,
         trackPageView: () => {
-          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          console.warn(
+            'Ezbot SDK is disabled due to payment/subscription issue'
+          );
           return undefined;
         },
         trackRewardEvent: () => {
-          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          console.warn(
+            'Ezbot SDK is disabled due to payment/subscription issue'
+          );
           return undefined;
         },
         startActivityTracking: () => {
-          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          console.warn(
+            'Ezbot SDK is disabled due to payment/subscription issue'
+          );
           return undefined;
         },
         setUserId: () => {
-          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          console.warn(
+            'Ezbot SDK is disabled due to payment/subscription issue'
+          );
           return undefined;
         },
         setUserIdFromCookie: () => {
-          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          console.warn(
+            'Ezbot SDK is disabled due to payment/subscription issue'
+          );
           return undefined;
         },
         makeVisualChanges: () => {
-          console.warn('Ezbot SDK is disabled due to payment/subscription issue');
+          console.warn(
+            'Ezbot SDK is disabled due to payment/subscription issue'
+          );
           return undefined;
         },
         utils: {
@@ -241,7 +262,7 @@ async function initEzbot(
   return tracker;
 }
 
-async function initEzbotWithServerSidePredictions(
+async function _initEzbotWithServerSidePredictions(
   projectId: number,
   predictions: ReadonlyArray<Prediction>,
   userId?: string | null,
@@ -279,7 +300,11 @@ async function initEzbotWithServerSidePredictions(
     trackerConfig.crossDomainLinker = crossDomainLinkerFunction;
   }
 
-  const tracker = newTracker(ezbotTrackerId, ezbotTrackerDomain(projectId), trackerConfig);
+  const tracker = newTracker(
+    ezbotTrackerId,
+    ezbotTrackerDomain(projectId),
+    trackerConfig
+  );
   if (!tracker) {
     throw new Error('Failed to initialize tracker');
   }
@@ -338,6 +363,17 @@ async function initEzbotWithServerSidePredictions(
 
   return tracker;
 }
+
+// ezbot.ai has been shut down: the init functions are guarded no-ops that
+// resolve with an inert tracker stand-in. Originals are preserved above.
+const initEzbot = guard('initEzbot', _initEzbot, () =>
+  Promise.resolve(createNoopObject<BrowserTracker>())
+);
+const initEzbotWithServerSidePredictions = guard(
+  'initEzbotWithServerSidePredictions',
+  _initEzbotWithServerSidePredictions,
+  () => Promise.resolve(createNoopObject<BrowserTracker>())
+);
 
 export {
   trackRewardEvent,

@@ -10,6 +10,7 @@ import {
   ezbotRewardEventSchemaPath,
   ezbotTrackerId,
 } from './constants';
+import { guard } from './shutdown';
 import {
   EzbotLinkClickEvent,
   EzbotLinkClickEventPayload,
@@ -107,12 +108,35 @@ function setUserIdFromCookie(cookieName: string): void {
   Snowplow.setUserIdFromCookie(cookieName);
 }
 
-export {
-  trackRewardEvent,
-  trackLinkClick,
+// ezbot.ai has been shut down: every exported function is a guarded no-op.
+// The original implementations above are preserved for reference.
+const noop = () => undefined;
+const gTrackRewardEvent = guard('trackRewardEvent', trackRewardEvent, noop);
+const gTrackLinkClick = guard('trackLinkClick', trackLinkClick, noop);
+const gStartActivityTracking = guard(
+  'startActivityTracking',
   startActivityTracking,
-  trackPageView,
-  setUserId,
+  noop
+);
+const gTrackPageView = guard('trackPageView', trackPageView, noop);
+const gSetUserId = guard('setUserId', setUserId, noop);
+const gSetUserIdFromCookie = guard(
+  'setUserIdFromCookie',
   setUserIdFromCookie,
+  noop
+);
+const gRemoveSnowplowQueryParams = guard(
+  'removeSnowplowQueryParams',
   removeSnowplowQueryParams,
+  noop
+);
+
+export {
+  gTrackRewardEvent as trackRewardEvent,
+  gTrackLinkClick as trackLinkClick,
+  gStartActivityTracking as startActivityTracking,
+  gTrackPageView as trackPageView,
+  gSetUserId as setUserId,
+  gSetUserIdFromCookie as setUserIdFromCookie,
+  gRemoveSnowplowQueryParams as removeSnowplowQueryParams,
 };

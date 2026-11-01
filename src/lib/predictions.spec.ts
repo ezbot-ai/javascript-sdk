@@ -3,6 +3,13 @@
 
 import { initEzbot } from './ezbot';
 import { getPredictions } from './predictions';
+
+jest.mock('./shutdown', () => ({
+  ...jest.requireActual('./shutdown'),
+  // Legacy behaviour is tested with the shutdown guard bypassed.
+  guard: (_name: string, fn: unknown) => fn,
+}));
+
 const predictions = [
   {
     key: 'hero_headline',

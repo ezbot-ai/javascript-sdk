@@ -3,6 +3,12 @@
 import { Prediction } from './types';
 import * as visualChanges from './visualChanges';
 
+jest.mock('./shutdown', () => ({
+  ...jest.requireActual('./shutdown'),
+  // Legacy behaviour is tested with the shutdown guard bypassed.
+  guard: (_name: string, fn: unknown) => fn,
+}));
+
 // Mock console.log
 const logSpy = jest.spyOn(console, 'info');
 logSpy.mockImplementation(() => {});

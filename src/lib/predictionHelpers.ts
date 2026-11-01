@@ -1,9 +1,10 @@
+import { guard } from './shutdown';
 import { Prediction } from './types';
 
 /**
  * Returns the first visual prediction matching the provided CSS selector.
  */
-export function getVisualForSelector(
+function _getVisualForSelector(
   predictions: ReadonlyArray<Prediction>,
   selector: string
 ): Prediction | undefined {
@@ -16,9 +17,7 @@ export function getVisualForSelector(
  * Converts visual predictions into a CSS string suitable for server-side rendering
  * within a single <style> tag.
  */
-export function predictionsToCss(
-  predictions: ReadonlyArray<Prediction>
-): string {
+function _predictionsToCss(predictions: ReadonlyArray<Prediction>): string {
   return predictions
     .filter(
       (prediction) =>
@@ -55,3 +54,15 @@ export function predictionsToCss(
     .filter((rule) => rule.length > 0)
     .join('\n');
 }
+
+// ezbot.ai has been shut down: guarded no-ops; originals preserved above.
+export const getVisualForSelector = guard(
+  'getVisualForSelector',
+  _getVisualForSelector,
+  () => undefined
+);
+export const predictionsToCss = guard(
+  'predictionsToCss',
+  _predictionsToCss,
+  () => ''
+);

@@ -12,6 +12,13 @@ import {
   trackLinkClick,
   trackRewardEvent,
 } from './tracking';
+
+jest.mock('./shutdown', () => ({
+  ...jest.requireActual('./shutdown'),
+  // Legacy behaviour is tested with the shutdown guard bypassed.
+  guard: (_name: string, fn: unknown) => fn,
+}));
+
 jest.mock('@snowplow/browser-tracker');
 
 describe('tracking', () => {

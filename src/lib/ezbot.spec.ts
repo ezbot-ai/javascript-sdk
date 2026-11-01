@@ -12,6 +12,12 @@ import * as predictionsContextSchema from './schemas/com.ezbot/predictions_conte
 import { startActivityTracking, trackRewardEvent } from './tracking';
 import { EzbotPredictionsContext } from './types';
 
+jest.mock('./shutdown', () => ({
+  ...jest.requireActual('./shutdown'),
+  // Legacy behaviour is tested with the shutdown guard bypassed.
+  guard: (_name: string, fn: unknown) => fn,
+}));
+
 const ajv = new Ajv();
 const validatePredictionsContextSchema = ajv.compile<EzbotPredictionsContext>(
   predictionsContextSchema

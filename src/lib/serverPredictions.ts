@@ -6,6 +6,7 @@ import {
 import { Agent as HttpsAgent, request as httpsRequest } from 'https';
 import { URL } from 'url';
 
+import { guard } from './shutdown';
 import { Prediction, PredictionsResponse } from './types';
 
 export type { Prediction, PredictionsResponse };
@@ -49,7 +50,7 @@ export type EzbotServerClient = {
   dispose: () => unknown;
 };
 
-export function extractUtmFromSearchParams(
+function _extractUtmFromSearchParams(
   obj: Record<string, string | string[] | undefined>
 ): Pick<
   PredictionsParams,
@@ -72,13 +73,13 @@ export function extractUtmFromSearchParams(
   };
 }
 
-export function buildQueryParams(params: Readonly<PredictionsParams>): string {
+function _buildQueryParams(params: Readonly<PredictionsParams>): string {
   const processedParams = {
     projectId:
       typeof params.projectId === 'number'
         ? params.projectId.toString()
         : params.projectId,
-    sessionId: params.sessionId ?? generateSessionId(),
+    sessionId: params.sessionId ?? _generateSessionId(),
     pageUrlPath: params.pageUrlPath ?? '/',
     domainSessionIdx: params.domainSessionIdx,
     utmContent: params.utmContent ?? 'unknown',
@@ -98,7 +99,7 @@ export function buildQueryParams(params: Readonly<PredictionsParams>): string {
 
 export const DEFAULT_API_BASE_URL = 'https://api.ezbot.ai';
 
-export function createEzbotClient(
+function _createEzbotClient(
   options: Readonly<EzbotServerClientOptions>
 ): EzbotServerClient {
   const {
@@ -224,6 +225,39 @@ export function createEzbotClient(
   };
 }
 
-export function generateSessionId(): string {
+function _generateSessionId(): string {
   return `ssr-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
+
+// ezbot.ai has been shut down: guarded no-ops; originals preserved above.
+export const extractUtmFromSearchParams = guard(
+  'extractUtmFromSearchParams',
+  _extractUtmFromSearchParams,
+  () => ({})
+);
+export const buildQueryParams = guard(
+  'buildQueryParams',
+  _buildQueryParams,
+  () => ''
+);
+export const generateSessionId = guard(
+  'generateSessionId',
+  _generateSessionId,
+  () => ''
+);
+export const createEzbotClient = guard(
+  'createEzbotClient',
+  _createEzbotClient,
+  (): EzbotServerClient => ({
+    getPredictions: guard(
+      'client.getPredictions',
+      async () => [] as Array<Prediction>,
+      () => Promise.resolve([] as Array<Prediction>)
+    ),
+    dispose: guard(
+      'client.dispose',
+      () => undefined,
+      () => undefined
+    ),
+  })
+);

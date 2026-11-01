@@ -1,3 +1,11 @@
+> # ⚠️ ezbot.ai has been shut down
+>
+> **ezbot.ai has been shut down. This repository is now read-only and archived.**
+> The npm package `@ezbot-ai/javascript-sdk` is deprecated. As of v2.0.0 every public
+> method is a **no-op** that only logs a console message, so existing integrations
+> keep running without errors but do nothing. The original code is preserved
+> behind guard functions (see `src/lib/shutdown.ts`) for reference only.
+
 # ezbot Javascript SDK
 
 The easiest way to interact with ezbot via JS (browser). For ease of use, our Javascript library wraps Snowplow's [Browser Tracker](https://www.npmjs.com/package/@snowplow/browser-tracker) (BSD-3 License).

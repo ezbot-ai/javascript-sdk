@@ -3,6 +3,7 @@
 /* eslint-disable functional/prefer-immutable-types */
 import { globalVisualChanges } from './constants';
 import { Prediction } from './ezbot';
+import { guard } from './shutdown';
 import * as utils from './utils';
 import { logInfo } from './utils';
 
@@ -289,23 +290,93 @@ const visualChanges = {
   makeGlobalVisualChange,
 };
 
-export {
-  visualUtils,
-  visualChanges,
-  setElementText,
+// ezbot.ai has been shut down: every exported function is a guarded no-op.
+// The original implementations above are preserved for reference.
+const noop = () => undefined;
+const gSetElementText = guard('setElementText', setElementText, noop);
+const gSetElementInnerHTML = guard(
+  'setElementInnerHTML',
   setElementInnerHTML,
+  noop
+);
+const gSetElementAttribute = guard(
+  'setElementAttribute',
   setElementAttribute,
-  addGlobalCSS,
-  setElementHref,
-  setElementSrc,
+  noop
+);
+const gAddGlobalCSS = guard('addGlobalCSS', addGlobalCSS, noop);
+const gSetElementHref = guard('setElementHref', setElementHref, noop);
+const gSetElementSrc = guard('setElementSrc', setElementSrc, noop);
+const gAddClassesToElement = guard(
+  'addClassesToElement',
   addClassesToElement,
+  noop
+);
+const gRemoveClassesFromElement = guard(
+  'removeClassesFromElement',
   removeClassesFromElement,
-  setElementStyle,
-  hideElement,
-  showElement,
+  noop
+);
+const gSetElementStyle = guard('setElementStyle', setElementStyle, noop);
+const gHideElement = guard('hideElement', hideElement, noop);
+const gShowElement = guard('showElement', showElement, noop);
+const gValidateVisualPrediction = guard(
+  'validateVisualPrediction',
   validateVisualPrediction,
-  makeVisualChange,
-  makeVisualChanges,
+  () => null
+);
+const gMakeVisualChange = guard('makeVisualChange', makeVisualChange, noop);
+const gMakeVisualChanges = guard('makeVisualChanges', makeVisualChanges, noop);
+const gParseCommaSeparatedList = guard(
+  'parseCommaSeparatedList',
   parseCommaSeparatedList,
+  () => [] as string[]
+);
+const gMakeGlobalVisualChange = guard(
+  'makeGlobalVisualChange',
   makeGlobalVisualChange,
+  noop
+);
+
+const guardedVisualUtils: typeof visualUtils = {
+  validateVisualPrediction: gValidateVisualPrediction,
+  parseCommaSeparatedList: gParseCommaSeparatedList,
+};
+
+const guardedVisualChanges: typeof visualChanges = {
+  setElementText: gSetElementText,
+  setElementInnerHTML: gSetElementInnerHTML,
+  setElementAttribute: gSetElementAttribute,
+  addGlobalCSS: gAddGlobalCSS,
+  setElementHref: gSetElementHref,
+  setElementSrc: gSetElementSrc,
+  addClassesToElement: gAddClassesToElement,
+  removeClassesFromElement: gRemoveClassesFromElement,
+  setElementStyle: gSetElementStyle,
+  hideElement: gHideElement,
+  showElement: gShowElement,
+  makeVisualChange: gMakeVisualChange,
+  makeVisualChanges: gMakeVisualChanges,
+  makeGlobalVisualChange: gMakeGlobalVisualChange,
+};
+
+export {
+  guardedVisualUtils as visualUtils,
+  guardedVisualChanges as visualChanges,
+  gSetElementText as setElementText,
+  gSetElementInnerHTML as setElementInnerHTML,
+  gSetElementAttribute as setElementAttribute,
+  gAddGlobalCSS as addGlobalCSS,
+  gSetElementHref as setElementHref,
+  gSetElementSrc as setElementSrc,
+  gAddClassesToElement as addClassesToElement,
+  gRemoveClassesFromElement as removeClassesFromElement,
+  gSetElementStyle as setElementStyle,
+  gHideElement as hideElement,
+  gShowElement as showElement,
+  gValidateVisualPrediction as validateVisualPrediction,
+  gMakeVisualChange as makeVisualChange,
+  gMakeVisualChanges as makeVisualChanges,
+  gParseCommaSeparatedList as parseCommaSeparatedList,
+  gMakeGlobalVisualChange as makeGlobalVisualChange,
 };
